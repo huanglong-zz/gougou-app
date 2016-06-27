@@ -1,0 +1,19 @@
+{
+  "name": "imoocApp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "dependencies": {
+    "lodash": "^4.13.1",
+    "mockjs": "^1.0.0",
+    "query-string": "^4.2.0",
+    "react": "^0.14.8",
+    "react-native": "^0.22.2",
+    "react-native-button": "^1.6.0",
+    "react-native-cli": "^0.2.0",
+    "react-native-vector-icons": "^2.0.2",
+    "react-native-video": "^0.8.0"
+  }
+}
