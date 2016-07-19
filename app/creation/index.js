@@ -9,7 +9,8 @@ var React = require('react-native')
 var Icon = require('react-native-vector-icons/Ionicons')
 
 var request = require('../common/request')  
-var config = require('../common/config')  
+var config = require('../common/config')
+var util = require('../common/util')
 var Detail = require('./detail')  
 
 var StyleSheet = React.StyleSheet
@@ -22,6 +23,7 @@ var Dimensions = React.Dimensions
 var RefreshControl = React.RefreshControl
 var ActivityIndicatorIOS = React.ActivityIndicatorIOS
 var AlertIOS = React.AlertIOS
+var AsyncStorage = React.AsyncStorage
 
 var width = Dimensions.get('window').width
 
@@ -35,6 +37,7 @@ var Item = React.createClass({
   getInitialState() {
     var row = this.props.row
 
+    console.log(row)
     return {
       up: row.voted,
       row: row
@@ -50,11 +53,12 @@ var Item = React.createClass({
     var body = {
       id: row._id,
       up: up ? 'yes' : 'no',
-      accessToken: 'abcee'
+      accessToken: this.props.user.accessToken
     }
 
     request.post(url, body)
       .then(function(data) {
+        console.log(data)
         if (data && data.success) {
           that.setState({
             up: up
@@ -79,7 +83,7 @@ var Item = React.createClass({
         <View style={styles.item}>
           <Text style={styles.title}>{row.title}</Text>
           <Image
-            source={{uri: row.thumb}}
+            source={{uri: util.thumb(row.qiniu_thumb)}}
             style={styles.thumb}
           >
             <Icon
@@ -126,12 +130,30 @@ var List = React.createClass({
   _renderRow(row) {
     return <Item
       key={row._id}
+      user={this.state.user}
       onSelect={() => this._loadPage(row)}
       row={row} />
   },
 
   componentDidMount() {
-    this._fetchData(1)
+    var that = this
+
+    AsyncStorage.getItem('user')
+      .then((data) => {
+        var user
+
+        if (data) {
+          user = JSON.parse(data)
+        }
+
+        if (user && user.accessToken) {
+          that.setState({
+            user: user
+          }, function() {
+            that._fetchData(1)
+          })
+        }
+      })
   },
 
   _fetchData(page) {
@@ -148,26 +170,40 @@ var List = React.createClass({
       })
     }
 
+    var user = this.state.user
     request.get(config.api.base + config.api.creations, {
-      accessToken: 'abcdef',
+      accessToken: user.accessToken,
       page: page
     })
       .then((data) => {
-        if (data.success) {
-          var items = cachedResults.items.slice()
+        if (data && data.success) {
+          if (data.data.length > 0) {
+            data.data.map(function(item) {
+              var votes = item.votes || []
 
-          if (page !== 0) {
-            items = items.concat(data.data)
-            cachedResults.nextPage += 1
-          }
-          else {
-            items = data.data.concat(items)
-          }
+              if (votes.indexOf(user._id) > -1) {
+                item.voted = true
+              }
+              else {
+                item.voted = false
+              }
 
-          cachedResults.items = items
-          cachedResults.total = data.total
+              return item
+            })
 
-          setTimeout(function() {
+            var items = cachedResults.items.slice()
+
+            if (page !== 0) {
+              items = items.concat(data.data)
+              cachedResults.nextPage += 1
+            }
+            else {
+              items = data.data.concat(items)
+            }
+
+            cachedResults.items = items
+            cachedResults.total = data.total
+
             if (page !== 0) {
               that.setState({
                 isLoadingTail: false,
@@ -180,7 +216,8 @@ var List = React.createClass({
                 dataSource: that.state.dataSource.cloneWithRows(cachedResults.items)
               })
             }
-          }, 0)
+          }
+
         }
       })
       .catch((error) => {

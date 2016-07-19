@@ -1,6 +1,7 @@
 package com.imoocapp;
 
 import com.facebook.react.ReactActivity;
+import com.imagepicker.ImagePickerPackage;
 import com.brentvatne.RCTVideo.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactPackage;
@@ -37,6 +38,7 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new ImagePickerPackage(),
             new ReactVideoPackage(),
             new VectorIconsPackage()
         );
