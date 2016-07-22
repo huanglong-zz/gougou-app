@@ -150,6 +150,7 @@ var imoocApp = React.createClass({
 
               return <Component {...route.params} navigator={navigator} />
             }} />
+
         </Icon.TabBarItem>
         <Icon.TabBarItem
           iconName='ios-recording-outline'

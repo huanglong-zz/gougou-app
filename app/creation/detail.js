@@ -190,6 +190,11 @@ var Detail = React.createClass({
             })
           }
         }
+        else {
+          that.setState({
+            isLoadingTail: false
+          })
+        }
       })
       .catch((error) => {
         this.setState({
@@ -205,6 +210,9 @@ var Detail = React.createClass({
 
   _fetchMoreData() {
     if (!this._hasMore() || this.state.isLoadingTail) {
+      this.setState({
+        isLoadingTail: false
+      })
       return
     }
 
@@ -389,6 +397,7 @@ var Detail = React.createClass({
                 name='ios-play'
                 size={48}
                 style={styles.playIcon} />
+            //: <Text></Text>
             : null
           }
 

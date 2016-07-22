@@ -37,7 +37,6 @@ var Item = React.createClass({
   getInitialState() {
     var row = this.props.row
 
-    console.log(row)
     return {
       up: row.voted,
       row: row
@@ -58,7 +57,6 @@ var Item = React.createClass({
 
     request.post(url, body)
       .then(function(data) {
-        console.log(data)
         if (data && data.success) {
           that.setState({
             up: up
@@ -231,7 +229,6 @@ var List = React.createClass({
             isRefreshing: false
           })
         }
-        console.warn(error)
       })
   },
 
@@ -241,6 +238,11 @@ var List = React.createClass({
 
   _fetchMoreData() {
     if (!this._hasMore() || this.state.isLoadingTail) {
+
+      this.setState({
+        isLoadingTail: false
+      })
+
       return
     }
 

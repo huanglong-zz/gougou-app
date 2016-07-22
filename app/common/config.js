@@ -26,7 +26,7 @@ module.exports = {
     audio: 'https://api.cloudinary.com/v1_1/gougou/raw/upload',
   },
   api: {
-    base: 'http://192.168.199.159:1234/',
+    base: 'http://127.0.0.1:1234/',
     // base: 'http://rap.taobao.org/mockjs/4230/',
     creations: 'api/creations',
     comment: 'api/comments',
