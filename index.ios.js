@@ -126,6 +126,7 @@ var imoocApp = React.createClass({
       return <Login afterLogin={this._afterLogin} />
     }
 
+    // https://medium.com/@dabit3/react-native-navigator-navigating-like-a-pro-in-react-native-3cb1b6dc1e30#.p4c4qjmf0
     return (
       <TabBarIOS tintColor="#ee735c">
         <Icon.TabBarItem
