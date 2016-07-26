@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "lodash": "^4.13.1",
-    "mockjs": "^1.0.0",
     "query-string": "^4.2.0",
     "react": "^0.14.8",
     "react-native": "^0.22.2",
