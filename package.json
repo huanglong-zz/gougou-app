@@ -6,19 +6,19 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "lodash": "^4.13.1",
-    "mockjs": "^1.0.0",
-    "query-string": "^4.2.0",
-    "react": "^0.14.8",
-    "react-native": "^0.22.2",
+    "lodash": "^4.15.0",
+    "query-string": "^4.2.3",
+    "react": "^15.2.1",
+    "react-addons-update": "^15.3.0",
+    "react-native": "^0.31.0",
     "react-native-audio": "^1.2.1",
     "react-native-button": "^1.6.0",
-    "react-native-cli": "^0.2.0",
-    "react-native-image-picker": "^0.20.0",
+    "react-native-cli": "^1.0.0",
+    "react-native-image-picker": "^0.21.2",
     "react-native-progress": "^3.0.1",
     "react-native-sk-countdown": "^1.0.1",
-    "react-native-swiper": "^1.4.6",
-    "react-native-vector-icons": "^2.0.2",
+    "react-native-swiper": "^1.4.7",
+    "react-native-vector-icons": "^2.0.3",
     "react-native-video": "^0.8.0",
     "sha1": "^1.1.1"
   }

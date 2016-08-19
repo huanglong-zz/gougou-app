@@ -5,43 +5,47 @@
  */
 
 // ES5
-var React = require('react-native')
-var Icon = require('react-native-vector-icons/Ionicons')
-var Video = require('react-native-video').default
-var Button = require('react-native-button')
-var config = require('../common/config')
-var request = require('../common/request')
-var util = require('../common/util')
+import Icon from 'react-native-vector-icons/Ionicons'
+import Video from 'react-native-video'
+import Button from 'react-native-button'
+import config from '../common/config'
+import request from '../common/request'
+import util from '../common/util'
 
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var TouchableOpacity = React.TouchableOpacity
-var Dimensions = React.Dimensions
-var ListView = React.ListView
-var Image = React.Image
-var Modal = React.Modal
-var AlertIOS = React.AlertIOS
-var TextInput = React.TextInput
-var ActivityIndicatorIOS = React.ActivityIndicatorIOS
-var AsyncStorage = React.AsyncStorage
+import React, {Component} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  ListView,
+  Image,
+  Modal,
+  AlertIOS,
+  TextInput,
+  ActivityIndicator,
+  AsyncStorage,
+} from 'react-native'
 
-var width = Dimensions.get('window').width
+const width = Dimensions.get('window').width
 
-var cachedResults = {
+let cachedResults = {
   nextPage: 1,
   items: [],
   total: 0
 }
 
-var Detail = React.createClass({
-  getInitialState() {
-    var data = this.props.data
-    var ds = new ListView.DataSource({
+export default class Detail extends React.Component {
+  constructor(props) {
+    super(props)
+
+    const data = this.props.data
+    const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
 
-    return {
+    this.state = {
       data: data,
 
       // comments
@@ -68,19 +72,19 @@ var Detail = React.createClass({
       resizeMode: 'contain',
       repeat: false
     }
-  },
+  }
 
   _pop() {
     this.props.navigator.pop()
-  },
+  }
 
   _onLoadStart() {
     console.log('load start')
-  },
+  }
 
   _onLoad() {
     console.log('loads')
-  },
+  }
 
   _onProgress(data) {
     if (!this.state.videoLoaded) {
@@ -89,10 +93,10 @@ var Detail = React.createClass({
       })
     }
 
-    var duration = data.playableDuration
-    var currentTime = data.currentTime
-    var percent = Number((currentTime / duration).toFixed(2))
-    var newState = {
+    const duration = data.playableDuration
+    const currentTime = data.currentTime
+    const percent = Number((currentTime / duration).toFixed(2))
+    let newState = {
       videoTotal: duration,
       currentTime: Number(data.currentTime.toFixed(2)),
       videoProgress: percent
@@ -106,24 +110,24 @@ var Detail = React.createClass({
     }
 
     this.setState(newState)
-  },
+  }
 
   _onEnd() {
     this.setState({
       videoProgress: 1,
       playing: false
     })
-  },
+  }
 
   _onError(e) {
     this.setState({
       videoOk: false
     })
-  },
+  }
 
   _rePlay() {
     this.refs.videoPlayer.seek(0)
-  },
+  }
 
   _pause() {
     if (!this.state.paused) {
@@ -131,7 +135,7 @@ var Detail = React.createClass({
         paused: true
       })
     }
-  },
+  }
 
   _resume() {
     if (this.state.paused) {
@@ -139,14 +143,14 @@ var Detail = React.createClass({
         paused: false
       })
     }
-  },
+  }
 
   componentDidMount() {
-    var that = this
+    let that = this
 
     AsyncStorage.getItem('user')
       .then((data) => {
-        var user
+        let user
 
         if (data) {
           user = JSON.parse(data)
@@ -160,10 +164,10 @@ var Detail = React.createClass({
           })
         }
       })
-  },
+  }
 
   _fetchData(page) {
-    var that = this
+    let that = this
 
     this.setState({
       isLoadingTail: true
@@ -177,7 +181,7 @@ var Detail = React.createClass({
       .then((data) => {
         if (data && data.success) {
           if (data.data.length > 0) {
-            var items = cachedResults.items.slice()
+            let items = cachedResults.items.slice()
 
             items = items.concat(data.data)
             cachedResults.nextPage += 1
@@ -202,11 +206,11 @@ var Detail = React.createClass({
         })
         console.warn(error)
       })
-  },
+  }
 
   _hasMore() {
     return cachedResults.items.length !== cachedResults.total
-  },
+  }
 
   _fetchMoreData() {
     if (!this._hasMore() || this.state.isLoadingTail) {
@@ -216,10 +220,10 @@ var Detail = React.createClass({
       return
     }
 
-    var page = cachedResults.nextPage
+    const page = cachedResults.nextPage
 
     this._fetchData(page)
-  },
+  }
 
   _renderFooter() {
     if (!this._hasMore() && cachedResults.total !== 0) {
@@ -234,8 +238,8 @@ var Detail = React.createClass({
       return <View style={styles.loadingMore} />
     }
 
-    return <ActivityIndicatorIOS style={styles.loadingMore} />
-  },
+    return <ActivityIndicator style={styles.loadingMore} />
+  }
 
   _renderRow(row) {
     return (
@@ -247,28 +251,28 @@ var Detail = React.createClass({
         </View>
       </View>
     )
-  },
+  }
 
   _focus() {
     this._setModalVisible(true)
-  },
+  }
 
   _blur() {
 
-  },
+  }
 
   _closeModal() {
     this._setModalVisible(false)
-  },
+  }
 
   _setModalVisible(isVisible) {
     this.setState({
       modalVisible: isVisible
     })
-  },
+  }
 
   _renderHeader() {
-    var data = this.state.data
+    const data = this.state.data
 
     return (
       <View style={styles.listHeader}>
@@ -285,7 +289,7 @@ var Detail = React.createClass({
               placeholder='敢不敢评论一个...'
               style={styles.content}
               multiline={true}
-              onFocus={this._focus}
+              onFocus={this._focus.bind(this)}
             />
           </View>
         </View>
@@ -295,10 +299,10 @@ var Detail = React.createClass({
         </View>
       </View>
     )
-  },
+  }
 
   _submit() {
-    var that = this
+    let that = this
 
     if (!this.state.content) {
       return AlertIOS.alert('留言不能为空！')
@@ -311,7 +315,7 @@ var Detail = React.createClass({
     this.setState({
       isSending: true
     }, function() {
-      var body = {
+      const body = {
         accessToken: this.state.user.accessToken,
         comment: {
           creation: this.state.data._id,
@@ -319,20 +323,18 @@ var Detail = React.createClass({
         }
       }
 
-      var url = config.api.base + config.api.comment
+      const url = config.api.base + config.api.comment
 
       request.post(url, body)
         .then(function(data) {
           if (data && data.success) {
-            var items = cachedResults.items.slice()
-            var content = that.state.content
+            let items = cachedResults.items.slice()
 
             items = data.data.concat(items)
             cachedResults.items = items
             cachedResults.total = cachedResults.total + 1
             
             that.setState({
-              content: '',
               isSending: false,
               dataSource: that.state.dataSource.cloneWithRows(cachedResults.items)
             })
@@ -349,15 +351,15 @@ var Detail = React.createClass({
           AlertIOS.alert('留言失败，稍后重试！')
         })
     })
-  },
+  }
 
   render() {
-    var data = this.props.data
+    const data = this.props.data
 
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backBox} onPress={this._pop}>
+          <TouchableOpacity style={styles.backBox} onPress={this._pop.bind(this)}>
             <Icon name='ios-arrow-back' style={styles.backIcon} />
             <Text style={styles.backText}>返回</Text>
           </TouchableOpacity>
@@ -376,24 +378,24 @@ var Detail = React.createClass({
             resizeMode={this.state.resizeMode}
             repeat={this.state.repeat}
 
-            onLoadStart={this._onLoadStart}
-            onLoad={this._onLoad}
-            onProgress={this._onProgress}
-            onEnd={this._onEnd}
-            onError={this._onError} />
+            onLoadStart={this._onLoadStart.bind(this)}
+            onLoad={this._onLoad.bind(this)}
+            onProgress={this._onProgress.bind(this)}
+            onEnd={this._onEnd.bind(this)}
+            onError={this._onError.bind(this)} />
 
           {
             !this.state.videoOk && <Text style={styles.failText}>视频出错了！很抱歉</Text>
           }
 
           {
-            !this.state.videoLoaded && <ActivityIndicatorIOS color='#ee735c' style={styles.loading} />
+            !this.state.videoLoaded && <ActivityIndicator color='#ee735c' style={styles.loading} />
           }
 
           {
             this.state.videoLoaded && !this.state.playing
             ? <Icon
-                onPress={this._rePlay}
+                onPress={this._rePlay.bind(this)}
                 name='ios-play'
                 size={48}
                 style={styles.playIcon} />
@@ -403,10 +405,10 @@ var Detail = React.createClass({
 
           {
             this.state.videoLoaded && this.state.playing
-            ? <TouchableOpacity onPress={this._pause} style={styles.pauseBtn}>
+            ? <TouchableOpacity onPress={this._pause.bind(this)} style={styles.pauseBtn}>
               {
                 this.state.paused
-                ? <Icon onPress={this._resume} size={48} name='ios-play' style={styles.resumeIcon} />
+                ? <Icon onPress={this._resume.bind(this)} size={48} name='ios-play' style={styles.resumeIcon} />
                 : null
               }
             </TouchableOpacity>
@@ -420,10 +422,10 @@ var Detail = React.createClass({
 
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          renderHeader={this._renderHeader}
-          renderFooter={this._renderFooter}
-          onEndReached={this._fetchMoreData}
+          renderRow={this._renderRow.bind(this)}
+          renderHeader={this._renderHeader.bind(this)}
+          renderFooter={this._renderFooter.bind(this)}
+          onEndReached={this._fetchMoreData.bind(this)}
           onEndReachedThreshold={20}
           enableEmptySections={true}
           showsVerticalScrollIndicator={false}
@@ -434,7 +436,7 @@ var Detail = React.createClass({
           visible={this.state.modalVisible}>
           <View style={styles.modalContainer}>
             <Icon
-              onPress={this._closeModal}
+              onPress={this._closeModal.bind(this)}
               name='ios-close-outline'
               style={styles.closeIcon} />
 
@@ -454,15 +456,15 @@ var Detail = React.createClass({
               </View>
             </View>
 
-            <Button style={styles.submitBtn} onPress={this._submit}>评论</Button>
+            <Button style={styles.submitBtn} onPress={this._submit.bind(this)}>评论</Button>
           </View>
         </Modal>
       </View>
     )
   }
-})
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
@@ -708,5 +710,3 @@ var styles = StyleSheet.create({
     borderBottomColor: '#eee'
   }
 })
-
-module.exports = Detail

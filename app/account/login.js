@@ -5,56 +5,59 @@
  */
 
 // ES5
-var React = require('react-native')
-var Button = require('react-native-button')
-var CountDown = require('react-native-sk-countdown').CountDownText
+import Button from 'react-native-button'
+import {CountDownText} from 'react-native-sk-countdown'
+import request from '../common/request'
+import config from '../common/config'
 
-var request = require('../common/request')
-var config = require('../common/config')
+import React, {Component} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  AlertIOS,
+  AsyncStorage,
+} from 'react-native'
 
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var TextInput = React.TextInput
-var AlertIOS = React.AlertIOS
-var AsyncStorage = React.AsyncStorage
 
+export default class Login extends React.Component {
+  constructor(props) {
+    super(props)
 
-var Login = React.createClass({
-  getInitialState() {
-    return {
+    this.state = {
       verifyCode: '',
       phoneNumber: '',
       countingDone: false,
       codeSent: false
     }
-  },
+  }
 
   _showVerifyCode() {
     this.setState({
       codeSent: true
     })
-  },
+  }
 
   _countingDone() {
     this.setState({
       countingDone: true
     })
-  },
+  }
 
   _sendVerifyCode() {
-    var that = this
-    var phoneNumber = this.state.phoneNumber
+    let that = this
+    const phoneNumber = this.state.phoneNumber
 
     if (!phoneNumber) {
       return AlertIOS.alert('手机号不能为空！')
     }
 
-    var body = {
+    let body = {
       phoneNumber: phoneNumber
     }
 
-    var signupURL = config.api.base + config.api.signup
+    const signupURL = config.api.base + config.api.signup
 
     request.post(signupURL, body)
       .then((data) => {
@@ -68,23 +71,23 @@ var Login = React.createClass({
       .catch((err) => {
         AlertIOS.alert('获取验证码失败，请检查网络是否良好')
       })
-  },
+  }
 
   _submit() {
-    var that = this
-    var phoneNumber = this.state.phoneNumber
-    var verifyCode = this.state.verifyCode
+    let that = this
+    const phoneNumber = this.state.phoneNumber
+    const verifyCode = this.state.verifyCode
 
     if (!phoneNumber || !verifyCode) {
       return AlertIOS.alert('手机号或验证码不能为空！')
     }
 
-    var body = {
+    let body = {
       phoneNumber: phoneNumber,
       verifyCode: verifyCode
     }
 
-    var verifyURL = config.api.base + config.api.verify
+    const verifyURL = config.api.base + config.api.verify
 
     request.post(verifyURL, body)
       .then((data) => {
@@ -98,7 +101,7 @@ var Login = React.createClass({
       .catch((err) => {
         AlertIOS.alert('获取验证码失败，请检查网络是否良好')
       })
-  },
+  }
 
   render() {
     return (
@@ -138,12 +141,12 @@ var Login = React.createClass({
                   this.state.countingDone
                   ? <Button
                     style={styles.countBtn}
-                    onPress={this._sendVerifyCode}>获取验证码</Button>
+                    onPress={this._sendVerifyCode.bind(this)}>获取验证码</Button>
                   : <CountDown
                       style={styles.countBtn}
                       countType='seconds' // 计时类型：seconds / date
                       auto={true} // 自动开始
-                      afterEnd={this._countingDone} // 结束回调
+                      afterEnd={this._countingDone.bind(this)} // 结束回调
                       timeLeft={60} // 正向计时 时间起点为0秒
                       step={-1} // 计时步长，以秒为单位，正数则为正计时，负数为倒计时
                       startText='获取验证码' // 开始的文本
@@ -160,18 +163,18 @@ var Login = React.createClass({
             this.state.codeSent
             ? <Button
               style={styles.btn}
-              onPress={this._submit}>登录</Button>
+              onPress={this._submit.bind(this)}>登录</Button>
             : <Button
               style={styles.btn}
-              onPress={this._sendVerifyCode}>获取验证码</Button>
+              onPress={this._sendVerifyCode.bind(this)}>获取验证码</Button>
           }
         </View>
       </View>
     )
   }
-})
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
@@ -229,5 +232,3 @@ var styles = StyleSheet.create({
     color: '#ee735c'
   }
 })
-
-module.exports = Login

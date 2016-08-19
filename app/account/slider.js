@@ -5,20 +5,26 @@
  */
 
 // ES5
-var React = require('react-native')
-var Swiper = require('react-native-swiper')
-var Button = require('react-native-button')
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var Image = React.Image
-var Dimensions = React.Dimensions
+const Swiper = require('react-native-swiper')
+const Button = require('react-native-button')
 
-var width = Dimensions.get('window').width
+import React, {Component} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+} from 'react-native'
 
-var Slider = React.createClass({
-  getInitialState() {
-    return {
+const width = Dimensions.get('window').width
+
+export default class Slider extends React.Component {
+  constructor(props) {
+    super(props)
+
+    debugger
+    this.state = {
       loop: false,
       banners: [
         require('../assets/images/s1.jpg'),
@@ -26,11 +32,11 @@ var Slider = React.createClass({
         require('../assets/images/s3.jpg')
       ]
     }
-  },
+  }
 
   _enter() {
     this.props.enterSlide()
-  },
+  }
 
   render() {
     return (
@@ -50,14 +56,14 @@ var Slider = React.createClass({
           <Image style={styles.image} source={this.state.banners[2]} />
           <Button
             style={styles.btn}
-            onPress={this._enter}>马上体验</Button>
+            onPress={this._enter.bind(this)}>马上体验</Button>
         </View>
       </Swiper>
     )
   }
-})
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1
   },
@@ -113,5 +119,3 @@ var styles = StyleSheet.create({
     color: '#fff'
   }
 })
-
-module.exports = Slider

@@ -4,46 +4,50 @@
  * @flow
  */
 
-// ES5
-var React = require('react-native')
-var Icon = require('react-native-vector-icons/Ionicons')
+import Icon from 'react-native-vector-icons/Ionicons'
+import List from './app/creation/index'
+import Edit from './app/edit/index'
+import Login from './app/account/login'
+import Account from './app/account/index'
+import Slider from './app/account/slider'
 
-var List = require('./app/creation/index')
-var Edit = require('./app/edit/index')
-var Account = require('./app/account/index')
-var Login = require('./app/account/login')
-var Slider = require('./app/account/slider')
+import React, {Component} from 'react'
 
-var AppRegistry = React.AppRegistry
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var TabBarIOS = React.TabBarIOS
-var Navigator = React.Navigator
-var AsyncStorage = React.AsyncStorage
-var ActivityIndicatorIOS = React.ActivityIndicatorIOS
-var Dimensions = React.Dimensions
-var AlertIOS = React.AlertIOS
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TabBarIOS,
+  Navigator,
+  Dimensions,
+  ActivityIndicator,
+  AsyncStorage
+} from 'react-native'
 
-var width = Dimensions.get('window').width
-var height = Dimensions.get('window').height
+// 第二点，对于这种不变的变量，我们全部使用 const
+const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 
-var imoocApp = React.createClass({
-  getInitialState() {
-    console.log('child', 'getInitialState')
-    return {
+class imoocApp extends React.Component {
+  constructor(props){
+    super(props)
+    
+    this.state = {
       user: null,
       selectedTab: 'list',
+      welcomed: false,
       entered: false,
       booted: false,
       logined: false
     }
-  },
+  }
 
   componentDidMount() {
     this._asyncAppStatus()
-  },
+  }
 
   _logout() {
     AsyncStorage.removeItem('user')
@@ -52,17 +56,17 @@ var imoocApp = React.createClass({
       logined: false,
       user: null
     })
-  },
+  }
 
   _asyncAppStatus() {
-    var that = this
+    let that = this
 
     AsyncStorage.multiGet(['user', 'entered'])
       .then((data) => {
-        var userData = data[0][1]
-        var entered = data[1][1]
-        var user
-        var newState = {
+        const userData = data[0][1]
+        const entered = data[1][1]
+        let user
+        let newState = {
           booted: true
         }
 
@@ -84,10 +88,10 @@ var imoocApp = React.createClass({
 
         that.setState(newState)
       })
-  },
+  }
 
   _afterLogin(user) {
-    var that = this
+    let that = this
 
     user = JSON.stringify(user)
 
@@ -98,7 +102,7 @@ var imoocApp = React.createClass({
           user: user
         })
       })
-  },
+  }
 
   _enterSlide() {
     this.setState({
@@ -107,13 +111,13 @@ var imoocApp = React.createClass({
       AsyncStorage.setItem('entered', 'yes')
       AlertIOS.alert('进入 App')
     })
-  },
+  }
 
   render() {
     if (!this.state.booted) {
       return (
         <View style={styles.bootPage}>
-          <ActivityIndicatorIOS color='#ee735c' />
+          <ActivityIndicator color='#ee735c' />
         </View>
       )
     }
@@ -147,7 +151,7 @@ var imoocApp = React.createClass({
               return Navigator.SceneConfigs.FloatFromRight
             }}
             renderScene={(route, navigator) => {
-              var Component = route.component
+              const Component = route.component
 
               return <Component {...route.params} navigator={navigator} />
             }} />
@@ -173,12 +177,12 @@ var imoocApp = React.createClass({
               selectedTab: 'account'
             })
           }}>
-          <Account user={this.state.user} logout={this._logout} />
+          <Account user={this.state.user} logout={this._logout.bind(this)} />
         </Icon.TabBarItem>
       </TabBarIOS>
     )
   }
-})
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,6 @@
 'use strict'
 
-var config = require('./config')
+const config = require('./config')
 
 exports.thumb = function(key) {
   if (key.indexOf('http') > -1) return key

@@ -5,39 +5,38 @@
  */
 
 // ES5
-var _ = require('lodash')
-var React = require('react-native')
-var Icon = require('react-native-vector-icons/Ionicons')
-var Video = require('react-native-video').default
-var ImagePicker = require('NativeModules').ImagePickerManager
-var CountDown = require('react-native-sk-countdown').CountDownText
-var RNAudio = require('react-native-audio')
-var Progress = require('react-native-progress')
-var Button = require('react-native-button')
+import _ from 'lodash'
+import Icon from 'react-native-vector-icons/Ionicons'
+import Video from 'react-native-video'
+import {ImagePickerManager} from 'NativeModules'
+import {CountDownText} from 'react-native-sk-countdown'
+import {AudioRecorder, AudioUtils} from 'react-native-audio'
+import Progress from 'react-native-progress'
+import Button from 'react-native-button'
 
-var AudioRecorder = RNAudio.AudioRecorder
-var AudioUtils = RNAudio.AudioUtils
-
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var Image = React.Image
-var AlertIOS = React.AlertIOS
-var Dimensions = React.Dimensions
-var AsyncStorage = React.AsyncStorage
-var ProgressViewIOS = React.ProgressViewIOS
-var TouchableOpacity = React.TouchableOpacity
-var Modal = React.Modal
-var TextInput = React.TextInput
-
-var request = require('../common/request')
-var config = require('../common/config')
-
-var width = Dimensions.get('window').width
-var height = Dimensions.get('window').height
+import React, {Component} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  AlertIOS,
+  Dimensions,
+  AsyncStorage,
+  ProgressViewIOS,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+} from 'react-native'
 
 
-var videoOptions = {
+const request = require('../common/request')
+const config = require('../common/config')
+const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
+
+
+const videoOptions = {
   title: '选择视频',
   cancelButtonTitle: '取消',
   takePhotoButtonTitle: '录制 10 秒视频',
@@ -52,7 +51,7 @@ var videoOptions = {
   }
 }
 
-var defaultState = {
+const defaultState = {
   previewVideo: null,
 
   videoId: null,
@@ -96,35 +95,36 @@ var defaultState = {
   repeat: false
 }
 
-var Edit = React.createClass({
-  getInitialState() {
-    var user = this.props.user || {}
-    var state = _.clone(defaultState)
+export default class Edit extends React.Component {
+  constructor(props) {
+    super(props)
+    const user = this.props.user || {}
+    const state = _.clone(defaultState)
 
     state.user = user
 
-    return state
-  },
+    this.state = state
+  }
 
   _onLoadStart() {
     console.log('load start')
-  },
+  }
 
   _onLoad() {
     console.log('loads')
-  },
+  }
 
   _onProgress(data) {
-    var duration = data.playableDuration
-    var currentTime = data.currentTime
-    var percent = Number((currentTime / duration).toFixed(2))
+    const duration = data.playableDuration
+    const currentTime = data.currentTime
+    const percent = Number((currentTime / duration).toFixed(2))
     
     this.setState({
       videoTotal: duration,
       currentTime: Number(data.currentTime.toFixed(2)),
       videoProgress: percent
     })
-  },
+  }
 
   _onEnd() {
     if (this.state.recording) {
@@ -136,13 +136,13 @@ var Edit = React.createClass({
         recording: false
       })
     }
-  },
+  }
 
   _onError(e) {
     this.setState({
       videoOk: false
     })
-  },
+  }
 
   _preview() {
     if (this.state.audioPlaying) {
@@ -156,7 +156,7 @@ var Edit = React.createClass({
 
     AudioRecorder.playRecording()
     this.refs.videoPlayer.seek(0)
-  },
+  }
 
   _record() {
     this.setState({
@@ -168,7 +168,7 @@ var Edit = React.createClass({
 
     AudioRecorder.startRecording()
     this.refs.videoPlayer.seek(0)
-  },
+  }
 
   _counting() {
     if (!this.state.counting && !this.state.recording && !this.state.audioPlaying) {
@@ -178,26 +178,26 @@ var Edit = React.createClass({
 
       this.refs.videoPlayer.seek(this.state.videoTotal - 0.01)
     }
-  },
+  }
 
   _getToken(body) {
-    var signatureURL = config.api.base + config.api.signature
+    const signatureURL = config.api.base + config.api.signature
 
     body.accessToken = this.state.user.accessToken
 
     return request.post(signatureURL, body)
-  },
+  }
 
   _upload(body, type) {
-    var that = this
-    var xhr = new XMLHttpRequest()
-    var url = config.qiniu.upload
+    let that = this
+    let xhr = new XMLHttpRequest()
+    let url = config.qiniu.upload
 
     if (type === 'audio') {
       url = config.cloudinary.video
     }
 
-    var state = {}
+    let state = {}
 
     state[type + 'UploadedProgress'] = 0
     state[type + 'Uploading'] = true
@@ -215,12 +215,12 @@ var Edit = React.createClass({
       }
 
       if (!xhr.responseText) {
-        AlertIOS.alert('请求失败')
+        AlertIOS.alert('未获得服务器响应')
 
         return
       }
 
-      var response
+      let response
 
       try {
         response = JSON.parse(xhr.response)
@@ -233,16 +233,16 @@ var Edit = React.createClass({
       console.log(response)
 
       if (response) {
-        var newState = {}
+        let newState = {}
         newState[type] = response
         newState[type + 'Uploading'] = false
         newState[type + 'Uploaded'] = true
 
         that.setState(newState)
 
-        var updateURL = config.api.base + config.api[type]
-        var accessToken = this.state.user.accessToken
-        var updateBody = {
+        const updateURL = config.api.base + config.api[type]
+        const accessToken = this.state.user.accessToken
+        let updateBody = {
           accessToken: accessToken
         }
 
@@ -265,7 +265,7 @@ var Edit = React.createClass({
           })
           .then((data) => {
             if (data && data.success) {
-              var mediaState = {}
+              let mediaState = {}
 
               mediaState[type + 'Id'] = data.data
 
@@ -291,8 +291,8 @@ var Edit = React.createClass({
     if (xhr.upload) {
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          var percent = Number((event.loaded / event.total).toFixed(2))
-          var progressState = {}
+          let percent = Number((event.loaded / event.total).toFixed(2))
+          let progressState = {}
 
           progressState[type + 'UploadedProgress'] = percent
           that.setState(progressState)
@@ -301,18 +301,18 @@ var Edit = React.createClass({
     }
 
     xhr.send(body)
-  },
+  }
 
   _pickVideo() {
-    var that = this
+    let that = this
 
     ImagePicker.showImagePicker(videoOptions, (res) => {
       if (res.didCancel) {
         return
       }
 
-      var state = _.clone(defaultState)
-      var uri = res.uri
+      let state = _.clone(defaultState)
+      const uri = res.uri
 
       state.previewVideo = uri
       state.user = this.state.user
@@ -323,15 +323,13 @@ var Edit = React.createClass({
         cloud: 'qiniu'
       })
       .catch((err) => {
-        console.log(err)
         AlertIOS.alert('上传出错')
       })
         .then((data) => {
           if (data && data.success) {
-            console.log(data)
-            var token = data.data.token
-            var key = data.data.key
-            var body = new FormData()
+            const token = data.data.token
+            const key = data.data.key
+            let body = new FormData()
 
             body.append('token', token)
             body.append('key', key)
@@ -345,13 +343,13 @@ var Edit = React.createClass({
           }
         })
     })
-  },
+  }
 
   _uploadAudio() {
-    var that = this
-    var tags = 'app,audio'
-    var folder = 'audio'
-    var timestamp = Date.now()
+    let that = this
+    const tags = 'app,audio'
+    const folder = 'audio'
+    const timestamp = Date.now()
 
     this._getToken({
       type: 'audio',
@@ -364,9 +362,9 @@ var Edit = React.createClass({
     .then((data) => {
       if (data && data.success) {
         // data.data
-        var signature = data.data.token
-        var key = data.data.key
-        var body = new FormData()
+        const signature = data.data.token
+        const key = data.data.key
+        let body = new FormData()
 
         body.append('folder', folder)
         body.append('signature', signature)
@@ -383,12 +381,10 @@ var Edit = React.createClass({
         that._upload(body, 'audio')
       }
     })
-  },
+  }
 
   _initAudio() {
-    var audioPath = this.state.audioPath
-
-    console.log(audioPath)
+    const audioPath = this.state.audioPath
 
     AudioRecorder.prepareRecordingAtPath(audioPath, {
       SampleRate: 22050,
@@ -406,28 +402,27 @@ var Edit = React.createClass({
       this.setState({
         finished: data.finished
       })
-      console.log(`Finished recording: ${data.finished}`)
     }
-  },
+  }
 
   _closeModal() {
     this.setState({
       modalVisible: false
     })
-  },
+  }
 
   _showModal() {
     this.setState({
       modalVisible: true
     })
-  },
+  }
 
   componentDidMount() {
-    var that = this
+    let that = this
     
     AsyncStorage.getItem('user')
       .then((data) => {
-        var user
+        let user
 
         if (data) {
           user = JSON.parse(data)
@@ -441,18 +436,18 @@ var Edit = React.createClass({
       })
 
     this._initAudio()
-  },
+  }
 
   _submit() {
-    var that = this
-    var body = {
+    let that = this
+    let body = {
       title: this.state.title,
       videoId: this.state.videoId,
       audioId: this.state.audioId
     }
 
-    var creationURL = config.api.base + config.api.creations
-    var user = this.state.user
+    const creationURL = config.api.base + config.api.creations
+    const user = this.state.user
 
     if (user && user.accessToken) {
       body.accessToken = user.accessToken
@@ -472,7 +467,7 @@ var Edit = React.createClass({
           if (data && data.success) {
             that._closeModal()
             AlertIOS.alert('视频发布成功')
-            var state = _.clone(defaultState)
+            const state = _.clone(defaultState)
 
             that.setState(state)
           }
@@ -484,7 +479,7 @@ var Edit = React.createClass({
           }
         })
     }
-  },
+  }
 
   render() {
     return (
@@ -495,7 +490,7 @@ var Edit = React.createClass({
           </Text>
           {
             this.state.previewVideo && this.state.videoUploaded
-            ? <Text style={styles.toolbarExtra} onPress={this._pickVideo}>更换视频</Text>
+            ? <Text style={styles.toolbarExtra} onPress={this._pickVideo.bind(this)}>更换视频</Text>
             : null
           }
         </View>
@@ -516,11 +511,11 @@ var Edit = React.createClass({
                     resizeMode={this.state.resizeMode}
                     repeat={this.state.repeat}
 
-                    onLoadStart={this._onLoadStart}
-                    onLoad={this._onLoad}
-                    onProgress={this._onProgress}
-                    onEnd={this._onEnd}
-                    onError={this._onError} />
+                    onLoadStart={this._onLoadStart.bind(this)}
+                    onLoad={this._onLoad.bind(this)}
+                    onProgress={this._onProgress.bind(this)}
+                    onEnd={this._onEnd.bind(this)}
+                    onError={this._onError.bind(this)} />
                   {
                     !this.state.videoUploaded && this.state.videoUploading
                     ? <View style={styles.progressTipBox}>
@@ -535,7 +530,7 @@ var Edit = React.createClass({
                   {
                     this.state.recording || this.state.audioPlaying
                     ? <View style={styles.progressTipBox}>
-                        <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={this.state.videoProgress} />
+                        <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={this.state.videoProgress.bind(this)} />
                         {
                           this.state.recording
                           ? <Text style={styles.progressTip}>
@@ -551,7 +546,7 @@ var Edit = React.createClass({
                     this.state.recordDone
                     ? <View style={styles.previewBox}>
                         <Icon name='ios-play' style={styles.previewIcon} />
-                        <Text style={styles.previewText} onPress={this._preview}>
+                        <Text style={styles.previewText} onPress={this._preview.bind(this)}>
                           预览
                         </Text>
                     </View>
@@ -559,7 +554,7 @@ var Edit = React.createClass({
                   }
                 </View>
               </View>
-            : <TouchableOpacity style={styles.uploadContainer} onPress={this._pickVideo}>
+            : <TouchableOpacity style={styles.uploadContainer} onPress={this._pickVideo.bind(this)}>
               <View style={styles.uploadBox}>
                 <Image source={require('../assets/images/record.png')} style={styles.uploadIcon} />
                 <Text style={styles.uploadTitle}>点我上传视频</Text>
@@ -586,7 +581,7 @@ var Edit = React.createClass({
                         intervalText={(sec) => {
                           return sec === 0 ? 'Go' : sec
                         }} />
-                    : <TouchableOpacity onPress={this._counting}>
+                    : <TouchableOpacity onPress={this._counting.bind(this)}>
                         <Icon name='ios-mic' style={styles.recordIcon} />
                       </TouchableOpacity>
                   }
@@ -600,17 +595,17 @@ var Edit = React.createClass({
             ? <View style={styles.uploadAudioBox}>
               {
                 !this.state.audioUploaded && !this.state.audioUploading
-                ? <Text style={styles.uploadAudioText} onPress={this._uploadAudio}>下一步</Text>
+                ? <Text style={styles.uploadAudioText} onPress={this._uploadAudio.bind(this)}>下一步</Text>
                 : null
               }
 
               {
                 this.state.audioUploading
                 ? <Progress.Circle
-                  showsText={true}
-                  size={60}
-                  color={'#ee735c'}
-                  progress={this.state.audioUploadedProgress} />
+                    showsText={true}
+                    size={60}
+                    color={'#ee735c'}
+                    progress={this.state.audioUploadedProgress} />
                 : null
               }
               </View>
@@ -619,12 +614,12 @@ var Edit = React.createClass({
         </View>
 
         <Modal
-          animated={false}
+          animationType={'slide'}
           visible={this.state.modalVisible}>
           <View style={styles.modalContainer}>
             <Icon
               name='ios-close-outline'
-              onPress={this._closeModal}
+              onPress={this._closeModal.bind(this)}
               style={styles.closeIcon} />
             {
               this.state.audioUploaded && !this.state.publishing
@@ -673,7 +668,7 @@ var Edit = React.createClass({
                 this.state.audioUploaded && !this.state.publishing
                 ? <Button
                   style={styles.btn}
-                  onPress={this._submit}>发布视频</Button>
+                  onPress={this._submit.bind(this)}>发布视频</Button>
                 : null
               }
             </View>
@@ -682,9 +677,9 @@ var Edit = React.createClass({
       </View>
     )
   }
-})
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1
   },
@@ -931,6 +926,4 @@ var styles = StyleSheet.create({
     color: '#ee735c'
   }
 })
-
-module.exports = Edit
 

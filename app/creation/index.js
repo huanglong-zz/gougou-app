@@ -5,51 +5,53 @@
  */
 
 // ES5
-var React = require('react-native')
-var Icon = require('react-native-vector-icons/Ionicons')
+import Icon from 'react-native-vector-icons/Ionicons'
+import request from '../common/request'  
+import config from '../common/config'
+import util from '../common/util'
+import Detail from './detail'  
 
-var request = require('../common/request')  
-var config = require('../common/config')
-var util = require('../common/util')
-var Detail = require('./detail')  
+import React, {Component} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
+  ListView,
+  Image,
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator,
+  AlertIOS,
+  AsyncStorage,
+} from 'react-native'
 
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var TouchableHighlight = React.TouchableHighlight
-var ListView = React.ListView
-var Image = React.Image
-var Dimensions = React.Dimensions
-var RefreshControl = React.RefreshControl
-var ActivityIndicatorIOS = React.ActivityIndicatorIOS
-var AlertIOS = React.AlertIOS
-var AsyncStorage = React.AsyncStorage
+const width = Dimensions.get('window').width
 
-var width = Dimensions.get('window').width
-
-var cachedResults = {
+let cachedResults = {
   nextPage: 1,
   items: [],
   total: 0
 }
 
-var Item = React.createClass({
-  getInitialState() {
-    var row = this.props.row
+class Item extends React.Component {
+  constructor(props) {
+    super(props)
+    const row = this.props.row
 
-    return {
+    this.state = {
       up: row.voted,
       row: row
     }
-  },
+  }
 
   _up() {
-    var that = this
-    var up = !this.state.up
-    var row = this.state.row
-    var url = config.api.base + config.api.up
+    let that = this
+    let up = !this.state.up
+    const row = this.state.row
+    const url = config.api.base + config.api.up
 
-    var body = {
+    const body = {
       id: row._id,
       up: up ? 'yes' : 'no',
       accessToken: this.props.user.accessToken
@@ -71,13 +73,13 @@ var Item = React.createClass({
         
         AlertIOS.alert('点赞失败，稍后重试')
       })
-  },
+  }
 
   render() {
-    var row = this.state.row
+    const row = this.state.row
 
     return (
-      <TouchableHighlight onPress={this.props.onSelect}>
+      <TouchableHighlight onPress={this.props.onSelect.bind(this)}>
         <View style={styles.item}>
           <Text style={styles.title}>{row.title}</Text>
           <Image
@@ -94,9 +96,9 @@ var Item = React.createClass({
               <Icon
                 name={this.state.up ? 'ios-heart' : 'ios-heart-outline'}
                 size={28}
-                onPress={this._up}
+                onPress={this._up.bind(this)}
                 style={[styles.up, this.state.up ? null : styles.down]} />
-              <Text style={styles.handleText} onPress={this._up}>喜欢</Text>
+              <Text style={styles.handleText} onPress={this._up.bind(this)}>喜欢</Text>
             </View>
             <View style={styles.handleBox}>
               <Icon
@@ -110,20 +112,21 @@ var Item = React.createClass({
       </TouchableHighlight>
     )
   }
-})
+}
 
-var List = React.createClass({
-  getInitialState() {
-    var ds = new ListView.DataSource({
+export default class List extends React.Component {
+  constructor(props) {
+    super(props)
+    const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
 
-    return {
+    this.state = {
       isRefreshing: false,
       isLoadingTail: false,
       dataSource: ds.cloneWithRows([]),
     }
-  },
+  }
 
   _renderRow(row) {
     return <Item
@@ -131,14 +134,14 @@ var List = React.createClass({
       user={this.state.user}
       onSelect={() => this._loadPage(row)}
       row={row} />
-  },
+  }
 
   componentDidMount() {
-    var that = this
+    let that = this
 
     AsyncStorage.getItem('user')
       .then((data) => {
-        var user
+        let user
 
         if (data) {
           user = JSON.parse(data)
@@ -152,10 +155,10 @@ var List = React.createClass({
           })
         }
       })
-  },
+  }
 
   _fetchData(page) {
-    var that = this
+    let that = this
 
     if (page !== 0) {
       this.setState({
@@ -168,7 +171,7 @@ var List = React.createClass({
       })
     }
 
-    var user = this.state.user
+    let user = this.state.user
     request.get(config.api.base + config.api.creations, {
       accessToken: user.accessToken,
       page: page
@@ -177,7 +180,7 @@ var List = React.createClass({
         if (data && data.success) {
           if (data.data.length > 0) {
             data.data.map(function(item) {
-              var votes = item.votes || []
+              const votes = item.votes || []
 
               if (votes.indexOf(user._id) > -1) {
                 item.voted = true
@@ -189,7 +192,7 @@ var List = React.createClass({
               return item
             })
 
-            var items = cachedResults.items.slice()
+            let items = cachedResults.items.slice()
 
             if (page !== 0) {
               items = items.concat(data.data)
@@ -215,7 +218,6 @@ var List = React.createClass({
               })
             }
           }
-
         }
       })
       .catch((error) => {
@@ -230,11 +232,11 @@ var List = React.createClass({
           })
         }
       })
-  },
+  }
 
   _hasMore() {
     return cachedResults.items.length !== cachedResults.total
-  },
+  }
 
   _fetchMoreData() {
     if (!this._hasMore() || this.state.isLoadingTail) {
@@ -246,10 +248,10 @@ var List = React.createClass({
       return
     }
 
-    var page = cachedResults.nextPage
+    const page = cachedResults.nextPage
 
     this._fetchData(page)
-  },
+  }
 
   _onRefresh() {
     if (!this._hasMore() || this.state.isRefreshing) {
@@ -257,7 +259,7 @@ var List = React.createClass({
     }
 
     this._fetchData(0)
-  },
+  }
 
   _renderFooter() {
     if (!this._hasMore() && cachedResults.total !== 0) {
@@ -272,8 +274,8 @@ var List = React.createClass({
       return <View style={styles.loadingMore} />
     }
 
-    return <ActivityIndicatorIOS style={styles.loadingMore} />
-  },
+    return <ActivityIndicator style={styles.loadingMore} />
+  }
 
   _loadPage(row) {
     this.props.navigator.push({
@@ -283,7 +285,7 @@ var List = React.createClass({
         data: row
       }
     })
-  },
+  }
 
   render() {
     return (
@@ -293,13 +295,13 @@ var List = React.createClass({
         </View>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          renderFooter={this._renderFooter}
-          onEndReached={this._fetchMoreData}
+          renderRow={this._renderRow.bind(this)}
+          renderFooter={this._renderFooter.bind(this)}
+          onEndReached={this._fetchMoreData.bind(this)}
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefreshing}
-              onRefresh={this._onRefresh}
+              onRefresh={this._onRefresh.bind(this)}
               tintColor='#ff6600'
               title='拼命加载中...'
             />
@@ -312,9 +314,9 @@ var List = React.createClass({
       </View>
     )
   }
-})
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
@@ -410,6 +412,3 @@ var styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
-
-
-module.exports = List

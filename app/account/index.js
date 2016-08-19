@@ -5,31 +5,32 @@
  */
 
 // ES5
-var React = require('react-native')
-var sha1 = require('sha1')
-var Icon = require('react-native-vector-icons/Ionicons')
-var Button = require('react-native-button')
-var Progress = require('react-native-progress')
-var ImagePicker = require('NativeModules').ImagePickerManager
+import sha1 from 'sha1'
+import Icon from 'react-native-vector-icons/Ionicons'
+import Button from 'react-native-button'
+import Progress from 'react-native-progress'
+import {ImagePickerManager} from 'NativeModules'
+import request from '../common/request'
+import config from '../common/config'
 
-var request = require('../common/request')
-var config = require('../common/config')
+import React, {Component} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  TextInput,
+  AlertIOS,
+  Image,
+  AsyncStorage,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native'
 
-var StyleSheet = React.StyleSheet
-var Text = React.Text
-var View = React.View
-var Modal = React.Modal
-var TextInput = React.TextInput
-var AlertIOS = React.AlertIOS
-var Image = React.Image
-var AsyncStorage = React.AsyncStorage
-var TouchableOpacity = React.TouchableOpacity
-var Dimensions = React.Dimensions
 
+const width = Dimensions.get('window').width
 
-var width = Dimensions.get('window').width
-
-var photoOptions = {
+const photoOptions = {
   title: '选择头像',
   cancelButtonTitle: '取消',
   takePhotoButtonTitle: '拍照',
@@ -59,37 +60,38 @@ function avatar(id, type) {
   return 'http://o9spjqu1b.bkt.clouddn.com/' + id
 }
 
+export default class Account extends React.Component {
+  constructor(props) {
+    super(props)
 
-var Account = React.createClass({
-  getInitialState() {
-    var user = this.props.user || {}
+    const user = this.props.user || {}
 
-    return {
+    this.state = {
       user: user,
       avatarProgress: 0,
       avatarUploading: false,
       modalVisible: false
     }
-  },
+  }
 
   _edit() {
     this.setState({
       modalVisible: true
     })
-  },
+  }
 
   _closeModal() {
     this.setState({
       modalVisible: false
     })
-  },
+  }
 
   componentDidMount() {
-    var that = this
+    let that = this
     
     AsyncStorage.getItem('user')
       .then((data) => {
-        var user
+        let user
 
         if (data) {
           user = JSON.parse(data)
@@ -101,11 +103,11 @@ var Account = React.createClass({
           })
         }
       })
-  },
+  }
 
   _getQiniuToken() {
-    var accessToken = this.state.user.accessToken
-    var signatureURL = config.api.base + config.api.signature
+    const accessToken = this.state.user.accessToken
+    const signatureURL = config.api.base + config.api.signature
 
     return request.post(signatureURL, {
       accessToken: accessToken,
@@ -115,25 +117,25 @@ var Account = React.createClass({
     .catch((err) => {
       console.log(err)
     })
-  },
+  }
 
   _pickPhoto() {
-    var that = this
+    let that = this
 
     ImagePicker.showImagePicker(photoOptions, (res) => {
       if (res.didCancel) {
         return
       }
 
-      var avartarData = 'data:image/jpeg;base64,' + res.data
-      var uri = res.uri
+      const avatarData = 'data:image/jpeg;base64,' + res.data
+      const uri = res.uri
 
       that._getQiniuToken()
         .then((data) => {
           if (data && data.success) {
-            var token = data.data.token
-            var key = data.data.key
-            var body = new FormData()
+            const token = data.data.token
+            const key = data.data.key
+            let body = new FormData()
 
             body.append('token', token)
             body.append('key', key)
@@ -146,43 +148,13 @@ var Account = React.createClass({
             that._upload(body)
           }
         })
-
-      // request.post(signatureURL, {
-      //   accessToken: accessToken,
-      //   key: key,
-      //   timestamp: timestamp,
-      //   type: 'avatar'
-      // })
-      // .catch((err) => {
-      //   console.log(err)
-      // })
-      // .then((data) => {
-      //   console.log(data)
-      //   if (data && data.success) {
-      //     // data.data
-      //     var signature = data.data
-      //     var body = new FormData()
-
-      //     body.append('folder', folder)
-      //     body.append('signature', signature)
-      //     body.append('tags', tags)
-      //     body.append('timestamp', timestamp)
-      //     body.append('api_key', config.cloudinary.api_key)
-      //     body.append('resource_type', 'image')
-      //     body.append('file', avartarData)
-
-      //     that._upload(body)
-      //   }
-      // })
     })
-  },
+  }
 
   _upload(body) {
-    var that = this
-    var xhr = new XMLHttpRequest()
-    var url = config.qiniu.upload
-
-    console.log(body)
+    let that = this
+    const xhr = new XMLHttpRequest()
+    const url = config.qiniu.upload
 
     this.setState({
       avatarUploading: true,
@@ -204,7 +176,7 @@ var Account = React.createClass({
         return
       }
 
-      var response
+      let response
 
       try {
         response = JSON.parse(xhr.response)
@@ -214,10 +186,8 @@ var Account = React.createClass({
         console.log('parse fails')
       }
 
-      console.log(response)
-
       if (response) {
-        var user = this.state.user
+        let user = this.state.user
 
         if (response.public_id) {
           user.avatar = response.public_id
@@ -240,7 +210,7 @@ var Account = React.createClass({
     if (xhr.upload) {
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          var percent = Number((event.loaded / event.total).toFixed(2))
+          let percent = Number((event.loaded / event.total).toFixed(2))
 
           that.setState({
             avatarProgress: percent
@@ -250,19 +220,19 @@ var Account = React.createClass({
     }
 
     xhr.send(body)
-  },
+  }
 
   _asyncUser(isAvatar) {
-    var that = this
-    var user = this.state.user
+    let that = this
+    let user = this.state.user
 
     if (user && user.accessToken) {
-      var url = config.api.base + config.api.update
+      const url = config.api.base + config.api.update
 
       request.post(url, user)
         .then((data) => {
           if (data && data.success) {
-            var user = data.data
+            user = data.data
 
             if (isAvatar) {
               AlertIOS.alert('头像更新成功')
@@ -277,39 +247,39 @@ var Account = React.createClass({
           }
         })
     }
-  },
+  }
 
   _changeUserState(key, value) {
-    var user = this.state.user
+    let user = this.state.user
 
     user[key] = value
 
     this.setState({
       user: user
     })
-  },
+  }
 
   _submit() {
     this._asyncUser()
-  },
+  }
 
   _logout() {
     this.props.logout()
-  },
+  }
 
   render() {
-    var user = this.state.user
+    const user = this.state.user
 
     return (
       <View style={styles.container}>
         <View style={styles.toolbar}>
           <Text style={styles.toolbarTitle}>狗狗的账户</Text>
-          <Text style={styles.toolbarExtra} onPress={this._edit}>编辑</Text>
+          <Text style={styles.toolbarExtra} onPress={this._edit.bind(this)}>编辑</Text>
         </View>
 
         {
           user.avatar
-          ? <TouchableOpacity onPress={this._pickPhoto} style={styles.avatarContainer}>
+          ? <TouchableOpacity onPress={this._pickPhoto.bind(this)} style={styles.avatarContainer}>
             <Image source={{uri: avatar(user.avatar, 'image')}} style={styles.avatarContainer}>
               <View style={styles.avatarBox}>
                 {
@@ -327,7 +297,7 @@ var Account = React.createClass({
               <Text style={styles.avatarTip}>戳这里换头像</Text>
             </Image>
           </TouchableOpacity>
-          : <TouchableOpacity onPress={this._pickPhoto} style={styles.avatarContainer}>
+          : <TouchableOpacity onPress={this._pickPhoto.bind(this)} style={styles.avatarContainer}>
             <Text style={styles.avatarTip}>添加狗狗头像</Text>
             <View style={styles.avatarBox}>
               {
@@ -346,12 +316,12 @@ var Account = React.createClass({
         }
 
         <Modal
-          animated={false}
+          animationType={'slide'}
           visible={this.state.modalVisible}>
           <View style={styles.modalContainer}>
             <Icon
               name='ios-close-outline'
-              onPress={this._closeModal}
+              onPress={this._closeModal.bind(this)}
               style={styles.closeIcon} />
             
             <View style={styles.fieldItem}>
@@ -420,19 +390,19 @@ var Account = React.createClass({
 
             <Button
               style={styles.btn}
-              onPress={this._submit}>保存资料</Button>
+              onPress={this._submit.bind(this)}>保存资料</Button>
           </View>
         </Modal>
 
         <Button
           style={styles.btn}
-          onPress={this._logout}>退出登录</Button>
+          onPress={this._logout.bind(this)}>退出登录</Button>
       </View>
     )
   }
-})
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1
   },
@@ -558,7 +528,5 @@ var styles = StyleSheet.create({
     borderRadius: 4,
     color: '#ee735c'
   }
-
 })
 
-module.exports = Account
