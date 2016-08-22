@@ -20,7 +20,7 @@ import {
   View,
   Modal,
   TextInput,
-  AlertIOS,
+  Alert,
   Image,
   AsyncStorage,
   TouchableOpacity,
@@ -38,8 +38,8 @@ const photoOptions = {
   quality: 0.75,
   allowsEditing: true,
   noData: false,
-  storageOptions: { 
-    skipBackup: true, 
+  storageOptions: {
+    skipBackup: true,
     path: 'images'
   }
 }
@@ -88,7 +88,7 @@ export default class Account extends React.Component {
 
   componentDidMount() {
     let that = this
-    
+
     AsyncStorage.getItem('user')
       .then((data) => {
         let user
@@ -164,14 +164,14 @@ export default class Account extends React.Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        AlertIOS.alert('请求失败')
+        Alert.alert('请求失败')
         console.log(xhr.responseText)
 
         return
       }
 
       if (!xhr.responseText) {
-        AlertIOS.alert('请求失败')
+        Alert.alert('请求失败')
 
         return
       }
@@ -192,7 +192,7 @@ export default class Account extends React.Component {
         if (response.public_id) {
           user.avatar = response.public_id
         }
-        
+
         if (response.key) {
           user.avatar = response.key
         }
@@ -235,7 +235,7 @@ export default class Account extends React.Component {
             user = data.data
 
             if (isAvatar) {
-              AlertIOS.alert('头像更新成功')
+              Alert.alert('头像更新成功')
             }
 
             that.setState({
@@ -307,7 +307,7 @@ export default class Account extends React.Component {
                     size={75}
                     color={'#ee735c'}
                     progress={this.state.avatarProgress} />
-                : <Icon          
+                : <Icon
                     name='ios-cloud-upload-outline'
                     style={styles.plusIcon} />
               }
@@ -323,7 +323,7 @@ export default class Account extends React.Component {
               name='ios-close-outline'
               onPress={this._closeModal.bind(this)}
               style={styles.closeIcon} />
-            
+
             <View style={styles.fieldItem}>
               <Text style={styles.label}>昵称</Text>
               <TextInput

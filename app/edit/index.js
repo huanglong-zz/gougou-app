@@ -20,7 +20,7 @@ import {
   Text,
   View,
   Image,
-  AlertIOS,
+  Alert,
   Dimensions,
   AsyncStorage,
   ProgressViewIOS,
@@ -45,8 +45,8 @@ const videoOptions = {
   mediaType: 'video',
   durationLimit: 10,
   noData: false,
-  storageOptions: { 
-    skipBackup: true, 
+  storageOptions: {
+    skipBackup: true,
     path: 'images'
   }
 }
@@ -118,7 +118,7 @@ export default class Edit extends React.Component {
     const duration = data.playableDuration
     const currentTime = data.currentTime
     const percent = Number((currentTime / duration).toFixed(2))
-    
+
     this.setState({
       videoTotal: duration,
       currentTime: Number(data.currentTime.toFixed(2)),
@@ -208,14 +208,14 @@ export default class Edit extends React.Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        AlertIOS.alert('请求失败')
+        Alert.alert('请求失败')
         console.log(xhr.responseText)
 
         return
       }
 
       if (!xhr.responseText) {
-        AlertIOS.alert('未获得服务器响应')
+        Alert.alert('未获得服务器响应')
 
         return
       }
@@ -257,10 +257,10 @@ export default class Edit extends React.Component {
           .catch((err) => {
             console.log(err)
             if (type === 'video') {
-              AlertIOS.alert('视频同步出错，请重新上传！')
+              Alert.alert('视频同步出错，请重新上传！')
             }
             else if (type === 'audio') {
-              AlertIOS.alert('音频同步出错，请重新上传！')
+              Alert.alert('音频同步出错，请重新上传！')
             }
           })
           .then((data) => {
@@ -278,10 +278,10 @@ export default class Edit extends React.Component {
             }
             else {
               if (type === 'video') {
-                AlertIOS.alert('视频同步出错，请重新上传！')
+                Alert.alert('视频同步出错，请重新上传！')
               }
               else if (type === 'audio') {
-                AlertIOS.alert('音频同步出错，请重新上传！')
+                Alert.alert('音频同步出错，请重新上传！')
               }
             }
           })
@@ -323,7 +323,7 @@ export default class Edit extends React.Component {
         cloud: 'qiniu'
       })
       .catch((err) => {
-        AlertIOS.alert('上传出错')
+        Alert.alert('上传出错')
       })
         .then((data) => {
           if (data && data.success) {
@@ -392,7 +392,7 @@ export default class Edit extends React.Component {
       AudioQuality: 'High',
       AudioEncoding: 'aac'
     })
-    
+
     AudioRecorder.onProgress = (data) => {
       this.setState({
         currentTime: Math.floor(data.currentTime)
@@ -419,7 +419,7 @@ export default class Edit extends React.Component {
 
   componentDidMount() {
     let that = this
-    
+
     AsyncStorage.getItem('user')
       .then((data) => {
         let user
@@ -460,13 +460,13 @@ export default class Edit extends React.Component {
         .post(creationURL, body)
         .catch((err) => {
           console.log(err)
-          AlertIOS.alert('视频发布失败')
+          Alert.alert('视频发布失败')
         })
         .then((data) => {
           console.log(data)
           if (data && data.success) {
             that._closeModal()
-            AlertIOS.alert('视频发布成功')
+            Alert.alert('视频发布成功')
             const state = _.clone(defaultState)
 
             that.setState(state)
@@ -475,7 +475,7 @@ export default class Edit extends React.Component {
             this.setState({
               publishing: false
             })
-            AlertIOS.alert('视频发布失败')
+            Alert.alert('视频发布失败')
           }
         })
     }

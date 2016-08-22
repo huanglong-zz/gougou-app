@@ -34,7 +34,7 @@ const height = Dimensions.get('window').height
 class imoocApp extends React.Component {
   constructor(props){
     super(props)
-    
+
     this.state = {
       user: null,
       selectedTab: 'list',
@@ -109,7 +109,6 @@ class imoocApp extends React.Component {
       entered: true
     }, function() {
       AsyncStorage.setItem('entered', 'yes')
-      AlertIOS.alert('进入 App')
     })
   }
 

@@ -22,7 +22,7 @@ import {
   ListView,
   Image,
   Modal,
-  AlertIOS,
+  Alert,
   TextInput,
   ActivityIndicator,
   AsyncStorage,
@@ -187,7 +187,7 @@ export default class Detail extends React.Component {
             cachedResults.nextPage += 1
             cachedResults.items = items
             cachedResults.total = data.total
-            
+
             that.setState({
               isLoadingTail: false,
               dataSource: that.state.dataSource.cloneWithRows(cachedResults.items)
@@ -305,11 +305,11 @@ export default class Detail extends React.Component {
     let that = this
 
     if (!this.state.content) {
-      return AlertIOS.alert('留言不能为空！')
+      return Alert.alert('留言不能为空！')
     }
 
     if (this.state.isSending) {
-      return AlertIOS.alert('正在评论中！')
+      return Alert.alert('正在评论中！')
     }
 
     this.setState({
@@ -333,7 +333,7 @@ export default class Detail extends React.Component {
             items = data.data.concat(items)
             cachedResults.items = items
             cachedResults.total = cachedResults.total + 1
-            
+
             that.setState({
               isSending: false,
               dataSource: that.state.dataSource.cloneWithRows(cachedResults.items)
@@ -348,7 +348,7 @@ export default class Detail extends React.Component {
             isSending: false
           })
           that._setModalVisible(false)
-          AlertIOS.alert('留言失败，稍后重试！')
+          Alert.alert('留言失败，稍后重试！')
         })
     })
   }

@@ -6,10 +6,10 @@
 
 // ES5
 import Icon from 'react-native-vector-icons/Ionicons'
-import request from '../common/request'  
+import request from '../common/request'
 import config from '../common/config'
 import util from '../common/util'
-import Detail from './detail'  
+import Detail from './detail'
 
 import React, {Component} from 'react'
 import {
@@ -22,7 +22,7 @@ import {
   Dimensions,
   RefreshControl,
   ActivityIndicator,
-  AlertIOS,
+  Alert,
   AsyncStorage,
 } from 'react-native'
 
@@ -65,13 +65,13 @@ class Item extends React.Component {
           })
         }
         else {
-          AlertIOS.alert('点赞失败，稍后重试')
+          Alert.alert('点赞失败，稍后重试')
         }
       })
       .catch(function(err) {
         console.log(err)
-        
-        AlertIOS.alert('点赞失败，稍后重试')
+
+        Alert.alert('点赞失败，稍后重试')
       })
   }
 
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     backgroundColor: '#ee735c'
   },
-  
+
   headerTitle: {
     color: '#fff',
     fontSize: 16,
