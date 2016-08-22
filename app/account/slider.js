@@ -23,7 +23,6 @@ export default class Slider extends React.Component {
   constructor(props) {
     super(props)
 
-    debugger
     this.state = {
       loop: false,
       banners: [
