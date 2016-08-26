@@ -200,11 +200,11 @@ export default class Detail extends React.Component {
           })
         }
       })
-      .catch((error) => {
+      .catch((err) => {
         this.setState({
           isLoadingTail: false
         })
-        console.warn(error)
+        console.warn(err)
       })
   }
 

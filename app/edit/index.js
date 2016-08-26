@@ -8,7 +8,7 @@
 import _ from 'lodash'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
-import {ImagePickerManager} from 'NativeModules'
+import ImagePicker from 'react-native-image-picker'
 import {CountDownText} from 'react-native-sk-countdown'
 import {AudioRecorder, AudioUtils} from 'react-native-audio'
 import Progress from 'react-native-progress'
@@ -39,11 +39,11 @@ const height = Dimensions.get('window').height
 const videoOptions = {
   title: '选择视频',
   cancelButtonTitle: '取消',
-  takePhotoButtonTitle: '录制 10 秒视频',
+  takePhotoButtonTitle: '录制 15 秒视频',
   chooseFromLibraryButtonTitle: '选择已有视频',
   videoQuality: 'medium',
   mediaType: 'video',
-  durationLimit: 10,
+  durationLimit: 15,
   noData: false,
   storageOptions: { 
     skipBackup: true, 
@@ -230,10 +230,9 @@ export default class Edit extends React.Component {
         console.log('parse fails')
       }
 
-      console.log(response)
-
       if (response) {
         let newState = {}
+        
         newState[type] = response
         newState[type + 'Uploading'] = false
         newState[type + 'Uploaded'] = true
@@ -323,6 +322,7 @@ export default class Edit extends React.Component {
         cloud: 'qiniu'
       })
       .catch((err) => {
+        console.log(err)
         AlertIOS.alert('上传出错')
       })
         .then((data) => {
@@ -558,7 +558,7 @@ export default class Edit extends React.Component {
               <View style={styles.uploadBox}>
                 <Image source={require('../assets/images/record.png')} style={styles.uploadIcon} />
                 <Text style={styles.uploadTitle}>点我上传视频</Text>
-                <Text style={styles.uploadDesc}>建议时长不超过 20 秒</Text>
+                <Text style={styles.uploadDesc}>建议时长不超过 15 秒</Text>
               </View>
             </TouchableOpacity>
           }

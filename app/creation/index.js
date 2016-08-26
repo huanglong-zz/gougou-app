@@ -69,8 +69,6 @@ class Item extends React.Component {
         }
       })
       .catch(function(err) {
-        console.log(err)
-        
         AlertIOS.alert('点赞失败，稍后重试')
       })
   }
@@ -172,6 +170,7 @@ export default class List extends React.Component {
     }
 
     let user = this.state.user
+
     request.get(config.api.base + config.api.creations, {
       accessToken: user.accessToken,
       page: page
@@ -220,7 +219,7 @@ export default class List extends React.Component {
           }
         }
       })
-      .catch((error) => {
+      .catch((err) => {
         if (page !== 0) {
           this.setState({
             isLoadingTail: false
