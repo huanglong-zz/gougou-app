@@ -11,7 +11,7 @@ import Video from 'react-native-video'
 import ImagePicker from 'react-native-image-picker'
 import {CountDownText} from 'react-native-sk-countdown'
 import {AudioRecorder, AudioUtils} from 'react-native-audio'
-import Progress from 'react-native-progress'
+import {Circle} from 'react-native-progress'
 import Button from 'react-native-button'
 
 import React, {Component} from 'react'
@@ -530,7 +530,7 @@ export default class Edit extends React.Component {
                   {
                     this.state.recording || this.state.audioPlaying
                     ? <View style={styles.progressTipBox}>
-                        <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={this.state.videoProgress.bind(this)} />
+                        <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={this.state.videoProgress} />
                         {
                           this.state.recording
                           ? <Text style={styles.progressTip}>
@@ -569,11 +569,11 @@ export default class Edit extends React.Component {
                 <View style={[styles.recordIconBox, (this.state.recording || this.state.audioPlaying) && styles.recordOn]}>
                   {
                     this.state.counting && !this.state.recording
-                    ? <CountDown
+                    ? <CountDownText
                         style={styles.countBtn}
                         countType='seconds' // 计时类型：seconds / date
                         auto={true} // 自动开始
-                        afterEnd={this._record} // 结束回调
+                        afterEnd={this._record.bind(this)} // 结束回调
                         timeLeft={3} // 正向计时 时间起点为0秒
                         step={-1} // 计时步长，以秒为单位，正数则为正计时，负数为倒计时
                         startText='准备录制' // 开始的文本
@@ -601,7 +601,7 @@ export default class Edit extends React.Component {
 
               {
                 this.state.audioUploading
-                ? <Progress.Circle
+                ? <Circle
                     showsText={true}
                     size={60}
                     color={'#ee735c'}
@@ -654,7 +654,7 @@ export default class Edit extends React.Component {
                     ? <Text style={styles.loadingText}>开始上传喽！...</Text>
                     : null
                   }
-                  <Progress.Circle
+                  <Circle
                     showsText={true}
                     size={60}
                     color={'#ee735c'}
