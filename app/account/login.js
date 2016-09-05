@@ -69,6 +69,7 @@ export default class Login extends React.Component {
         }
       })
       .catch((err) => {
+        console.log(err)
         AlertIOS.alert('获取验证码失败，请检查网络是否良好')
       })
   }
@@ -142,7 +143,7 @@ export default class Login extends React.Component {
                   ? <Button
                     style={styles.countBtn}
                     onPress={this._sendVerifyCode.bind(this)}>获取验证码</Button>
-                  : <CountDown
+                  : <CountDownText
                       style={styles.countBtn}
                       countType='seconds' // 计时类型：seconds / date
                       auto={true} // 自动开始

@@ -93,6 +93,8 @@ class imoocApp extends React.Component {
   _afterLogin(user) {
     let that = this
 
+    console.log(this)
+    console.log(that)
     user = JSON.stringify(user)
 
     AsyncStorage.setItem('user', user)
@@ -123,11 +125,11 @@ class imoocApp extends React.Component {
     }
 
     if (!this.state.entered) {
-      return <Slider enterSlide={this._enterSlide} />
+      return <Slider enterSlide={this._enterSlide.bind(this)} />
     }
 
     if (!this.state.logined) {
-      return <Login afterLogin={this._afterLogin} />
+      return <Login afterLogin={this._afterLogin.bind(this)} />
     }
 
     // https://medium.com/@dabit3/react-native-navigator-navigating-like-a-pro-in-react-native-3cb1b6dc1e30#.p4c4qjmf0

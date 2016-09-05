@@ -6,7 +6,6 @@
 
 // ES5
 const Swiper = require('react-native-swiper')
-const Button = require('react-native-button')
 
 import React, {Component} from 'react'
 import {
@@ -18,12 +17,12 @@ import {
 } from 'react-native'
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 export default class Slider extends React.Component {
   constructor(props) {
     super(props)
 
-    debugger
     this.state = {
       loop: false,
       banners: [
@@ -54,9 +53,9 @@ export default class Slider extends React.Component {
         </View>
         <View style={styles.slide}>
           <Image style={styles.image} source={this.state.banners[2]} />
-          <Button
+          <Text
             style={styles.btn}
-            onPress={this._enter.bind(this)}>马上体验</Button>
+            onPress={this._enter.bind(this)}>马上体验</Text>
         </View>
       </Swiper>
     )
@@ -75,7 +74,8 @@ const styles = StyleSheet.create({
 
   image: {
     flex: 1,
-    width: width
+    width: width,
+    height: height
   },
 
   dot: {
