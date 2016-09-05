@@ -13,6 +13,7 @@ import {
   Text,
   View,
   Image,
+  TouchableHighlight,
   Dimensions,
 } from 'react-native'
 
@@ -40,7 +41,6 @@ export default class Slider extends React.Component {
   render() {
     return (
       <Swiper
-        style={styles.container}
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}
         paginationStyle={styles.pagination}
@@ -52,10 +52,11 @@ export default class Slider extends React.Component {
           <Image style={styles.image} source={this.state.banners[1]} />
         </View>
         <View style={styles.slide}>
-          <Image style={styles.image} source={this.state.banners[2]} />
-          <Text
-            style={styles.btn}
-            onPress={this._enter.bind(this)}>马上体验</Text>
+          <Image style={styles.image} source={this.state.banners[2]}>
+            <TouchableHighlight style={styles.btn} onPress={this._enter.bind(this)}>
+              <Text style={styles.btnText}>马上体验</Text>
+            </TouchableHighlight>
+          </Image>
         </View>
       </Swiper>
     )
@@ -63,10 +64,6 @@ export default class Slider extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-
   slide: {
     flex: 1,
     width: width
@@ -110,12 +107,16 @@ const styles = StyleSheet.create({
     left: 10,
     bottom: 60,
     height: 50,
-    padding: 10,
+    padding: 15,
     backgroundColor: '#ee735c',
     borderColor: '#ee735c',
     borderWidth: 1,
-    fontSize: 18,
-    borderRadius: 3,
-    color: '#fff'
+    borderRadius: 3
+  },
+
+  btnText: {
+    color: '#fff',
+    fontSize: 20,
+    textAlign: 'center'
   }
 })
