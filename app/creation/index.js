@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -176,6 +178,17 @@ export default class List extends React.Component {
       page: page
     })
       .then((data) => {
+        if (page !== 0) {
+          that.setState({
+            isLoadingTail: false
+          })
+        }
+        else {
+          that.setState({
+            isRefreshing: false
+          })
+        }
+
         if (data && data.success) {
           if (data.data.length > 0) {
             data.data.map(function(item) {
@@ -206,13 +219,11 @@ export default class List extends React.Component {
 
             if (page !== 0) {
               that.setState({
-                isLoadingTail: false,
                 dataSource: that.state.dataSource.cloneWithRows(cachedResults.items)
               })
             }
             else {
               that.setState({
-                isRefreshing: false,
                 dataSource: that.state.dataSource.cloneWithRows(cachedResults.items)
               })
             }
@@ -270,7 +281,7 @@ export default class List extends React.Component {
     }
 
     if (!this.state.isLoadingTail) {
-      return <View style={styles.loadingMore} />
+      return <View style={styles.loadingMore}></View>
     }
 
     return <ActivityIndicator style={styles.loadingMore} />
@@ -290,7 +301,7 @@ export default class List extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>列表页面</Text>
+          <Text style={styles.headerTitle}>狗狗有话说</Text>
         </View>
         <ListView
           dataSource={this.state.dataSource}
@@ -301,8 +312,6 @@ export default class List extends React.Component {
             <RefreshControl
               refreshing={this.state.isRefreshing}
               onRefresh={this._onRefresh.bind(this)}
-              tintColor='#ff6600'
-              title='拼命加载中...'
             />
           }
           onEndReachedThreshold={20}
@@ -318,7 +327,7 @@ export default class List extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#ffffff',
   },
 
   header: {

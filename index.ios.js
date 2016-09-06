@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -111,7 +113,6 @@ class imoocApp extends React.Component {
       entered: true
     }, function() {
       AsyncStorage.setItem('entered', 'yes')
-      AlertIOS.alert('进入 App')
     })
   }
 

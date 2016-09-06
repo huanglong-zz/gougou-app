@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -8,8 +10,8 @@
 import sha1 from 'sha1'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Button from 'react-native-button'
-import Progress from 'react-native-progress'
-import {ImagePickerManager} from 'NativeModules'
+import {Circle} from 'react-native-progress'
+import ImagePicker from 'react-native-image-picker'
 import request from '../common/request'
 import config from '../common/config'
 
@@ -20,7 +22,7 @@ import {
   View,
   Modal,
   TextInput,
-  AlertIOS,
+  Alert,
   Image,
   AsyncStorage,
   TouchableOpacity,
@@ -164,14 +166,14 @@ export default class Account extends React.Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        AlertIOS.alert('请求失败')
+        Alert.alert('请求失败')
         console.log(xhr.responseText)
 
         return
       }
 
       if (!xhr.responseText) {
-        AlertIOS.alert('请求失败')
+        Alert.alert('请求失败')
 
         return
       }
@@ -235,7 +237,7 @@ export default class Account extends React.Component {
             user = data.data
 
             if (isAvatar) {
-              AlertIOS.alert('头像更新成功')
+              Alert.alert('头像更新成功')
             }
 
             that.setState({
@@ -284,7 +286,7 @@ export default class Account extends React.Component {
               <View style={styles.avatarBox}>
                 {
                   this.state.avatarUploading
-                  ? <Progress.Circle
+                  ? <Circle
                     showsText={true}
                     size={75}
                     color={'#ee735c'}
@@ -302,7 +304,7 @@ export default class Account extends React.Component {
             <View style={styles.avatarBox}>
               {
                 this.state.avatarUploading
-                ? <Progress.Circle
+                ? <Circle
                     showsText={true}
                     size={75}
                     color={'#ee735c'}

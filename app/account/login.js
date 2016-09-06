@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -16,7 +18,7 @@ import {
   Text,
   View,
   TextInput,
-  AlertIOS,
+  Alert,
   AsyncStorage,
 } from 'react-native'
 
@@ -50,7 +52,7 @@ export default class Login extends React.Component {
     const phoneNumber = this.state.phoneNumber
 
     if (!phoneNumber) {
-      return AlertIOS.alert('手机号不能为空！')
+      return Alert.alert('手机号不能为空！')
     }
 
     let body = {
@@ -65,12 +67,12 @@ export default class Login extends React.Component {
           that._showVerifyCode()
         }
         else {
-          AlertIOS.alert('获取验证码失败，请检查手机号是否正确')
+          Alert.alert('获取验证码失败，请检查手机号是否正确')
         }
       })
       .catch((err) => {
         console.log(err)
-        AlertIOS.alert('获取验证码失败，请检查网络是否良好')
+        Alert.alert('获取验证码失败，请检查网络是否良好')
       })
   }
 
@@ -80,7 +82,7 @@ export default class Login extends React.Component {
     const verifyCode = this.state.verifyCode
 
     if (!phoneNumber || !verifyCode) {
-      return AlertIOS.alert('手机号或验证码不能为空！')
+      return Alert.alert('手机号或验证码不能为空！')
     }
 
     let body = {
@@ -96,11 +98,11 @@ export default class Login extends React.Component {
           that.props.afterLogin(data.data)
         }
         else {
-          AlertIOS.alert('获取验证码失败，请检查手机号是否正确')
+          Alert.alert('获取验证码失败，请检查手机号是否正确')
         }
       })
       .catch((err) => {
-        AlertIOS.alert('获取验证码失败，请检查网络是否良好')
+        Alert.alert('获取验证码失败，请检查网络是否良好')
       })
   }
 
