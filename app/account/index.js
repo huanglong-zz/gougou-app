@@ -13,6 +13,7 @@ import Button from 'react-native-button'
 import {Circle} from 'react-native-progress'
 import ImagePicker from 'react-native-image-picker'
 import request from '../common/request'
+import Popup from '../common/popup'
 import config from '../common/config'
 
 import React, {Component} from 'react'
@@ -69,6 +70,7 @@ export default class Account extends React.Component {
     const user = this.props.user || {}
 
     this.state = {
+      pop: null,
       user: user,
       avatarProgress: 0,
       avatarUploading: false,
@@ -153,6 +155,23 @@ export default class Account extends React.Component {
     })
   }
 
+  _alert(title, content) {
+    var that = this
+
+    this.setState({
+      pop: {
+        title: title,
+        content: content
+      }
+    }, function() {
+      setTimeout(function() {
+        that.setState({
+          pop: null
+        })
+      }, 1500)
+    })
+  }
+
   _upload(body) {
     let that = this
     const xhr = new XMLHttpRequest()
@@ -166,14 +185,14 @@ export default class Account extends React.Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        Alert.alert('请求失败')
+        that._alert('呜呜~', '上传失败，稍后重试')
         console.log(xhr.responseText)
 
         return
       }
 
       if (!xhr.responseText) {
-        Alert.alert('请求失败')
+        that._alert('呜呜~', '服务器异常，稍后重试')
 
         return
       }
@@ -185,7 +204,7 @@ export default class Account extends React.Component {
       }
       catch (e) {
         console.log(e)
-        console.log('parse fails')
+        that._alert('呜呜~', '返回数据异常，稍后重试')
       }
 
       if (response) {
@@ -237,7 +256,7 @@ export default class Account extends React.Component {
             user = data.data
 
             if (isAvatar) {
-              Alert.alert('头像更新成功')
+              that._alert('汪汪~', '头像更新成功')
             }
 
             that.setState({
@@ -274,6 +293,7 @@ export default class Account extends React.Component {
 
     return (
       <View style={styles.container}>
+        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.toolbar}>
           <Text style={styles.toolbarTitle}>狗狗的账户</Text>
           <Text style={styles.toolbarExtra} onPress={this._edit.bind(this)}>编辑</Text>

@@ -10,6 +10,7 @@
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
 import Button from 'react-native-button'
+import Popup from '../common/popup'
 import config from '../common/config'
 import request from '../common/request'
 import util from '../common/util'
@@ -48,6 +49,7 @@ export default class Detail extends React.Component {
     })
 
     this.state = {
+      pop: null,
       data: data,
 
       // comments
@@ -307,11 +309,11 @@ export default class Detail extends React.Component {
     let that = this
 
     if (!this.state.content) {
-      return AlertIOS.alert('留言不能为空！')
+      return that._alert('呜呜~', '留言不能为空！')
     }
 
     if (this.state.isSending) {
-      return AlertIOS.alert('正在评论中！')
+      return that._alert('呜呜~', '正在评论中！')
     }
 
     this.setState({
@@ -350,8 +352,25 @@ export default class Detail extends React.Component {
             isSending: false
           })
           that._setModalVisible(false)
-          AlertIOS.alert('留言失败，稍后重试！')
+          that._alert('呜呜~', '留言失败，稍后重试！')
         })
+    })
+  }
+
+  _alert(title, content) {
+    var that = this
+
+    this.setState({
+      pop: {
+        title: title,
+        content: content
+      }
+    }, function() {
+      setTimeout(function() {
+        that.setState({
+          pop: null
+        })
+      }, 1500)
     })
   }
 
@@ -360,6 +379,7 @@ export default class Detail extends React.Component {
 
     return (
       <View style={styles.container}>
+        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backBox} onPress={this._pop.bind(this)}>
             <Icon name='ios-arrow-back' style={styles.backIcon} />

@@ -11,6 +11,7 @@ import Button from 'react-native-button'
 import {CountDownText} from 'react-native-sk-countdown'
 import request from '../common/request'
 import config from '../common/config'
+import Popup from '../common/popup'
 
 import React, {Component} from 'react'
 import {
@@ -28,6 +29,7 @@ export default class Login extends React.Component {
     super(props)
 
     this.state = {
+      pop: null,
       verifyCode: '',
       phoneNumber: '',
       countingDone: false,
@@ -52,7 +54,7 @@ export default class Login extends React.Component {
     const phoneNumber = this.state.phoneNumber
 
     if (!phoneNumber) {
-      return Alert.alert('手机号不能为空！')
+      return that._alert('呜呜~', '手机号不能为空！')
     }
 
     let body = {
@@ -67,12 +69,12 @@ export default class Login extends React.Component {
           that._showVerifyCode()
         }
         else {
-          Alert.alert('获取验证码失败，请检查手机号是否正确')
+          that._alert('呜呜~', '获取验证码失败，请检查手机号是否正确')
         }
       })
       .catch((err) => {
         console.log(err)
-        Alert.alert('获取验证码失败，请检查网络是否良好')
+        that._alert('呜呜~', '获取验证码失败，请检查网络是否良好')
       })
   }
 
@@ -82,7 +84,7 @@ export default class Login extends React.Component {
     const verifyCode = this.state.verifyCode
 
     if (!phoneNumber || !verifyCode) {
-      return Alert.alert('手机号或验证码不能为空！')
+      return that._alert('呜呜~', '手机号或验证码不能为空！')
     }
 
     let body = {
@@ -98,17 +100,35 @@ export default class Login extends React.Component {
           that.props.afterLogin(data.data)
         }
         else {
-          Alert.alert('获取验证码失败，请检查手机号是否正确')
+          that._alert('呜呜~', '获取验证码失败，请检查手机号是否正确')
         }
       })
       .catch((err) => {
-        Alert.alert('获取验证码失败，请检查网络是否良好')
+        that._alert('呜呜~', '获取验证码失败，请检查网络是否良好')
       })
+  }
+
+  _alert(title, content) {
+    var that = this
+
+    this.setState({
+      pop: {
+        title: title,
+        content: content
+      }
+    }, function() {
+      setTimeout(function() {
+        that.setState({
+          pop: null
+        })
+      }, 1500)
+    })
   }
 
   render() {
     return (
       <View style={styles.container}>
+        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.signupBox}>
           <Text style={styles.title}>快速登录</Text>
           <TextInput

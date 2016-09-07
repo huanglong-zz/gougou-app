@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import request from '../common/request'  
 import config from '../common/config'
 import util from '../common/util'
+import Popup from '../common/popup'
 import Detail from './detail'  
 
 import React, {Component} from 'react'
@@ -67,11 +68,11 @@ class Item extends React.Component {
           })
         }
         else {
-          AlertIOS.alert('点赞失败，稍后重试')
+          that.props.alert('失败', '点赞失败，稍后重试')
         }
       })
       .catch(function(err) {
-        AlertIOS.alert('点赞失败，稍后重试')
+        that.props.alert('失败', '点赞失败，稍后重试')
       })
   }
 
@@ -122,6 +123,7 @@ export default class List extends React.Component {
     })
 
     this.state = {
+      pop: null,
       isRefreshing: false,
       isLoadingTail: false,
       dataSource: ds.cloneWithRows([]),
@@ -132,6 +134,7 @@ export default class List extends React.Component {
     return <Item
       key={row._id}
       user={this.state.user}
+      alert={this._alert.bind(this)}
       onSelect={() => this._loadPage(row)}
       row={row} />
   }
@@ -155,6 +158,23 @@ export default class List extends React.Component {
           })
         }
       })
+  }
+
+  _alert(title, content) {
+    var that = this
+
+    this.setState({
+      pop: {
+        title: title,
+        content: content
+      }
+    }, function() {
+      setTimeout(function() {
+        that.setState({
+          pop: null
+        })
+      }, 1500)
+    })
   }
 
   _fetchData(page) {
@@ -231,6 +251,8 @@ export default class List extends React.Component {
         }
       })
       .catch((err) => {
+        that._alert('请求失败，稍后重试')
+
         if (page !== 0) {
           this.setState({
             isLoadingTail: false
@@ -319,6 +341,7 @@ export default class List extends React.Component {
           showsVerticalScrollIndicator={false}
           automaticallyAdjustContentInsets={false}
         />
+        {this.state.pop && <Popup {...this.state.pop} />}
       </View>
     )
   }

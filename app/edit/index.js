@@ -15,6 +15,7 @@ import {CountDownText} from 'react-native-sk-countdown'
 import {AudioRecorder, AudioUtils} from 'react-native-audio'
 import {Circle} from 'react-native-progress'
 import Button from 'react-native-button'
+import Popup from '../common/popup'
 
 import React, {Component} from 'react'
 import {
@@ -54,6 +55,7 @@ const videoOptions = {
 }
 
 const defaultState = {
+  pop: null,
   previewVideo: null,
 
   videoId: null,
@@ -210,14 +212,14 @@ export default class Edit extends React.Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        AlertIOS.alert('请求失败')
+        that._alert('呜呜~', '请求失败')
         console.log(xhr.responseText)
 
         return
       }
 
       if (!xhr.responseText) {
-        AlertIOS.alert('未获得服务器响应')
+        that._alert('呜呜~', '未获得服务器响应')
 
         return
       }
@@ -258,10 +260,10 @@ export default class Edit extends React.Component {
           .catch((err) => {
             console.log(err)
             if (type === 'video') {
-              AlertIOS.alert('视频同步出错，请重新上传！')
+              that._alert('呜呜~', '视频同步出错，请重新上传！')
             }
             else if (type === 'audio') {
-              AlertIOS.alert('音频同步出错，请重新上传！')
+              that._alert('呜呜~', '音频同步出错，请重新上传！')
             }
           })
           .then((data) => {
@@ -279,10 +281,10 @@ export default class Edit extends React.Component {
             }
             else {
               if (type === 'video') {
-                AlertIOS.alert('视频同步出错，请重新上传！')
+                that._alert('呜呜~', '视频同步出错，请重新上传！')
               }
               else if (type === 'audio') {
-                AlertIOS.alert('音频同步出错，请重新上传！')
+                that._alert('呜呜~', '音频同步出错，请重新上传！')
               }
             }
           })
@@ -325,7 +327,7 @@ export default class Edit extends React.Component {
       })
       .catch((err) => {
         console.log(err)
-        AlertIOS.alert('上传出错')
+        that._alert('呜呜~', '上传出错')
       })
         .then((data) => {
           if (data && data.success) {
@@ -462,13 +464,13 @@ export default class Edit extends React.Component {
         .post(creationURL, body)
         .catch((err) => {
           console.log(err)
-          AlertIOS.alert('视频发布失败')
+          that._alert('呜呜~', '视频发布失败')
         })
         .then((data) => {
           console.log(data)
           if (data && data.success) {
             that._closeModal()
-            AlertIOS.alert('视频发布成功')
+            that._alert('汪汪~', '视频发布成功')
             const state = _.clone(defaultState)
 
             that.setState(state)
@@ -477,15 +479,33 @@ export default class Edit extends React.Component {
             this.setState({
               publishing: false
             })
-            AlertIOS.alert('视频发布失败')
+            that._alert('呜呜~', '视频发布失败')
           }
         })
     }
   }
 
+  _alert(title, content) {
+    var that = this
+
+    this.setState({
+      pop: {
+        title: title,
+        content: content
+      }
+    }, function() {
+      setTimeout(function() {
+        that.setState({
+          pop: null
+        })
+      }, 1500)
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.toolbar}>
           <Text style={styles.toolbarTitle}>
             {this.state.previewVideo ? '点击按钮配音' : '理解狗狗，从配音开始'}
