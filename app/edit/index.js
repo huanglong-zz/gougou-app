@@ -326,7 +326,6 @@ export default class Edit extends React.Component {
         cloud: 'qiniu'
       })
       .catch((err) => {
-        console.log(err)
         that._alert('呜呜~', '上传出错')
       })
         .then((data) => {
@@ -463,11 +462,9 @@ export default class Edit extends React.Component {
       request
         .post(creationURL, body)
         .catch((err) => {
-          console.log(err)
-          that._alert('呜呜~', '视频发布失败')
+          that._alert('呜呜~', '视频发布失败，请稍后重试')
         })
         .then((data) => {
-          console.log(data)
           if (data && data.success) {
             that._closeModal()
             that._alert('汪汪~', '视频发布成功')

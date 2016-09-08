@@ -186,7 +186,6 @@ export default class Account extends React.Component {
     xhr.onload = () => {
       if (xhr.status !== 200) {
         that._alert('呜呜~', '上传失败，稍后重试')
-        console.log(xhr.responseText)
 
         return
       }
@@ -203,7 +202,6 @@ export default class Account extends React.Component {
         response = JSON.parse(xhr.response)
       }
       catch (e) {
-        console.log(e)
         that._alert('呜呜~', '返回数据异常，稍后重试')
       }
 
