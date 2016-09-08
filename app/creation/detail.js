@@ -385,8 +385,7 @@ export default class Detail extends React.Component {
             <Icon name='ios-arrow-back' style={styles.backIcon} />
             <Text style={styles.backText}>返回</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOflines={1}>
-            视频详情页</Text>
+          <Text style={styles.headerTitle} numberOflines={1}>{this.state.data.author.nickname} 呜呜呜~</Text>
         </View>
         <View style={styles.videoBox}>
           <Video
@@ -489,7 +488,7 @@ export default class Detail extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#ffffff',
   },
 
   modalContainer: {
@@ -714,7 +713,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingLeft: 2,
+    paddingLeft: 4,
     color: '#333',
     borderWidth: 1,
     borderColor: '#ddd',
