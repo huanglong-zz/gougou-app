@@ -477,6 +477,8 @@ const styles = StyleSheet.create({
     width: width * 0.2,
     height: width * 0.2,
     resizeMode: 'cover',
+    borderColor: '#f9f9f9',
+    borderWidth: 1,
     borderRadius: width * 0.1
   },
 
