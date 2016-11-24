@@ -1,9 +1,11 @@
 package com.imoocapp;
 
 import com.facebook.react.ReactActivity;
-import com.brentvatne.RCTVideo.ReactVideoPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.rnim.rn.audio.ReactNativeAudioPackage;
+import com.brentvatne.RCTVideo.ReactVideoPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
@@ -40,7 +42,8 @@ public class MainActivity extends ReactActivity {
             new MainReactPackage(),
             new ReactVideoPackage(),
             new VectorIconsPackage(),
-            new ImagePickerPackage()
+            new ImagePickerPackage(),
+            new ReactNativeAudioPackage()
         );
     }
 }

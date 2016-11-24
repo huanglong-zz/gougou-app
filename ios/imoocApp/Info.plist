@@ -30,6 +30,12 @@
     <array>
       <string>armv7</string>
     </array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>GouGou App 需要您的同意才能读取多媒体资料</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>GouGou App 需要获取您的录音功能</string>
+    <key>NSCameraUsageDescription</key>
+    <string>GouGou App 需要读取您的摄像头</string>
     <key>UISupportedInterfaceOrientations</key>
     <array>
       <string>UIInterfaceOrientationPortrait</string>

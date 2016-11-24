@@ -736,6 +736,7 @@ const styles = StyleSheet.create({
   uploadContainer: {
     marginTop: 90,
     width: width - 40,
+    height: 210,
     paddingBottom: 10,
     borderWidth: 1,
     borderColor: '#ee735c',
