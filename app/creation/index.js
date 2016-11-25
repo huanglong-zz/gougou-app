@@ -29,7 +29,7 @@ import {
   AsyncStorage,
 } from 'react-native'
 
-const width = Dimensions.get('window').width
+const {height, width} = Dimensions.get('window')
 
 let cachedResults = {
   nextPage: 1,

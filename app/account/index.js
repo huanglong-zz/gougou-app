@@ -30,8 +30,7 @@ import {
   Dimensions
 } from 'react-native'
 
-
-const width = Dimensions.get('window').width
+const {height, width} = Dimensions.get('window')
 
 const photoOptions = {
   title: '选择头像',

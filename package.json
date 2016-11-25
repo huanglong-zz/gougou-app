@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "immutable": "^3.8.1",
     "lodash": "^4.16.4",
     "query-string": "^4.2.3",
     "react": "15.3.2",
@@ -21,16 +22,29 @@
     "react-native-swiper": "^1.5.2",
     "react-native-vector-icons": "^2.1.0",
     "react-native-video": "^0.9.0",
+    "react-redux": "^4.4.6",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
     "sha1": "^1.1.1"
   },
   "jest": {
     "preset": "jest-react-native"
   },
+  "remotedev": {
+    "hostname": "localhost",
+    "port": 5678
+  },
   "devDependencies": {
     "babel-jest": "16.0.0",
     "babel-preset-react-native": "1.9.0",
+    "immutable-devtools": "0.0.7",
     "jest": "16.0.2",
+    "remote-redux-devtools": "^0.5.4",
+    "remote-redux-devtools-on-debugger": "^0.7.0",
     "jest-react-native": "16.0.0",
     "react-test-renderer": "15.3.2"
+  },
+  "devEngines": {
+    "node": ">= 6.x"
   }
 }

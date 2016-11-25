@@ -8,8 +8,7 @@ import {
   View
 } from 'react-native'
 
-var width = Dimensions.get('window').width
-var height = Dimensions.get('window').height
+const {height, width} = Dimensions.get('window')
 
 export default class Popup extends React.Component {
 

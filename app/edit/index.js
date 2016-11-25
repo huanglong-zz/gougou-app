@@ -35,8 +35,7 @@ import {
 
 const request = require('../common/request')
 const config = require('../common/config')
-const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
+const {height, width} = Dimensions.get('window')
 
 
 const videoOptions = {
