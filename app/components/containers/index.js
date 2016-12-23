@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * banruosheng@gmail.com
  * Scott Dong

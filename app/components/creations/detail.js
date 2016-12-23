@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -10,10 +8,10 @@
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
 import Button from 'react-native-button'
-import Popup from '../common/popup'
-import config from '../common/config'
-import request from '../common/request'
-import util from '../common/util'
+import Popup from '../../common/popup'
+import config from '../../common/config'
+import request from '../../common/request'
+import util from '../../common/util'
 
 import React, {Component} from 'react'
 import {

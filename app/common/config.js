@@ -1,6 +1,7 @@
-'use strict'
+const baseUrl = 'http://127.0.0.1:1234/'
+//const baseUrl = 'http://rap.taobao.org/mockjs/4230/'
 
-module.exports = {
+export default {
   header: {
     method: 'POST',
     headers: {
@@ -26,16 +27,14 @@ module.exports = {
     audio: 'https://api.cloudinary.com/v1_1/gougou/raw/upload',
   },
   api: {
-    base: 'http://127.0.0.1:1234/',
-    // base: 'http://rap.taobao.org/mockjs/4230/',
-    creations: 'api/creations',
-    comment: 'api/comments',
-    up: 'api/up',
-    video: 'api/creations/video',
-    audio: 'api/creations/audio',
-    signup: 'api/u/signup',
-    verify: 'api/u/verify',
-    update: 'api/u/update',
-    signature: 'api/signature'
+    creations: baseUrl + 'api/creations',
+    comment: baseUrl + 'api/comments',
+    up: baseUrl + 'api/up',
+    video: baseUrl + 'api/creations/video',
+    audio: baseUrl + 'api/creations/audio',
+    signup: baseUrl + 'api/u/signup',
+    verify: baseUrl + 'api/u/verify',
+    update: baseUrl + 'api/u/update',
+    signature: baseUrl + 'api/signature'
   }
 }

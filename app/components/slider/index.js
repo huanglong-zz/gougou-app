@@ -1,6 +1,3 @@
-'use strict'
-
-
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -25,41 +22,41 @@ const {height, width} = Dimensions.get('window')
 export default class Slider extends React.Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      loop: false,
-      banners: [
-        require('../assets/images/s1.jpg'),
-        require('../assets/images/s2.jpg'),
-        require('../assets/images/s3.jpg')
-      ]
-    }
-  }
-
-  _enter() {
-    this.props.enterSlide()
   }
 
   render() {
+    const {
+      banners,
+      sliderLoop,
+      enterSlide
+    } = this.props
+
+    let innerButton = null
+    const bannersSlider = banners.map((item, i) => {
+      if (i + 1 === banners.length) {
+        let innerButton = (
+          <TouchableHighlight style={styles.btn} onPress={enterSlide()}>
+            <Text style={styles.btnText}>马上体验</Text>
+          </TouchableHighlight>
+        )
+      }
+      
+      return (
+        <View style={styles.slide}>
+          <Image style={styles.image} source={banners[i]}>
+            {innerButton}
+          </Image>
+        </View>
+      )
+    })
+
     return (
       <Swiper
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}
         paginationStyle={styles.pagination}
-        loop={this.state.loop}>
-        <View style={styles.slide}>
-          <Image style={styles.image} source={this.state.banners[0]} />
-        </View>
-        <View style={styles.slide}>
-          <Image style={styles.image} source={this.state.banners[1]} />
-        </View>
-        <View style={styles.slide}>
-          <Image style={styles.image} source={this.state.banners[2]}>
-            <TouchableHighlight style={styles.btn} onPress={this._enter.bind(this)}>
-              <Text style={styles.btnText}>马上体验</Text>
-            </TouchableHighlight>
-          </Image>
-        </View>
+        loop={sliderLoop}>
+        {bannersSlider}
       </Swiper>
     )
   }

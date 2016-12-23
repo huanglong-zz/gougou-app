@@ -1,8 +1,16 @@
-import { combineReducers } from 'redux'
-import counter from './counter'
-import routes from './routes'
+import {combineReducers} from 'redux-immutable'
 
-export default combineReducers({
-  counter,
-  routes,
-})
+//import tabs from './tabs'
+import tabsReducer from './tabs'
+import appReducer from './app'
+import creationReducer from './creation'
+
+const reducers = {
+  app: appReducer,
+  tabs: tabsReducer,
+  creations: creationReducer
+}
+
+export default function createReducer() {
+  return combineReducers(reducers)
+}

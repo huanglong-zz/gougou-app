@@ -1,5 +1,3 @@
-'use strict'
-
 const queryString = require('query-string')
 const _ = require('lodash')
 const config = require('./config')
