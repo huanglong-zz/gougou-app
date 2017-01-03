@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 
 
-const { jumpTo } = navigationActions
+const {jumpTo} = navigationActions
 const {height, width} = Dimensions.get('window')
 
 const styles = StyleSheet.create({
@@ -40,16 +40,12 @@ const styles = StyleSheet.create({
 
 
 class Tabs extends Component {
-  static propTypes = {
-    navigate: PropTypes.func.isRequired
-  }
-
   constructor(props) {
     super(props)
   }
 
   render() {
-    const { dispatch, navigation, routes } = this.props
+    const {dispatch, navigation, routes} = this.props
 
     const children = navigation.routes.map((tab, i) => {
       return (

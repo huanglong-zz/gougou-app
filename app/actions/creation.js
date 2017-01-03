@@ -52,8 +52,10 @@ export let fetchCreations = (page) => {
     return (dispatch, getState) => {
       dispatch({
         type: types.FETCH_CREATIONS_START,
-        isLoadingTail: isLoadingTail,
-        isRefreshing: isRefreshing
+        payload: {
+          isLoadingTail: isLoadingTail,
+          isRefreshing: isRefreshing
+        }
       })
 
       storage.getItem('user')
@@ -102,15 +104,18 @@ export let fetchCreations = (page) => {
 
                 newVideoList = items
                 videoTotal = data.total
-                
+
                 dispatch({
                   type: types.FETCH_CREATIONS_FULFILLED,
-                  videoList: videoList,
-                  nextPage: nextPage,
-                  videoTotal: videoTotal,
-                  page: page,
-                  isLoadingTail: false,
-                  isRefreshing: false
+                  payload: {
+                    page: page,
+                    user: user,
+                    nextPage: nextPage,
+                    videoList: newVideoList,
+                    videoTotal: videoTotal,
+                    isLoadingTail: false,
+                    isRefreshing: false
+                  }
                 })
               }
             }
@@ -118,9 +123,11 @@ export let fetchCreations = (page) => {
           .catch(err => {
             dispatch({
               type: types.FETCH_CREATIONS_REJECTED,
-              isLoadingTail: false,
-              isRefreshing: false,
-              err: err
+              payload: {
+                isLoadingTail: false,
+                isRefreshing: false,
+                err: err
+              }
             })
           })
         })

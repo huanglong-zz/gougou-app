@@ -1,5 +1,6 @@
 import {Platform} from 'react-native'
 import {createStore, applyMiddleware, compose} from 'redux'
+import {fromJS} from 'immutable'
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 import promiseMiddleware from 'redux-promise'
@@ -13,7 +14,7 @@ const middlewares = [
   logger
 ]
 
-function configureStore(initialState) {
+function configureStore(initialState = fromJS({})) {
   const enhancer = applyMiddleware(...middlewares)
   const store = createStore(reducers(), initialState, enhancer)
   

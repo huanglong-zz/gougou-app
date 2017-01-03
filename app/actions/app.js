@@ -11,6 +11,12 @@ import * as types from './actionTypes'
 import config from '../common/config'
 import request from '../common/request'
 import * as storage from '../common/storage'
+import {actions} from 'react-native-navigation-redux-helpers'
+
+const {
+  popRoute,
+  pushRoute
+} = actions
 
 // function fetchSongs(url, playlist) {
 //   return (dispatch, getState) => {
@@ -39,33 +45,51 @@ import * as storage from '../common/storage'
 
 export let enteredSlide = () => {
   return {
-    type: types.EnteredSlide
+    type: types.ENTER_SLIDE
   }
 }
 
 export let appBooted = () => {
   return {
-    type: types.AppBooted
+    type: types.APP_BOOTED
   }
 }
 
 export let afterLogin = () => {
   return {
-    type: types.AfterLogin
+    type: types.USER_LOGINED
   }
 }
 
-export let showAlert = () => {
+export let pop = () => {
   return {
+    type: types.POP
   }
 }
 
+
+export let routeTo = (data, key) => {
+  return (dispatch, getState) => {
+    dispatch(pushRoute({
+      key: data.key,
+      title: data.title,
+      rowData: data.rowData,
+      showBackButton: !!data.showBackButton
+    }, key))
+  }
+}
+
+export let back = () => {
+  return {
+    type: types.BACK
+  }
+}
 
 export let popAlert = (title, content) => {
   return (dispatch, getState) => {
     dispatch({
-      type: types.ShowAlert,
-      pop: {
+      type: types.SHOW_ALERT,
+      payload: {
         title: title,
         content: content
       }
@@ -73,7 +97,7 @@ export let popAlert = (title, content) => {
 
     setTimeout(function() {
       dispatch({
-        type: types.HideAlert
+        type: types.HIDE_ALERT
       })
     }, 1500)
   }
@@ -87,9 +111,11 @@ export let willEnterApp = () => {
         let entered = data[1]
 
         dispatch({
-          type: types.WillEnterApp,
-          user: user,
-          entered: entered
+          type: types.WILL_ENTER_APP,
+          payload: {
+            user: user,
+            entered: entered
+          }
         })
       })
   }
@@ -99,17 +125,19 @@ export let checkUserStatus = () => {
   return (dispatch, getState) => {
     storage.getItem('user')
       .then(function(data) {
-        var type = types.CheckUserStatus
+        var type = types.CHECK_USER_STATUS
 
         if (data && data.accessToken) {
           dispatch({
-            type: types.UserLogined,
-            user: data
+            type: types.USER_LOGINED,
+            payload: {
+              user: data
+            }
           })
         }
         else {
           dispatch({
-            type: types.UserLogouted
+            type: types.USER_LOGOUT
           })
         }
       })

@@ -1,14 +1,16 @@
 import {combineReducers} from 'redux-immutable'
 
 //import tabs from './tabs'
-import tabsReducer from './tabs'
-import appReducer from './app'
-import creationReducer from './creation'
+import tabs from './tabs'
+import app from './app'
+import creations from './creation'
+import globalNav from './globalNav'
 
 const reducers = {
-  app: appReducer,
-  tabs: tabsReducer,
-  creations: creationReducer
+  globalNav: globalNav,
+  tabs,
+  app,
+  creations,
 }
 
 export default function createReducer() {

@@ -5,11 +5,11 @@ import {NavigationExperimental, Navigator} from 'react-native'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
-import List from './creation'
-import Edit from './edit'
-import Account from './account'
-import Tabs from '../components/tabs'
-import storage from '../common/storage'
+import AppTabs from './appTabs'
+import Login from './login'
+import Slider from '../components/slider'
+import Detail from '../components/creations/detail'
+import BootPage from '../components/boot'
 import * as appActions from '../actions/app'
 
 import {
@@ -29,12 +29,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  bootPage: {
-    width: width,
-    height: height,
-    backgroundColor: '#fff',
-    justifyContent: 'center'
   }
 })
 
@@ -47,28 +41,38 @@ class App extends Component {
 
   constructor(props) {
     super(props)
+
+    this._renderHeader = this._renderHeader.bind(this)
+    this._renderScene = this._renderScene.bind(this)
   }
 
+  _renderScene = props => {
+    if (props.scene.key === 'scene_detail') {
+      return <Detail rowData={props.scene.rowData} {...this.props} />
+    }
 
-  handleNavigation = action => {
-    this.props.dispatch(action)
-  }
+    if (props.scene.key === 'scene_tabs') {
+      return (
+        <View style={{flex: 1}}>
+          <AppTabs {...this.props} />
+        </View>
+      )
+    }
 
-  renderScene = props => {
-    switch (props.scene.key) {
-      case 'scene_list':
-        return <List {...this.props} />
-      case 'scene_edit':
-        return <Edit {...this.props} />
-      case 'scene_account':
-        return <Account {...this.props} />
-      default:
-        return null
+    if (props.scene.key === 'scene_new') {
+      return (
+        <View style={{flex: 1}}>
+        </View>
+      )
     }
   }
 
   componentWillMount() {
     this.props.willEnterApp()
+  }
+
+  _renderHeader = props => {
+    return null
   }
 
   render() {
@@ -77,49 +81,31 @@ class App extends Component {
       entered,
       logined,
       afterLogin,
+      pop,
       enteredSlide,
       navigation
     } = this.props
 
     if (!booted) {
-      return (
-        <View style={styles.bootPage}>
-          <ActivityIndicator color='#ee735c' />
-        </View>
-      )
+      return <BootPage {...this.props} />
     }
 
     if (!entered) {
-      return <Slider enterSlide={enteredSlide()} />
+      return <Slider enterSlide={enteredSlide()} {...this.props} />
     }
 
     if (!logined) {
-      return <Login afterLogin={afterLogin()} />
+      return <Login afterLogin={afterLogin()} {...this.props} />
     }
 
     return (
-      <View style={{flex: 1}}>
-        <CardStack
-          direction="horizontal"
-          navigationState={this.props.navigation}
-          renderScene={this.renderScene.bind(this)}
-          configureScene={(route) => {
-            const InstantTransition = {
-              gestures: null,
-              defaultTransitionVelocity: null,
-              springFriction: null,
-              springTension: 1000,
-              animationInterpolators: {
-                into: r => r.opacity = 1,
-                out: r => r.opacity = 1,
-              }
-            }
-            return InstantTransition
-            //return Navigator.SceneConfigs.FadeAndroid
-          }}
-        />
-        <Tabs {...this.props} navigate={this.handleNavigation} />
-      </View>
+      <CardStack
+        direction="horizontal"
+        onNavigate={() => {}}
+        navigationState={this.props.navigation}
+        renderScene={this._renderScene}
+        renderHeader={this._renderHeader}
+      />
     )
   }
 }
@@ -130,7 +116,7 @@ function mapStateToProps(state) {
     booted: state.get('app').booted,
     entered: state.get('app').entered,
     logined: state.get('app').logined,
-    navigation: state.get('tabs')
+    navigation: state.get('globalNav')
   }
 }
 

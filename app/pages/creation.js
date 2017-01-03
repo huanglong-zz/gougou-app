@@ -5,29 +5,37 @@ import {bindActionCreators} from 'redux'
 import CreationList from '../components/creations/list'
 import * as creationActions from '../actions/creation'
 
+import { actions } from 'react-native-navigation-redux-helpers'
+
+const {
+  popRoute,
+  pushRoute
+} = actions
+
 class creationContainer extends Component {
   constructor(props) {
     super(props)
+
+    this._onLoadItem = this._onLoadItem.bind(this)
   }
 
   render() {
     return (
-      <CreationList {...this.props} />
+      <CreationList onLoadItem={this._onLoadItem} {...this.props} />
     )
+  }
+
+  _onLoadItem(row) {
+    this.props.routeTo({
+      key: 'detail',
+      title: 'Detail Page',
+      showBackButton: true,
+      rowData: row
+    }, 'global')
   }
 
   componentWillMount() {
     this.props.fetchCreations(1)
-  }
-
-  _loadPage(row) {
-    this.props.navigator.push({
-      name: 'detail',
-      component: Detail,
-      params: {
-        data: row
-      }
-    })
   }
 }
 
@@ -36,48 +44,20 @@ function mapStateToProps(state) {
     isRefreshing,
     isLoadingTail,
     videoList,
-    nextVideoList,
     nextPage,
     videoTotal,
     page,
     user
   } = state.get('creations')
 
-  if (nextVideoList) {
-    nextVideoList.map(function(item) {
-      const votes = item.votes || []
-
-      if (votes.indexOf(user._id) > -1) {
-        item.voted = true
-      }
-      else {
-        item.voted = false
-      }
-
-      return item
-    })
-  }
-
-  let items = videoList.slice()
-  let newVideoList
-  let newPage = nextPage
-
-  if (page !== 0) {
-    newVideoList = items.concat(nextVideoList)
-    newPage += 1
-  }
-  else {
-    newVideoList = nextVideoList.concat(items)
-  }
-
   return {
     isRefreshing: false,
     isLoadingTail: false,
     videoTotal: videoTotal,
-    nextPage: newPage,
+    nextPage: nextPage,
     page: page,
     user: user,
-    videoList: []
+    videoList: videoList
   }
 }
 

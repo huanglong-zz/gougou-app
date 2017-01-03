@@ -14,7 +14,7 @@ const initialState = {
     {
       key: 'edit',
       icon: 'ios-recording',
-      title: 'Notifications'
+      title: 'Edit'
     },
     {
       key: 'account',

@@ -15,37 +15,37 @@ const initialState = {
 
 export default rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.EnteredSlide:
+    case types.ENTER_SLIDE:
       return {
         ...state,
         entered: true
       }
-    case types.AfterLogin:
+    case types.AFTER_LOGIN:
       return {
         ...state,
-        user: action.user,
+        user: action.payload.user,
         logined: true,
       }
-    case types.AppBooted:
+    case types.APP_BOOTED:
       return {
         ...state,
         booted: true,
       }
-    case types.UserLogined:
+    case types.USER_LOGINED:
       return {
         ...state,
         logined: true,
-        user: action.user
+        user: action.payload.user
       }
-    case types.UserLogouted:
+    case types.USER_LOGOUT:
       return {
         ...state,
         logined: false,
         user: null
       }
-    case types.WillEnterApp:
-      let userData = action.user
-      let entered = action.entered
+    case types.WILL_ENTER_APP:
+      let userData = action.payload.user
+      let entered = action.payload.entered
       let newState = {booted: true}
 
       if (userData && userData[1]) {

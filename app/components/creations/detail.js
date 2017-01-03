@@ -37,18 +37,21 @@ let cachedResults = {
   total: 0
 }
 
-export default class Detail extends React.Component {
+class Detail extends React.Component {
   constructor(props) {
     super(props)
 
-    const data = this.props.data
+    console.log('props from list')
+    console.log(props)
+    console.log('props from list')
+    //const data = this.props.rowData
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
 
     this.state = {
       pop: null,
-      data: data,
+      //data: data,
 
       // comments
       dataSource: ds.cloneWithRows([]),
@@ -373,7 +376,9 @@ export default class Detail extends React.Component {
   }
 
   render() {
-    const data = this.props.data
+    const data = this.props.rowData
+    console.log(data)
+    console.log('data in detail')
 
     return (
       <View style={styles.container}>
@@ -383,7 +388,7 @@ export default class Detail extends React.Component {
             <Icon name='ios-arrow-back' style={styles.backIcon} />
             <Text style={styles.backText}>返回</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOflines={1}>{this.state.data.author.nickname} 呜呜呜~</Text>
+          <Text style={styles.headerTitle} numberOflines={1}>{data.author.nickname} 呜呜呜~</Text>
         </View>
         <View style={styles.videoBox}>
           <Video
@@ -482,6 +487,14 @@ export default class Detail extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    rowData: state.rowData,
+  }
+}
+
+export default Detail
 
 const styles = StyleSheet.create({
   container: {

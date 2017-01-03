@@ -17,9 +17,9 @@ let creationReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_CREATIONS_STAET:
       return Object.assign({}, state, {
-        isLoadMore: action.isLoadMore,
-        isRefreshing: action.isRefreshing,
-        isLoading: action.isLoading,
+        isLoadMore: action.payload.isLoadMore,
+        isRefreshing: action.payload.isRefreshing,
+        isLoading: action.payload.isLoading,
       })
     case types.FETCH_CREATIONS_REJECTED:
       return {
@@ -31,11 +31,11 @@ let creationReducer = (state = initialState, action) => {
     case types.FETCH_CREATIONS_FULFILLED:
       return {
         ...state,
-        videoList: action.videoList,
-        videoTotal: action.videoTotal,
-        nextPage: action.nextPage,
-        page: action.page,
-        isLoadingTail: action.isLoadingTail,
+        videoList: action.payload.videoList,
+        videoTotal: action.payload.videoTotal,
+        nextPage: action.payload.nextPage,
+        page: action.payload.page,
+        isLoadingTail: action.payload.isLoadingTail,
         isLoading: false,
         isRefreshing: false,
       }

@@ -1,4 +1,4 @@
-const config = require('./config')
+import config from './config'
 
 exports.thumb = function(key) {
   if (key.indexOf('http') > -1) return key

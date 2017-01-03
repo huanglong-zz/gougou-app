@@ -5,7 +5,9 @@
  */
 
 // ES5
+import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
+
 import request from '../../common/request'  
 import config from '../../common/config'
 import util from '../../common/util'
@@ -13,8 +15,6 @@ import Popup from '../../common/popup'
 import Detail from './detail'
 import Item from './item'
 
-
-import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
@@ -31,14 +31,11 @@ import {
 
 const {height, width} = Dimensions.get('window')
 
-let cachedResults = {
-  nextPage: 1,
-  items: [],
-  total: 0
-}
-
-
 export default class List extends React.Component {
+  static propTypes = {
+    onLoadItem: React.PropTypes.func.isRequired
+  }
+
   constructor(props) {
     super(props)
   }
@@ -46,9 +43,9 @@ export default class List extends React.Component {
   _renderRow(row) {
     return <Item
       key={row._id}
-      user={this.state.user}
+      user={this.props.user}
       alert={this._alert.bind(this)}
-      onSelect={() => this._loadPage(row)}
+      onSelect={() => this.props.onLoadItem(row)}
       row={row} />
   }
 
@@ -66,7 +63,13 @@ export default class List extends React.Component {
   }
 
   _renderFooter() {
-    if (!this._hasMore() && cachedResults.total !== 0) {
+    const {
+      videoTotal,
+      isLoadingTail,
+      fetchCreations
+    } = this.props
+
+    if (!this._hasMore() && videoTotal !== 0) {
       return (
         <View style={styles.loadingMore}>
           <Text style={styles.loadingText}>没有更多了</Text>
@@ -74,7 +77,7 @@ export default class List extends React.Component {
       )
     }
 
-    if (!this.state.isLoadingTail) {
+    if (!isLoadingTail) {
       return <ActivityIndicator style={styles.loadingMore} />
     }
 
@@ -133,7 +136,6 @@ export default class List extends React.Component {
           showsVerticalScrollIndicator={false}
           automaticallyAdjustContentInsets={false}
         />
-        {this.state.pop && <Popup {...this.state.pop} />}
       </View>
     )
   }
