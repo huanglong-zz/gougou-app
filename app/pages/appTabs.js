@@ -18,11 +18,13 @@ import Account from './account'
 import Tabs from '../components/tabs'
 import Popup from '../components/popup'
 import storage from '../common/storage'
+import Detail from '../components/creations/detail'
 import * as appActions from '../actions/app'
 
 import {
   StyleSheet,
   View,
+  Text,
   AsyncStorage,
   Dimensions,
   ActivityIndicator,
@@ -49,30 +51,6 @@ const styles = StyleSheet.create({
   }
 })
 
-class Header extends Component {
-  render() {
-    return (
-      <NavigationHeader
-        {...this.props}
-        renderTitleComponent={this._renderTitleComponent}
-        onNavigateBack={this._back}
-      />
-    )
-  }
-
-  _back = () => {
-    this.props.pop()
-  }
-
-  _renderTitleComponent= (props) => {
-    return (
-      <NavigationHeader.Title>
-        {props.scene.route.key}
-      </NavigationHeader.Title>
-    );
-  }
-}
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -82,15 +60,19 @@ class App extends Component {
   }
 
   _renderScene = props => {
-    switch (props.scene.key) {
-      case 'scene_list':
+    console.log('tabs props')
+    console.log(props.scene.route.key)
+    switch (props.scene.route.key) {
+      case 'list':
         return <List {...this.props} />
-      case 'scene_edit':
+      case 'edit':
         return <Edit {...this.props} />
-      case 'scene_account':
+      case 'account':
         return <Account {...this.props} />
+      case 'detail':
+        return <Detail rowData={props.scene.route.rowData} {...this.props} />
       default:
-        return null
+        return <Text>Hi There!</Text>
     }
   }
 
@@ -142,7 +124,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(appActions, dispatch)
+  return {
+    dispatch
+  }
 }
 
 export default connect(mapStateToProps)(App)

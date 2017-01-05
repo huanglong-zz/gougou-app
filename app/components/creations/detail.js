@@ -230,34 +230,6 @@ class Detail extends React.Component {
     this._fetchData(page)
   }
 
-  _renderFooter() {
-    if (!this._hasMore() && cachedResults.total !== 0) {
-      return (
-        <View style={styles.loadingMore}>
-          <Text style={styles.loadingText}>没有更多了</Text>
-        </View>
-      )
-    }
-
-    if (!this.state.isLoadingTail) {
-      return <View style={styles.loadingMore} />
-    }
-
-    return <ActivityIndicator style={styles.loadingMore} />
-  }
-
-  _renderRow(row) {
-    return (
-      <View key={row._id} style={styles.replyBox}>
-        <Image style={styles.replyAvatar} source={{uri: util.avatar(row.replyBy.avatar)}} />
-        <View style={styles.reply}>
-          <Text style={styles.replyNickname}>{row.replyBy.nickname}</Text>
-          <Text style={styles.replyContent}>{row.content}</Text>
-        </View>
-      </View>
-    )
-  }
-
   _focus() {
     this._setModalVisible(true)
   }
@@ -275,36 +247,7 @@ class Detail extends React.Component {
       modalVisible: isVisible
     })
   }
-
-  _renderHeader() {
-    const data = this.state.data
-
-    return (
-      <View style={styles.listHeader}>
-        <View style={styles.infoBox}>
-          <Image style={styles.avatar} source={{uri: util.avatar(data.author.avatar)}} />
-          <View style={styles.descBox}>
-            <Text style={styles.nickname}>{data.author.nickname}</Text>
-            <Text style={styles.title}>{data.title}</Text>
-          </View>
-        </View>
-        <View style={styles.commentBox}>
-          <View style={styles.comment}>
-            <TextInput
-              placeholder='敢不敢评论一个...'
-              style={styles.content}
-              multiline={true}
-              onFocus={this._focus.bind(this)}
-            />
-          </View>
-        </View>
-
-        <View style={styles.commentArea}>
-          <Text style={styles.commentTitle}>精彩评论</Text>
-        </View>
-      </View>
-    )
-  }
+  
 
   _submit() {
     let that = this
@@ -377,8 +320,6 @@ class Detail extends React.Component {
 
   render() {
     const data = this.props.rowData
-    console.log(data)
-    console.log('data in detail')
 
     return (
       <View style={styles.container}>
@@ -444,53 +385,11 @@ class Detail extends React.Component {
           </View>
         </View>
 
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow.bind(this)}
-          renderHeader={this._renderHeader.bind(this)}
-          renderFooter={this._renderFooter.bind(this)}
-          onEndReached={this._fetchMoreData.bind(this)}
-          onEndReachedThreshold={20}
-          enableEmptySections={true}
-          showsVerticalScrollIndicator={false}
-          automaticallyAdjustContentInsets={false}
-        />
+        <CommentList {...this.props} focus={this.focus} />
 
-        <Modal
-          visible={this.state.modalVisible}>
-          <View style={styles.modalContainer}>
-            <Icon
-              onPress={this._closeModal.bind(this)}
-              name='ios-close-outline'
-              style={styles.closeIcon} />
-
-            <View style={styles.commentBox}>
-              <View style={styles.comment}>
-                <TextInput
-                  placeholder='敢不敢评论一个...'
-                  style={styles.content}
-                  multiline={true}
-                  defaultValue={this.state.content}
-                  onChangeText={(text) => {
-                    this.setState({
-                      content: text
-                    })
-                  }}
-                />
-              </View>
-            </View>
-
-            <Button style={styles.submitBtn} onPress={this._submit.bind(this)}>评论</Button>
-          </View>
-        </Modal>
+        <CommentModal {...this.props} />
       </View>
     )
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    rowData: state.rowData,
   }
 }
 

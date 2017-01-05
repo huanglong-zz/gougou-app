@@ -39,6 +39,27 @@ let creationReducer = (state = initialState, action) => {
         isLoading: false,
         isRefreshing: false,
       }
+    case types.FETCH_COMMENTS_STAET:
+      return Object.assign({}, state, {
+        isLoadMore: action.payload.isLoadMore,
+        isLoading: action.payload.isLoading,
+      })
+    case types.FETCH_COMMENTS_REJECTED:
+      return {
+        ...state,
+        videoList: [],
+        isLoading: false,
+      }
+    case types.FETCH_COMMENTS_FULFILLED:
+      return {
+        ...state,
+        commentList: action.payload.commentList,
+        commentTotal: action.payload.commentTotal,
+        nextPage: action.payload.nextPage,
+        page: action.payload.page,
+        isLoadingTail: action.payload.isLoadingTail,
+        isLoading: false,
+      }
     default:
       return state
   }

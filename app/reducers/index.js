@@ -4,6 +4,8 @@ import {combineReducers} from 'redux-immutable'
 import tabs from './tabs'
 import app from './app'
 import creations from './creation'
+import comments from './comment'
+import list from './list'
 import globalNav from './globalNav'
 
 const reducers = {
@@ -11,6 +13,8 @@ const reducers = {
   tabs,
   app,
   creations,
+  comments,
+  list,
 }
 
 export default function createReducer() {

@@ -47,11 +47,16 @@ class App extends Component {
   }
 
   _renderScene = props => {
-    if (props.scene.key === 'scene_detail') {
-      return <Detail rowData={props.scene.rowData} {...this.props} />
+    console.log('app props: ')
+    console.log(props)
+
+    
+    if (props.scene.route.key === 'detail') {
+      return <Detail rowData={props.scene.route.rowData} {...this.props} />
     }
 
-    if (props.scene.key === 'scene_tabs') {
+
+    if (props.scene.route.key === 'tabs') {
       return (
         <View style={{flex: 1}}>
           <AppTabs {...this.props} />
@@ -59,7 +64,7 @@ class App extends Component {
       )
     }
 
-    if (props.scene.key === 'scene_new') {
+    if (props.scene.route.key === 'new') {
       return (
         <View style={{flex: 1}}>
         </View>

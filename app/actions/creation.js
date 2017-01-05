@@ -11,6 +11,12 @@ import * as types from './actionTypes'
 import config from '../common/config'
 import request from '../common/request'
 import * as storage from '../common/storage'
+import {actions} from 'react-native-navigation-redux-helpers'
+
+const {
+  popRoute,
+  pushRoute
+} = actions
 
 // function fetchSongs(url, playlist) {
 //   return (dispatch, getState) => {
@@ -36,6 +42,17 @@ import * as storage from '../common/storage'
 //     }
 //   }
 // }
+
+export let routeTo = (data, key) => {
+  return (dispatch, getState) => {
+    dispatch(pushRoute({
+      key: data.key,
+      title: data.title,
+      rowData: data.rowData,
+      showBackButton: !!data.showBackButton
+    }, key))
+  }
+}
 
 export let fetchCreations = (page) => {
     let url = config.api.creations
@@ -133,6 +150,7 @@ export let fetchCreations = (page) => {
         })
     }
 }
+
 
 /**
  *
