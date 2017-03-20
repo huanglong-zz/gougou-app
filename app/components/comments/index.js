@@ -58,7 +58,9 @@ class Comment extends React.Component {
   }
 
   _focus() {
-    this.props.showModal()
+    this.props.navigation.navigate('CommentModal', {
+    })
+    // this.props.showModal()
   }
 
   _renderFooter() {

@@ -56,7 +56,7 @@ class CommentModal extends React.Component {
   }
 
   _close() {
-    this.props.hideModal()
+    this.props.navigation.goBack()
   }
 
   componentWillReceiveProps(a, b) {

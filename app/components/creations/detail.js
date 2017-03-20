@@ -46,9 +46,6 @@ class Detail extends React.Component {
   constructor(props) {
     super(props)
 
-    console.log('props')
-    console.log(props.params)
-    console.log('props')
     const data = this.props.rowData
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
@@ -82,10 +79,6 @@ class Detail extends React.Component {
       resizeMode: 'contain',
       repeat: false
     }
-  }
-
-  _pop() {
-    this.props.backTo('tabs')
   }
 
   _onLoadStart() {
@@ -166,13 +159,6 @@ class Detail extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.pop && <Popup {...this.state.pop} />}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBox} onPress={this._pop.bind(this)}>
-            <Icon name='ios-arrow-back' style={styles.backIcon} />
-            <Text style={styles.backText}>返回</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOflines={1}>{data.author.nickname} 呜呜呜~</Text>
-        </View>
         <View style={styles.videoBox}>
           <Video
             ref='videoPlayer'

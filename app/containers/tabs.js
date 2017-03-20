@@ -1,32 +1,49 @@
 import React, {Component, PropTypes} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
+
 import List from './creation'
-import Detail from '../components/creations/detail'
 import Edit from './edit'
 import Account from './account'
+import Detail from '../components/creations/detail'
+import CommentModal from '../components/comments/modal'
 
 import {
   TabNavigator,
   StackNavigator,
 } from 'react-navigation'
 
+const DetailScreen = ({ navigation }) => (
+  <Detail
+    rowData={navigation.state.params.rowData}
+    navigation={navigation}
+  />
+)
+
+const CommentModalScreen = ({ navigation }) => (
+  <CommentModal
+    rowData={navigation.state.params.rowData}
+    navigation={navigation}
+  />
+)
+
+const header = {
+  style: {
+    height: 52,
+    paddingTop: 14,
+    backgroundColor: '#ee735c'
+  },
+  tintColor: '#fff'
+}
+
 const ListTab = StackNavigator({
   List: {
     screen: List,
     navigationOptions: {
-      title: '狗狗有话说',
-      header: {
-        style: {
-          height: 52,
-          paddingTop: 14,
-          backgroundColor: '#ee735c'
-        },
-        tintColor: '#fff'
-      },
+      title: '狗狗说',
+      header: header,
       tabBar: ({ state, setParams }) => ({
         label: '合集',
         visible: true,
-        backTitle: null,
         icon: ({ tintColor, focused }) => {
           return (
             <Icon
@@ -40,17 +57,23 @@ const ListTab = StackNavigator({
   },
   Detail: {
     path: 'creations/:cid',
-    screen: Detail,
+    screen: DetailScreen,
     navigationOptions: {
-      title: ({state}) => `${state.params.rowData.author.name} 的创意`,
+      title: ({state}) => `${state.params.rowData.author.nickname} 的创意`,
+      header: header,
       tabBar: ({ state, setParams }) => ({
-        visible: false,
-        icon: ({ tintColor, focused }) => {
-          return (<Icon
-            name={focused ? 'ios-videocam' : 'ios-videocam-outline'}
-            size={28} />
-          )
-        }
+        visible: false
+      }),
+    }
+  },
+  CommentModal: {
+    path: 'creations/:cid',
+    screen: CommentModalScreen,
+    navigationOptions: {
+      title: '评论',
+      header: header,
+      tabBar: ({ state, setParams }) => ({
+        visible: false
       }),
     }
   },

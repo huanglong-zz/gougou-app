@@ -20,17 +20,11 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   ListView,
   Image,
-  Dimensions,
   RefreshControl,
   ActivityIndicator,
-  AlertIOS,
-  AsyncStorage,
 } from 'react-native'
-
-const {height, width} = Dimensions.get('window')
 
 class List extends React.Component {
   static propTypes = {
@@ -144,19 +138,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
-  header: {
-    paddingTop: 25,
-    paddingBottom: 12,
-    backgroundColor: '#ee735c'
-  },
-  
-  headerTitle: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-    fontWeight: '600'
-  },
-
   loadingMore: {
     marginVertical: 20
   },
@@ -168,14 +149,8 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(state) {
-  console.log('creation state')
-  console.log(state.get('creations'))
-  console.log('creation state')
   return {
-    booted: state.get('app').booted,
-    entered: state.get('app').entered,
-    logined: state.get('app').logined,
-    banners: state.get('app').banners
+    
   }
 }
 
