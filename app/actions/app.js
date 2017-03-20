@@ -86,8 +86,6 @@ export let checkUserStatus = () => {
       .then(function (data) {
         var type = types.CHECK_USER_STATUS
 
-        console.log('data in actions app')
-        console.log(data)
         if (data && data.accessToken) {
           dispatch({
             type: types.USER_LOGINED,

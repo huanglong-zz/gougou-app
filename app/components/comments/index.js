@@ -5,9 +5,9 @@
  */
 
 // ES5
-import Icon from 'react-native-vector-icons/Ionicons'
 import * as commentActions from '../../actions/comment'
 import * as util from '../../common/util'
+import Button from 'react-native-button'
 
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -16,159 +16,85 @@ import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
+  Modal,
   View,
   TextInput,
-  ListView,
+  ActivityIndicator,
   Image,
   Dimensions,
 } from 'react-native'
 
 const {height, width} = Dimensions.get('window')
 
-class Comment extends React.Component {
+class CommentModal extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      content: '',
+      isSending: false
+    }
   }
 
-  componentDidMount() {
-    this.props.fetchComments(1)
+
+  componentWillReceiveProps(props) {
+    if (props.commentDone) {
+      this.props.navigation.goBack()
+    }
   }
 
-  _fetchMoreData() {
-    if (!this._hasMore() || this.props.isLoadingTail) {
-      this.setState({
-        isLoadingTail: false
-      })
-
-      return
+  _submit() {
+    if (!this.state.content) {
+      return this.props.popAlert('呜呜~', '留言不能为空！')
     }
 
-    const page = this.props.nextPage
+    if (this.state.isSending) {
+      return this.props.popAlert('呜呜~', '正在评论中！')
+    }
 
-    this.props.fetchComments(page)
-  }
-
-  _hasMore() {
-    const {
-      commentTotal,
-      commentList
-    } = this.props
-
-    return commentList.length !== commentTotal
-  }
-
-  _focus() {
-    this.props.navigation.navigate('CommentModal', {
+    this.setState({
+      isSending: true
     })
-    // this.props.showModal()
+
+    this.props.sendComment({
+      creation: this.props.navigation.state.params.rowData._id,
+      content: this.state.content
+    })
   }
 
-  _renderFooter() {
-    if (!this._hasMore() && this.props.commentTotal !== 0) {
-      return (
-        <View style={styles.loadingMore}>
-          <Text style={styles.loadingText}>没有更多了</Text>
-        </View>
-      )
-    }
-
-    if (!this.props.isLoadingTail) {
-      return <View style={styles.loadingMore} />
-    }
-
-    return <ActivityIndicator style={styles.loadingMore} />
-  }
-
-  _renderRow(row) {
+  render() {
     return (
-      <View key={row._id} style={styles.replyBox}>
-        <Image style={styles.replyAvatar} source={{uri: util.avatar(row.replyBy.avatar)}} />
-        <View style={styles.reply}>
-          <Text style={styles.replyNickname}>{row.replyBy.nickname}</Text>
-          <Text style={styles.replyContent}>{row.content}</Text>
-        </View>
-      </View>
-    )
-  }
-
-  _renderHeader() {
-    const data = this.props.rowData
-
-    return (
-      <View style={styles.listHeader}>
-        <View style={styles.infoBox}>
-          <Image style={styles.avatar} source={{uri: util.avatar(data.author.avatar)}} />
-          <View style={styles.descBox}>
-            <Text style={styles.nickname}>{data.author.nickname}</Text>
-            <Text style={styles.title}>{data.title}</Text>
-          </View>
-        </View>
+      <View style={styles.commentContainer}>
+        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.commentBox}>
           <View style={styles.comment}>
             <TextInput
               placeholder='敢不敢评论一个...'
               style={styles.content}
               multiline={true}
-              onFocus={this._focus.bind(this)}
+              defaultValue={this.state.content}
+              onChangeText={(text) => {
+                this.setState({
+                  content: text
+                })
+              }}
             />
           </View>
         </View>
 
-        <View style={styles.commentArea}>
-          <Text style={styles.commentTitle}>精彩评论</Text>
-        </View>
+        {this.state.isSending && <ActivityIndicator color='#ee735c' />}
+
+        <Button style={styles.submitBtn} onPress={this._submit.bind(this)}>评论</Button>
       </View>
-    )
-  }
-
-  render() {
-    const {
-      commentList,
-      fetchComments,
-      isRefreshing,
-      nextPage,
-      onRefresh,
-    } = this.props
-
-    let ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    })
-
-    let dataSource = ds.cloneWithRows(commentList)
-
-    return (
-      <ListView
-        dataSource={dataSource}
-        renderRow={this._renderRow.bind(this)}
-        renderHeader={this._renderHeader.bind(this)}
-        renderFooter={this._renderFooter.bind(this)}
-        onEndReached={this._fetchMoreData.bind(this)}
-        onEndReachedThreshold={20}
-        enableEmptySections={true}
-        showsVerticalScrollIndicator={false}
-        automaticallyAdjustContentInsets={false}
-      />
     )
   }
 }
 
 function mapStateToProps(state) {
-  const {
-    isLoadingTail,
-    commentList,
-    nextPage,
-    commentTotal,
-    page,
-    user
-  } = state.get('comments')
-
+  console.log('1', state.get('comments').commentDone)
+  console.log('2', state.get('commentDone'))
   return {
-    user: user,
-    page: page,
-    nextPage: nextPage,
-    isLoadingTail: isLoadingTail,
-    commentTotal: commentTotal,
-    commentList: commentList
+    commentDone: state.get('comments').commentDone
   }
 }
 
@@ -176,24 +102,13 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(commentActions, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Comment)
+export default connect(mapStateToProps, mapDispatchToProps)(CommentModal)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
-
-  modalContainer: {
+  commentContainer: {
     flex: 1,
     paddingTop: 45,
     backgroundColor: '#fff'
-  },
-
-  closeIcon: {
-    alignSelf: 'center',
-    fontSize: 30,
-    color: '#ee753c'
   },
 
   submitBtn: {
@@ -207,114 +122,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontSize: 18,
     color: '#ee753c'
-  },
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: width,
-    height: 64,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderBottomWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
-    backgroundColor: '#fff'
-  },
-
-  backBox: {
-    position: 'absolute',
-    left: 12,
-    top: 32,
-    width: 50,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-
-  headerTitle: {
-    width: width - 120,
-    textAlign: 'center'
-  },
-
-  backIcon: {
-    color: '#999',
-    fontSize: 20,
-    marginRight: 5
-  },
-
-  backText: {
-    color: '#999'
-  },
-
-  infoBox: {
-    width: width,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10
-  },
-
-  avatar: {
-    width: 60,
-    height: 60,
-    marginRight: 10,
-    marginLeft: 10,
-    borderRadius: 30
-  },
-
-  descBox: {
-    flex: 1
-  },
-
-  nickname: {
-    fontSize: 18
-  },
-
-  title: {
-    marginTop: 8,
-    fontSize: 16,
-    color: '#666'
-  },
-
-  replyBox: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginTop: 10
-  },
-
-  replyAvatar: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
-    marginLeft: 10,
-    borderRadius: 20
-  },
-
-  replyNickname: {
-    color: '#666'
-  },
-
-  replyContent: {
-    marginTop: 4,
-    color: '#666'
-  },
-
-  reply: {
-    flex: 1
-  },
-
-  loadingMore: {
-    marginVertical: 20
-  },
-
-  loadingText: {
-    color: '#777',
-    textAlign: 'center'
-  },
-
-  listHeader: {
-    width: width,
-    marginTop: 10
   },
 
   commentBox: {
@@ -332,14 +139,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontSize: 14,
     height: 80
-  },
-
-  commentArea: {
-    width: width,
-    paddingBottom: 6,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee'
   }
 })

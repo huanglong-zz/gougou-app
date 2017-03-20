@@ -9,33 +9,24 @@ import * as creationActions from '../actions/creation'
 class creationContainer extends Component {
   constructor(props) {
     super(props)
-
-    this._onLoadItem = this._onLoadItem.bind(this)
-    this._backTo = this._backTo.bind(this)
-  }
-
-  render() {
-    return (
-      <CreationList
-        backTo={this._backTo}
-        onLoadItem={this._onLoadItem}
-        {...this.props} />
-    )
   }
 
   _onLoadItem(row) {
-    console.log(row)
     this.props.navigation.navigate('Detail', {
       rowData: row
     })
   }
 
-  _backTo(key) {
-    this.props.pop(key)
-  }
-
   componentWillMount() {
     this.props.fetchCreations(1)
+  }
+  
+  render() {
+    return (
+      <CreationList
+        onLoadItem={this._onLoadItem.bind(this)}
+        {...this.props} />
+    )
   }
 }
 

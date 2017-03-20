@@ -7,14 +7,11 @@
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
 import Popup from '../../common/popup'
-import * as detailActions from '../../actions/detail'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
-import CommentList from '../comments/index'
-import CommentModal from '../comments/modal'
-import config from '../../common/config'
-import request from '../../common/request'
+import * as detailActions from '../../actions/detail'
+import CommentList from '../comments/list'
 import util from '../../common/util'
 
 import React, {Component} from 'react'
@@ -144,15 +141,6 @@ class Detail extends React.Component {
     }
   }
 
-  _showModal() {
-    console.log('show modal')
-    this.props.showModal()
-  }
-
-  _hideModal() {
-    this.props.hideModal()
-  }
-
   render() {
     const data = this.props.rowData
 
@@ -213,9 +201,7 @@ class Detail extends React.Component {
           </View>
         </View>
 
-        <CommentList {...this.props} showModal={this._showModal} />
-
-        <CommentModal {...this.props} hideModal={this._hideModal} />
+        <CommentList rowData={this.props.rowData} {...this.props} />
       </View>
     )
   }
@@ -223,13 +209,11 @@ class Detail extends React.Component {
 
 function mapStateToProps(state) {
   const {
-    paused,
-    modalVisible,
+    paused
   } = state.get('comments')
 
   return {
-    paused: paused,
-    modalVisible: modalVisible,
+    paused: paused
   }
 }
 
@@ -245,18 +229,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
-  modalContainer: {
-    flex: 1,
-    paddingTop: 45,
-    backgroundColor: '#fff'
-  },
-
-  closeIcon: {
-    alignSelf: 'center',
-    fontSize: 30,
-    color: '#ee753c'
-  },
-
   submitBtn: {
     width: width - 20,
     padding: 16,
@@ -268,44 +240,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontSize: 18,
     color: '#ee753c'
-  },
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: width,
-    height: 64,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderBottomWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
-    backgroundColor: '#fff'
-  },
-
-  backBox: {
-    position: 'absolute',
-    left: 12,
-    top: 32,
-    width: 50,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-
-  headerTitle: {
-    width: width - 120,
-    textAlign: 'center'
-  },
-
-  backIcon: {
-    color: '#999',
-    fontSize: 20,
-    marginRight: 5
-  },
-
-  backText: {
-    color: '#999'
   },
 
   videoBox: {

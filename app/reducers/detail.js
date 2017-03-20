@@ -1,7 +1,8 @@
 import * as types from '../actions/actionTypes'
 
 const initialState = {
-  PAUSED: false
+  PAUSED: false,
+  data: {}
 }
 
 let detailReducer = (state = initialState, action) => {

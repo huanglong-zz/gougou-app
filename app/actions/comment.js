@@ -15,10 +15,7 @@ import * as storage from '../common/storage'
 export let sendComment = (comment) => {
   return (dispatch, getState) => {
     dispatch({
-      type: types.SEND_COMMENTS_START,
-      payload: {
-        isLoadingTail: isLoadingTail
-      }
+      type: types.SEND_COMMENTS_START
     })
 
     storage.getItem('user')
@@ -47,10 +44,9 @@ export let sendComment = (comment) => {
               dispatch({
                 type: types.SEND_COMMENTS_FULFILLED,
                 payload: {
-                  page: page,
                   user: user,
                   nextPage: nextPage,
-                  commentList: newCommentList,
+                  commentList: items,
                   commentTotal: commentTotal,
                   modalVisible: false,
                   isSending: false,
@@ -69,6 +65,24 @@ export let sendComment = (comment) => {
             })
           })
       })
+  }
+}
+
+export let popAlert = (title, content) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: types.SHOW_ALERT,
+      payload: {
+        title: title,
+        content: content
+      }
+    })
+
+    setTimeout(function () {
+      dispatch({
+        type: types.HIDE_ALERT
+      })
+    }, 1500)
   }
 }
 
@@ -92,8 +106,6 @@ export let fetchComments = (page) => {
           page: page
         })
         .then(data => {
-          console.log('data')
-          console.log(data)
           if (data && data.success) {
             if (data.data.length > 0) {
               let {

@@ -10,6 +10,7 @@ const initialState = {
   nextCommentList: [],
   isLoading: true,
   modalVisible: false,
+  commentDone: false,
   isLoadMore: false
 }
 
@@ -33,6 +34,28 @@ let commentReducer = (state = initialState, action) => {
         commentTotal: action.payload.commentTotal,
         nextPage: action.payload.nextPage,
         page: action.payload.page,
+        isLoadingTail: action.payload.isLoadingTail,
+        isLoading: false
+      }
+    case types.SEND_COMMENTS_STAET:
+      return Object.assign({}, state, {
+        commentDone: false
+      })
+    case types.SEND_COMMENTS_REJECTED:
+      return {
+        ...state,
+        videoList: [],
+        commentDone: false,
+        isLoading: false
+      }
+    case types.SEND_COMMENTS_FULFILLED:
+      return {
+        ...state,
+        commentList: action.payload.commentList,
+        commentTotal: action.payload.commentTotal,
+        nextPage: action.payload.nextPage,
+        page: action.payload.page,
+        commentDone: true,
         isLoadingTail: action.payload.isLoadingTail,
         isLoading: false
       }

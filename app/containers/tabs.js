@@ -5,7 +5,7 @@ import List from './creation'
 import Edit from './edit'
 import Account from './account'
 import Detail from '../components/creations/detail'
-import CommentModal from '../components/comments/modal'
+import Comment from '../components/comments/index'
 
 import {
   TabNavigator,
@@ -19,9 +19,8 @@ const DetailScreen = ({ navigation }) => (
   />
 )
 
-const CommentModalScreen = ({ navigation }) => (
-  <CommentModal
-    rowData={navigation.state.params.rowData}
+const CommentScreen = ({ navigation }) => (
+  <Comment
     navigation={navigation}
   />
 )
@@ -56,7 +55,6 @@ const ListTab = StackNavigator({
     },
   },
   Detail: {
-    path: 'creations/:cid',
     screen: DetailScreen,
     navigationOptions: {
       title: ({state}) => `${state.params.rowData.author.nickname} 的创意`,
@@ -66,9 +64,8 @@ const ListTab = StackNavigator({
       }),
     }
   },
-  CommentModal: {
-    path: 'creations/:cid',
-    screen: CommentModalScreen,
+  Comment: {
+    screen: CommentScreen,
     navigationOptions: {
       title: '评论',
       header: header,
