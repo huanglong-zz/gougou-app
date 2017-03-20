@@ -27,3 +27,4 @@ AppRegistry.registerComponent('imoocApp', () => imoocApp)
 // https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch4.html#总结
 // https://www.zhihu.com/question/41312576
 // 沙发椅子解释 http://www.youhavetolearncomputers.com/blog/2015/9/15/a-conceptual-overview-of-redux-or-how-i-fell-in-love-with-a-javascript-state-container
+// https://medium.com/@rajaraodv/a-guide-for-building-a-react-redux-crud-app-7fe0b8943d0f#.r93k4tiqy

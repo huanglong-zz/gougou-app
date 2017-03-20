@@ -36,7 +36,6 @@ class CommentModal extends React.Component {
     }
   }
 
-
   componentWillReceiveProps(props) {
     if (props.commentDone) {
       this.props.navigation.goBack()
@@ -91,8 +90,6 @@ class CommentModal extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log('1', state.get('comments').commentDone)
-  console.log('2', state.get('commentDone'))
   return {
     commentDone: state.get('comments').commentDone
   }

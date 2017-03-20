@@ -58,6 +58,7 @@ class Comment extends React.Component {
   }
 
   _focus() {
+    this.props.willComment()
     this.props.navigation.navigate('Comment', {
       rowData: this.props.rowData
     })

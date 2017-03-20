@@ -37,6 +37,10 @@ let commentReducer = (state = initialState, action) => {
         isLoadingTail: action.payload.isLoadingTail,
         isLoading: false
       }
+    case types.WILL_COMMENT:
+      return Object.assign({}, state, {
+        commentDone: false
+      })
     case types.SEND_COMMENTS_STAET:
       return Object.assign({}, state, {
         commentDone: false

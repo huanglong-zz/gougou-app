@@ -12,6 +12,12 @@ import config from '../common/config'
 import request from '../common/request'
 import * as storage from '../common/storage'
 
+export let willComment = (comment) => {
+  return {
+    type: types.WILL_COMMENT
+  }
+}
+
 export let sendComment = (comment) => {
   return (dispatch, getState) => {
     dispatch({
