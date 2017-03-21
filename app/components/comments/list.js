@@ -31,7 +31,7 @@ class Comment extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchComments(1)
+    this.props.fetchComments(1, this.props.rowData._id)
   }
 
   _fetchMoreData() {

@@ -6,7 +6,6 @@
 
 // ES5
 import * as commentActions from '../../actions/comment'
-import * as util from '../../common/util'
 import Button from 'react-native-button'
 
 import {connect} from 'react-redux'
@@ -16,7 +15,6 @@ import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
-  Modal,
   View,
   TextInput,
   ActivityIndicator,
@@ -26,7 +24,7 @@ import {
 
 const {height, width} = Dimensions.get('window')
 
-class CommentModal extends React.Component {
+class Comment extends React.Component {
   constructor(props) {
     super(props)
 
@@ -99,7 +97,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(commentActions, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommentModal)
+export default connect(mapStateToProps, mapDispatchToProps)(Comment)
 
 const styles = StyleSheet.create({
   commentContainer: {

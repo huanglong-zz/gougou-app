@@ -93,7 +93,7 @@ export let popAlert = (title, content) => {
 }
 
 
-export let fetchComments = (page) => {
+export let fetchComments = (page, creationid) => {
   let url = config.api.comment
   let isLoadingTail = true
 
@@ -108,6 +108,7 @@ export let fetchComments = (page) => {
     storage.getItem('user')
       .then(function(user) {
         request.get(url, {
+          creation: creationid,
           accessToken: user.accessToken,
           page: page
         })

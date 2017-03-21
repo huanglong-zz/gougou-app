@@ -10,9 +10,9 @@ import Popup from '../../common/popup'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
-import * as detailActions from '../../actions/detail'
 import CommentList from '../comments/list'
 import util from '../../common/util'
+import * as commentActions from '../../actions/comment'
 
 import React, {Component} from 'react'
 import {
@@ -209,16 +209,32 @@ class Detail extends React.Component {
 
 function mapStateToProps(state) {
   const {
-    paused
+    isLoadingTail,
+    commentList,
+    nextPage,
+    commentTotal,
+    page,
+    user
   } = state.get('comments')
 
+  console.log('enter detail')
+  console.log(commentList)
+  console.log(nextPage)
+  console.log(commentTotal)
+  console.log(page)
+
   return {
-    paused: paused
+    user: user,
+    page: page,
+    nextPage: nextPage,
+    isLoadingTail: isLoadingTail,
+    commentTotal: commentTotal,
+    commentList: commentList
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(detailActions, dispatch)
+  return bindActionCreators(commentActions, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Detail)
