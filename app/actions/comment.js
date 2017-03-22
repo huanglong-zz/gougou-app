@@ -35,37 +35,26 @@ export let sendComment = (comment) => {
         request.post(url, body)
           .then(function(data) {
             if (data && data.success) {
-              let {
-                commentList,
-                nextPage,
-                commentTotal
-              } = getState()
-
-              let newCommentList = commentList || []
-              let items = newCommentList.slice()
-
-              items = data.data.concat(items)
-              commentTotal += 1
+              let commentList = data.data
+              let commentTotal = data.total
 
               dispatch({
                 type: types.SEND_COMMENTS_FULFILLED,
                 payload: {
                   user: user,
-                  nextPage: nextPage,
-                  commentList: items,
+                  commentList: commentList,
                   commentTotal: commentTotal,
-                  modalVisible: false,
                   isSending: false,
                 }
               })
             }
           })
           .catch((err) => {
+            console.log(err)
             dispatch({
               type: types.SEND_COMMENTS_REJECTED,
               payload: {
                 isLoadingTail: false,
-                modalVisible: false,
                 err: err
               }
             })

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import CreationList from '../components/creations/list'
+import CreationList from '../components/creation/list'
 import * as creationActions from '../actions/creation'
 
 

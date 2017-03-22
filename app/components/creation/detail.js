@@ -10,7 +10,7 @@ import Popup from '../../common/popup'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
-import CommentList from '../comments/list'
+import CommentList from '../comment/list'
 import util from '../../common/util'
 import * as commentActions from '../../actions/comment'
 
@@ -217,11 +217,8 @@ function mapStateToProps(state) {
     user
   } = state.get('comments')
 
-  console.log('enter detail')
+  console.log('commentList map state to detail')
   console.log(commentList)
-  console.log(nextPage)
-  console.log(commentTotal)
-  console.log(page)
 
   return {
     user: user,

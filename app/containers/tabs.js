@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import List from './creation'
 import Edit from './edit'
 import Account from './account'
-import Detail from '../components/creations/detail'
-import Comment from '../components/comments/index'
+import Detail from '../components/creation/detail'
+import Comment from '../components/comment/index'
 
 import {
   TabNavigator,

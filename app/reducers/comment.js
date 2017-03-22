@@ -17,14 +17,15 @@ const initialState = {
 let commentReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_COMMENTS_STAET:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isLoadMore: action.payload.isLoadMore,
         isLoading: action.payload.isLoading
-      })
+      }
     case types.FETCH_COMMENTS_REJECTED:
       return {
         ...state,
-        videoList: [],
+        commentList: [],
         isLoading: false
       }
     case types.FETCH_COMMENTS_FULFILLED:
@@ -38,9 +39,10 @@ let commentReducer = (state = initialState, action) => {
         isLoading: false
       }
     case types.WILL_COMMENT:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         commentDone: false
-      })
+      }
     case types.SEND_COMMENTS_STAET:
       return Object.assign({}, state, {
         commentDone: false
@@ -57,10 +59,8 @@ let commentReducer = (state = initialState, action) => {
         ...state,
         commentList: action.payload.commentList,
         commentTotal: action.payload.commentTotal,
-        nextPage: action.payload.nextPage,
-        page: action.payload.page,
-        commentDone: true,
         isLoadingTail: action.payload.isLoadingTail,
+        commentDone: true,
         isLoading: false
       }
     default:
