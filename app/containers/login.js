@@ -6,7 +6,6 @@
 
 // ES5
 import Button from 'react-native-button'
-import {CountDownText} from 'react-native-sk-countdown'
 import request from '../common/request'
 import config from '../common/config'
 import Popup from '../common/popup'
@@ -27,6 +26,7 @@ export default class Login extends React.Component {
 
     this.state = {
       pop: null,
+      countText: '',
       verifyCode: '',
       phoneNumber: '',
       countingDone: false,
@@ -123,6 +123,41 @@ export default class Login extends React.Component {
     })
   }
 
+  _tick() {
+    var that = this
+    var countText = this.state.countText
+
+    countText--
+
+    if (countText === 0) {
+      that._record()
+    }
+    else {
+      setTimeout(function() {
+        that.setState({
+          countText: countText
+        }, function() {
+          that._tick()
+        })
+      }, 1000)
+    }
+  }
+
+  _counting () {
+    var that = this
+    var countText = 3
+
+    if (!this.state.counting && !this.state.recording && !this.state.audioPlaying) {
+      this.refs.videoPlayer.seek(this.state.videoTotal - 0.01)
+      this.setState({
+        counting: true,
+        countText: countText
+      }, function() {
+        that._tick()
+      })
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -163,17 +198,7 @@ export default class Login extends React.Component {
                   ? <Button
                     style={styles.countBtn}
                     onPress={this._sendVerifyCode.bind(this)}>获取验证码</Button>
-                  : <CountDownText
-                    style={styles.countBtn}
-                    countType='seconds' // 计时类型：seconds / date
-                    auto // 自动开始
-                    afterEnd={this._countingDone.bind(this)} // 结束回调
-                    timeLeft={60} // 正向计时 时间起点为0秒
-                    step={-1} // 计时步长，以秒为单位，正数则为正计时，负数为倒计时
-                    startText='获取验证码' // 开始的文本
-                    endText='获取验证码' // 结束的文本
-                    intervalText={(sec) => '剩余秒数:' + sec} // 定时的文本回调
-                    />
+                  : <Text style={styles.countBtn}>{this.state.countText}</Text>
 
                 }
             </View>

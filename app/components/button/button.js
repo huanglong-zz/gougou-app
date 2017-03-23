@@ -1,28 +1,19 @@
 import React, { PropTypes, Component } from 'react'
 import {
-    View,
-    Text,
-    TouchableOpacity
+    Button,
 } from 'react-native'
 
-const Button = ({onPress, disabled, style, containerStyle, text}) => (
-  <TouchableOpacity
+const Button = ({onPress, disabled, text}) => (
+  <Button
     onPress={onPress}
-    disabled={disabled}
-    activeOpacity={0.75}>
-    <View style={containerStyle}>
-      <Text style={style}>
-        {text}
-      </Text>
-    </View>
-  </TouchableOpacity>
+    title={text}
+    color={color}
+  />
 )
 
 Button.propTypes = {
   onPress: PropTypes.func,
   disabled: PropTypes.bool,
-  style: Text.propTypes.style,
-  containerStyle: View.propTypes.style,
   text: PropTypes.string
 }
 

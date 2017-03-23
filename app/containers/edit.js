@@ -9,8 +9,8 @@ import _ from 'lodash'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
 import ImagePicker from 'react-native-image-picker'
-import {CountDownText} from 'react-native-sk-countdown'
 import {AudioRecorder, AudioUtils} from 'react-native-audio'
+import Sound from 'react-native-sound'
 import {Circle} from 'react-native-progress'
 import Button from 'react-native-button'
 import Popup from '../common/popup'
@@ -26,6 +26,8 @@ import {
   AsyncStorage,
   ProgressViewIOS,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
   Modal,
   TextInput
 } from 'react-native'
@@ -75,6 +77,7 @@ const defaultState = {
   currentTime: 0,
 
   // count down
+  countText: '',
   counting: false,
   recording: false,
 
@@ -82,6 +85,7 @@ const defaultState = {
   audio: null,
   audioPlaying: false,
   recordDone: false,
+  hasPermission: undefined,
   audioPath: AudioUtils.DocumentDirectoryPath + '/gougou.aac',
 
   audioUploaded: false,
@@ -95,7 +99,7 @@ const defaultState = {
   repeat: false
 }
 
-export default class Edit extends React.Component {
+export default class Edit extends Component {
 
   constructor (props) {
     super(props)
@@ -127,16 +131,35 @@ export default class Edit extends React.Component {
     })
   }
 
-  _onEnd () {
-    if (this.state.recording) {
-      AudioRecorder.stopRecording()
+  async _onEnd () {
+    var that = this
 
-      this.setState({
-        videoProgress: 1,
-        recordDone: true,
-        recording: false
-      })
+    if (!this.state.recording) {
+      console.warn('Cannot stop, not recording!')
+
+      return
     }
+    
+    if (this.state.recording) {
+      try {
+        const filePath = await AudioRecorder.stopRecording()
+
+        if (Platform.OS === 'android') {
+          this._finishRecording(true, filePath)
+        }
+
+        return filePath
+      }
+      catch (e) {
+        console.log(e)
+      }
+    }
+
+    this.setState({
+      videoProgress: 1,
+      recordDone: true,
+      recording: false
+    })
   }
 
   _onError (e) {
@@ -145,21 +168,48 @@ export default class Edit extends React.Component {
     })
   }
 
-  _preview () {
-    if (this.state.audioPlaying) {
-      AudioRecorder.stopPlaying()
-    }
+  async _preview () {
+    // if (this.state.audioPlaying) {
+    //   AudioRecorder.stopPlaying()
+    // }
 
     this.setState({
       videoProgress: 0,
       audioPlaying: true
     })
 
-    AudioRecorder.playRecording()
+    setTimeout(() => {
+      var sound = new Sound(this.state.audioPath, '', (error) => {
+        if (error) {
+          console.log('failed to load the sound', error)
+        }
+      })
+
+      setTimeout(() => {
+        sound.play((success) => {
+          if (success) {
+            console.log('successfully finished playing')
+          } else {
+            console.log('playback failed due to audio decoding errors')
+          }
+        })
+      }, 100)
+    }, 100)
+
     this.refs.videoPlayer.seek(0)
   }
 
-  _record () {
+  async _record () {
+    if (!this.state.hasPermission) {
+      console.warn('Can\'t record, no permission granted!')
+      return
+    }
+
+    if (this.state.recording) {
+      console.warn('Already recording!')
+      return;
+    }
+
     this.setState({
       videoProgress: 0,
       counting: false,
@@ -167,17 +217,141 @@ export default class Edit extends React.Component {
       recording: true
     })
 
-    AudioRecorder.startRecording()
+    try {
+      const filePath = await AudioRecorder.startRecording()
+    } catch (error) {
+      console.error(error)
+    }
+
     this.refs.videoPlayer.seek(0)
   }
 
-  _counting () {
-    if (!this.state.counting && !this.state.recording && !this.state.audioPlaying) {
-      this.setState({
-        counting: true
+  _play() {
+    if (this.state.recording) {
+      this._stop()
+    }
+
+    // These timeouts are a hacky workaround for some issues with react-native-sound.
+    // See https://github.com/zmxv/react-native-sound/issues/89.
+    setTimeout(() => {
+      var sound = new Sound(this.state.audioPath, '', (error) => {
+        if (error) {
+          console.log('failed to load the sound', error)
+        }
       })
 
+      setTimeout(() => {
+        sound.play((success) => {
+          if (success) {
+            console.log('successfully finished playing')
+          } else {
+            console.log('playback failed due to audio decoding errors')
+          }
+        })
+      }, 100)
+    }, 100)
+  }
+
+  _finishRecording(didSucceed, filePath) {
+    this.setState({ finished: didSucceed })
+    console.log(`Finished recording of duration ${this.state.currentTime} seconds at path: ${filePath}`)
+  }
+
+  _checkPermission() {
+    if (Platform.OS !== 'android') {
+      return Promise.resolve(true)
+    }
+
+    const rationale = {
+      'title': 'Microphone Permission',
+      'message': 'GougouApp needs access to your microphone so you can record audio.'
+    }
+
+    return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale)
+      .then((result) => {
+        console.log('Permission result:', result)
+        return (result === true || result === PermissionsAndroid.RESULTS.GRANTED)
+      })
+  }
+
+  _initAudio () {
+    this._checkPermission().then((hasPermission) => {
+      this.setState({
+        hasPermission: hasPermission
+      })
+
+      if (!hasPermission) return
+
+      const audioPath = this.state.audioPath
+
+      AudioRecorder.prepareRecordingPath(audioPath, {
+        SampleRate: 22050,
+        Channels: 1,
+        AudioQuality: 'High',
+        AudioEncoding: 'aac'
+      })
+
+      AudioRecorder.onProgress = (data) => {
+        this.setState({
+          currentTime: Math.floor(data.currentTime)
+        })
+      }
+      AudioRecorder.onFinished = (data) => {
+        if (Platform.OS === 'ios') {
+          this._finishRecording(data.status === "OK", data.audioFileURL)
+        }
+        this.setState({
+          finished: data.finished
+        })
+      }
+    })
+
+  }
+
+  _closeModal () {
+    this.setState({
+      modalVisible: false
+    })
+  }
+
+  _showModal () {
+    this.setState({
+      modalVisible: true
+    })
+  }
+
+  _tick() {
+    var that = this
+    var countText = this.state.countText
+
+    countText--
+
+    if (countText === 0) {
+      that._record()
+    }
+    else {
+      setTimeout(function() {
+        that.setState({
+          countText: countText
+        }, function() {
+          that._tick()
+        })
+      }, 1000)
+    }
+  }
+
+  _counting () {
+    var that = this
+    var countText = 3
+
+    if (!this.state.counting && !this.state.recording && !this.state.audioPlaying) {
       this.refs.videoPlayer.seek(this.state.videoTotal - 0.01)
+      this.setState({
+        counting: true,
+        countText: countText
+      }, function() {
+        that._tick()
+      })
     }
   }
 
@@ -379,40 +553,6 @@ export default class Edit extends React.Component {
     })
   }
 
-  _initAudio () {
-    const audioPath = this.state.audioPath
-
-    AudioRecorder.prepareRecordingAtPath(audioPath, {
-      SampleRate: 22050,
-      Channels: 1,
-      AudioQuality: 'High',
-      AudioEncoding: 'aac'
-    })
-
-    AudioRecorder.onProgress = (data) => {
-      this.setState({
-        currentTime: Math.floor(data.currentTime)
-      })
-    }
-    AudioRecorder.onFinished = (data) => {
-      this.setState({
-        finished: data.finished
-      })
-    }
-  }
-
-  _closeModal () {
-    this.setState({
-      modalVisible: false
-    })
-  }
-
-  _showModal () {
-    this.setState({
-      modalVisible: true
-    })
-  }
-
   componentDidMount () {
     let that = this
 
@@ -577,27 +717,16 @@ export default class Edit extends React.Component {
           {
             this.state.videoUploaded
             ? <View style={styles.recordBox}>
-              <View style={[styles.recordIconBox, (this.state.recording || this.state.audioPlaying) && styles.recordOn]}>
-                {
+                <View style={[styles.recordIconBox, (this.state.recording || this.state.audioPlaying) && styles.recordOn]}>
+                  {
                     this.state.counting && !this.state.recording
-                    ? <CountDownText
-                      style={styles.countBtn}
-                      countType='seconds' // 计时类型：seconds / date
-                      auto // 自动开始
-                      afterEnd={this._record.bind(this)} // 结束回调
-                      timeLeft={3} // 正向计时 时间起点为0秒
-                      step={-1} // 计时步长，以秒为单位，正数则为正计时，负数为倒计时
-                      startText='准备录制' // 开始的文本
-                      endText='Go' // 结束的文本
-                      intervalText={(sec) => {
-                        return sec === 0 ? 'Go' : sec
-                      }} />
+                    ? <Text style={styles.countBtn}>{this.state.countText}</Text>
                     : <TouchableOpacity onPress={this._counting.bind(this)}>
-                      <Icon name='ios-mic' style={styles.recordIcon} />
-                    </TouchableOpacity>
+                        <Icon name='ios-mic' style={styles.recordIcon} />
+                      </TouchableOpacity>
                   }
+                </View>
               </View>
-            </View>
             : null
           }
 
@@ -665,6 +794,7 @@ export default class Edit extends React.Component {
                     ? <Text style={styles.loadingText}>开始上传喽！...</Text>
                     : null
                   }
+
                 <Circle
                   showsText
                   size={60}
