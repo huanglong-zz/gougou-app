@@ -5,23 +5,22 @@ import {bindActionCreators} from 'redux'
 import CreationList from '../components/creation/list'
 import * as creationActions from '../actions/creation'
 
-
 class creationContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
   }
 
-  _onLoadItem(row) {
+  _onLoadItem (row) {
     this.props.navigation.navigate('Detail', {
       rowData: row
     })
   }
 
-  componentWillMount() {
+  componentWillMount () {
     this.props.fetchCreations(1)
   }
   
-  render() {
+  render () {
     return (
       <CreationList
         onLoadItem={this._onLoadItem.bind(this)}
@@ -30,7 +29,7 @@ class creationContainer extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   const {
     isRefreshing,
     isLoadingTail,
@@ -42,8 +41,8 @@ function mapStateToProps(state) {
   } = state.get('creations')
 
   return {
-    isRefreshing: false,
-    isLoadingTail: false,
+    isRefreshing: isRefreshing,
+    isLoadingTail: isLoadingTail,
     videoTotal: videoTotal,
     nextPage: nextPage,
     page: page,
@@ -52,7 +51,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return bindActionCreators(creationActions, dispatch)
 }
 

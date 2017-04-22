@@ -50,7 +50,7 @@
 		C12986491E7D377200943828 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C129863F1E7D377200943828 /* Zocial.ttf */; };
 		C141A8451E83F74600E54BB9 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C141A8431E83F70F00E54BB9 /* libRNSound.a */; };
 		D13054BF9B1C4FEC834A5438 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F39B3200009445E482D3609F /* libRNImagePicker.a */; };
-		7853950BE6E34C80A33306A9 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EF327E68F94B6AA1C21B2E /* libRCTVideo.a */; };
+		82F8DFD2235C4460908A5FAF /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F77E4391760244D7BBA462DC /* libRCTVideo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -323,8 +323,8 @@
 		C141A8221E83F70F00E54BB9 /* RNSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		CDB23F1B2E6248F6B24C325C /* RNAudio.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAudio.xcodeproj; path = "../node_modules/react-native-audio/ios/RNAudio.xcodeproj"; sourceTree = "<group>"; };
 		F39B3200009445E482D3609F /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
-		556311FE334F4529B9828ACE /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; name = "RCTVideo.xcodeproj"; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		93EF327E68F94B6AA1C21B2E /* libRCTVideo.a */ = {isa = PBXFileReference; name = "libRCTVideo.a"; path = "libRCTVideo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		44BB93F37C914EF7A5A1F277 /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; name = "RCTVideo.xcodeproj"; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F77E4391760244D7BBA462DC /* libRCTVideo.a */ = {isa = PBXFileReference; name = "libRCTVideo.a"; path = "libRCTVideo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,7 +356,7 @@
 				D13054BF9B1C4FEC834A5438 /* libRNImagePicker.a in Frameworks */,
 				1EC3BA10EBC14863A5563544 /* libRNVectorIcons.a in Frameworks */,
 				5AB1A14D85B44CAEBCB7FF43 /* libRNAudio.a in Frameworks */,
-				7853950BE6E34C80A33306A9 /* libRCTVideo.a in Frameworks */,
+				82F8DFD2235C4460908A5FAF /* libRCTVideo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,7 +535,7 @@
 				70E46DF8E80148C8B66E49D8 /* RNImagePicker.xcodeproj */,
 				42EA9CC974434AB2812DC156 /* RNVectorIcons.xcodeproj */,
 				CDB23F1B2E6248F6B24C325C /* RNAudio.xcodeproj */,
-				556311FE334F4529B9828ACE /* RCTVideo.xcodeproj */,
+				44BB93F37C914EF7A5A1F277 /* RCTVideo.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1179,7 +1179,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-video",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-audio/ios",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
@@ -1208,7 +1207,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-video",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-audio/ios",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
@@ -1238,7 +1236,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-video",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-audio/ios",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
@@ -1263,7 +1260,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-video",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-audio/ios",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
@@ -1295,7 +1291,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-video",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-audio/ios",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
@@ -1333,7 +1328,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-video",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-audio/ios",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",

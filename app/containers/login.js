@@ -16,9 +16,12 @@ import {
   Text,
   View,
   TextInput,
+  Dimensions,
   Alert,
   AsyncStorage
 } from 'react-native'
+
+const {height, width} = Dimensions.get('window')
 
 export default class Login extends React.Component {
   constructor (props) {
@@ -26,17 +29,23 @@ export default class Login extends React.Component {
 
     this.state = {
       pop: null,
-      countText: '',
+      countText: 60,
       verifyCode: '',
       phoneNumber: '',
+      submiting: false,
+      counting: false,
       countingDone: false,
       codeSent: false
     }
   }
 
   _showVerifyCode () {
+    var that = this
+
     this.setState({
       codeSent: true
+    }, function() {
+      that._counting()
     })
   }
 
@@ -60,8 +69,6 @@ export default class Login extends React.Component {
 
     const signupURL = config.api.signup
 
-    console.log('login body')
-    console.log(body)
     request.post(signupURL, body)
       .then((data) => {
         console.log(data)
@@ -93,17 +100,31 @@ export default class Login extends React.Component {
 
     const verifyURL = config.api.verify
 
-    request.post(verifyURL, body)
-      .then((data) => {
-        if (data && data.success) {
-          that.props.afterLogin(data.data)
-        } else {
-          that._alert('呜呜~', '获取验证码失败，请检查手机号是否正确')
-        }
-      })
-      .catch((err) => {
-        that._alert('呜呜~', '获取验证码失败，请检查网络是否良好')
-      })
+    this.setState({
+      submiting: true
+    }, function() {
+      request.post(verifyURL, body)
+        .then((data) => {
+          if (data && data.success) {
+            that.setState({
+              submiting: false
+            })
+            that.props.afterLogin(data.data)
+          } else {
+            that.setState({
+              submiting: false
+            })
+            that._alert('呜呜~', '获取验证码失败，请检查手机号是否正确')
+          }
+        })
+        .catch((err) => {
+          that.setState({
+            submiting: false
+          })
+          that._alert('呜呜~', '获取验证码失败，请检查网络是否良好')
+        })
+    })
+
   }
 
   _alert (title, content) {
@@ -129,26 +150,24 @@ export default class Login extends React.Component {
 
     countText--
 
-    if (countText === 0) {
-      that._record()
-    }
-    else {
+    if (countText >= 0) {
       setTimeout(function() {
-        that.setState({
-          countText: countText
-        }, function() {
-          that._tick()
-        })
+        if (that.state.submiting) {
+          that.setState({
+            countText: countText
+          }, function() {
+            that._tick()
+          })
+        }
       }, 1000)
     }
   }
 
   _counting () {
     var that = this
-    var countText = 3
+    var countText = 60
 
-    if (!this.state.counting && !this.state.recording && !this.state.audioPlaying) {
-      this.refs.videoPlayer.seek(this.state.videoTotal - 0.01)
+    if (!this.state.counting) {
       this.setState({
         counting: true,
         countText: countText
@@ -185,7 +204,7 @@ export default class Login extends React.Component {
                 autoCaptialize={'none'}
                 autoCorrect={false}
                 keyboardType={'number-pad'}
-                style={styles.inputField}
+                style={[styles.inputField, styles.verifyField]}
                 onChangeText={(text) => {
                   this.setState({
                     verifyCode: text
@@ -198,7 +217,7 @@ export default class Login extends React.Component {
                   ? <Button
                     style={styles.countBtn}
                     onPress={this._sendVerifyCode.bind(this)}>获取验证码</Button>
-                  : <Text style={styles.countBtn}>{this.state.countText}</Text>
+                  : <Text style={styles.countBtn}>剩余秒数: {this.state.countText}</Text>
 
                 }
             </View>
@@ -239,13 +258,16 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
-    flex: 1,
     height: 40,
     padding: 5,
     color: '#666',
     fontSize: 16,
     backgroundColor: '#fff',
     borderRadius: 4
+  },
+
+  verifyField: {
+    width: width - 140
   },
 
   verifyCodeBox: {

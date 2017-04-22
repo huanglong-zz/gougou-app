@@ -17,13 +17,13 @@ import {
   View,
   TouchableHighlight,
   Image,
-  Dimensions,
+  Dimensions
 } from 'react-native'
 
 const {height, width} = Dimensions.get('window')
 
 export default class Item extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     const row = this.props.row
 
@@ -33,7 +33,7 @@ export default class Item extends React.Component {
     }
   }
 
-  _up() {
+  _up () {
     let that = this
     let up = !this.state.up
     const row = this.state.row
@@ -46,27 +46,23 @@ export default class Item extends React.Component {
     }
 
     request.post(url, body)
-      .then(function(data) {
+      .then(function (data) {
         if (data && data.success) {
           that.setState({
             up: up
           })
-        }
-        else {
+        } else {
           that.props.alert('失败', '点赞失败，稍后重试')
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         that.props.alert('失败', '点赞失败，稍后重试')
       })
   }
 
-  render() {
+  render () {
     const row = this.state.row
 
-    console.log(row)
-    console.log(util.thumb(row.qiniu_thumb))
-    
     return (
       <TouchableHighlight onPress={this.props.onSelect.bind(this)}>
         <View style={styles.item}>

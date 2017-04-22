@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-// ES5
 import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 
@@ -39,12 +32,12 @@ class List extends React.Component {
     return <Item
       key={row._id}
       user={this.props.user}
-      alert={this._alert.bind(this)}
+      alert={this._pop.bind(this)}
       onSelect={() => this.props.onLoadItem(row)}
       row={row} />
   }
 
-  _alert(title, content) {
+  _pop(title, content) {
     this.props.popAlert(title, content)
   }
 
@@ -150,7 +143,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    
+    user: state.get('app').user
   }
 }
 

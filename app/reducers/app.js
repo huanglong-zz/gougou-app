@@ -6,6 +6,7 @@ const initialState = {
   logined: false,
   sliderLoop: true,
   user: null,
+  popup: null,
   banners: [
     require('../assets/images/s1.jpg'),
     require('../assets/images/s2.jpg'),
@@ -37,6 +38,13 @@ export default rootReducer = (state = initialState, action) => {
         logined: true,
         user: action.payload.user
       }
+    case types.USER_UPDATED:
+      return {
+        ...state,
+        logined: true,
+        popup: action.payload.popup,
+        user: action.payload.user
+      }
     case types.USER_LOGOUT:
       return {
         ...state,
@@ -65,14 +73,22 @@ export default rootReducer = (state = initialState, action) => {
         newState.entered = true
       }
 
-      console.log({
-        ...state,
-        ...newState
-      })
-
       return {
         ...state,
         ...newState
+      }
+    case types.SHOW_ALERT:
+      return {
+        ...state,
+        popup: {
+          title: action.payload.title,
+          content: action.payload.content
+        }
+      }
+    case types.HIDE_ALERT:
+      return {
+        ...state,
+        popup: null
       }
     default:
       return state

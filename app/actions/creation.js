@@ -11,49 +11,6 @@ import * as types from './actionTypes'
 import config from '../common/config'
 import request from '../common/request'
 import * as storage from '../common/storage'
-import {actions} from 'react-native-navigation-redux-helpers'
-
-const {
-  popRoute,
-  pushRoute
-} = actions
-
-// function fetchSongs(url, playlist) {
-//   return (dispatch, getState) => {
-//     dispatch(requestSongs(playlist))
-//     return fetch(url)
-//       .then(response => response.json())
-//       .then(json => {
-//         const songs = json.collection.filter(song => song.streamable && song.duration < 600000 )
-//         const nextUrl = json.next_href
-//         const normalized = normalize(songs, arrayOf(songSchema))
-//         dispatch(receiveSongs(normalized.entities, normalized.result, nextUrl, playlist))
-//       })
-//       .catch(error => console.log(error))
-//   }
-// }
-
-// export function fetchSongsIfNeeded(playlist) {
-//   return (dispatch, getState) => {
-//     const {playlists, songs} = getState()
-//     if (shouldFetchSongs(playlists, playlist)) {
-//       const nextUrl = getNextUrl(playlists, playlist)
-//       return dispatch(fetchSongs(nextUrl, playlist))
-//     }
-//   }
-// }
-
-export let routeTo = (data, key) => {
-  return (dispatch, getState) => {
-    dispatch(pushRoute({
-      key: data.key,
-      title: data.title,
-      rowData: data.rowData,
-      showBackButton: !!data.showBackButton
-    }, key))
-  }
-}
-
 
 export let fetchCreations = (page) => {
     let url = config.api.creations

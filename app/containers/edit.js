@@ -72,7 +72,7 @@ const defaultState = {
 
   // video loads
   videoProgress: 0.01,
-  videoTotal: 0,
+  duration: 0,
   currentTime: 0,
   audioCurrentTime: 0,
 
@@ -116,38 +116,34 @@ export default class Edit extends Component {
   }
 
   _onLoad (data) {
-    this.setState({videoTotal: data.duration})
+    console.log('data onload')
+    console.log(data)
+    this.setState({duration: data.duration})
   }
 
-  _onProgress (data) {
-    this.setState({currentTime: data.currentTime})
+  async _onProgress (data) {
+    console.log('data progress')
+    console.log(data)
+
+    if (data.playableDuration === 0) {
+      console.log(32323)
+      await this._onEnd()
+    }
+    else {
+      this.setState({currentTime: data.currentTime})
+    }
   }
 
   getCurrentTimePercentage () {
     if (this.state.currentTime > 0) {
-      return parseFloat(this.state.currentTime) / parseFloat(this.state.videoTotal)
+      return parseFloat(this.state.currentTime) / parseFloat(this.state.duration)
     } else {
       return 0
     }
   }
 
-  // _onProgress (data) {
-  //   console.log('data onproress')
-  //   console.log(data)
-  //   const duration = data.playableDuration
-  //   const currentTime = data.currentTime
-  //   const percent = Number((currentTime / duration).toFixed(2))
-
-  //   if (this.state.videoProgress < 1) {
-  //     this.setState({
-  //       videoTotal: duration,
-  //       currentTime: Number(data.currentTime.toFixed(2)),
-  //       videoProgress: percent
-  //     })
-  //   }
-  // }
-
   async _onEnd () {
+    console.log('from progress')
     var newState = {}
 
     if (this.state.recording) {
@@ -163,6 +159,9 @@ export default class Edit extends Component {
       } catch (e) {
         console.log(e)
       }
+    }
+    else {
+      newState.videoUploaded = true
     }
 
     this.setState(newState)
@@ -324,7 +323,7 @@ export default class Edit extends Component {
     var countText = 3
 
     if (!this.state.counting && !this.state.recording && !this.state.audioPlaying) {
-      this.refs.videoPlayer.seek(this.state.videoTotal - 0.01)
+      this.refs.videoPlayer.seek(this.state.duration - 0.01)
       this.setState({
         counting: true,
         countText: countText
@@ -489,7 +488,7 @@ export default class Edit extends Component {
               name: key
             })
 
-            that._upload(body, 'video')
+            //that._upload(body, 'video')
           }
         })
     })
@@ -608,18 +607,13 @@ export default class Edit extends Component {
     })
   }
 
-  shouldComponentUpdate (props, state) {
-    console.log('shouldComponentUpdate props state')
-    console.log(state)
-
-    return true
-  }
-
   onBuffer (isBuffering) {
+    console.log('isBuffering')
     console.log(isBuffering)
   }
 
   onTimedMetadata (onTimedMetadata) {
+    console.log('onTimedMetadata')
     console.log(onTimedMetadata)
   }
 
@@ -734,41 +728,42 @@ export default class Edit extends Component {
                   onEnd={this._onEnd.bind(this)}
                   onError={this._onError.bind(this)} />
                 {
-                    !this.state.videoUploaded && this.state.videoUploading
-                    ? <View style={styles.progressTipBox}>
-                      <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={videoProgress} />
-                      <Text style={styles.progressTip}>
-                          正在生成静音视频，已完成{(this.state.videoUploadedProgress * 100).toFixed(2)}%
-                        </Text>
-                    </View>
-                    : null
-                  }
+                  !this.state.videoUploaded && this.state.videoUploading
+                  ? <View style={styles.progressTipBox}>
+                    <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={videoProgress} />
+                    <Text style={styles.progressTip}>
+                        正在生成静音视频，已完成{(this.state.videoUploadedProgress * 100).toFixed(2)}%
+                      </Text>
+                  </View>
+                  : null
+                }
 
                 {
-                    this.state.recording || this.state.audioPlaying
-                    ? <View style={styles.progressTipBox}>
-                      <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={videoProgress} />
-                      {
-                          this.state.recording
-                          ? <Text style={styles.progressTip}>
-                            录制声音中
-                            </Text>
-                          : null
-                        }
-                    </View>
-                    : null
-                  }
+                  this.state.recording || this.state.audioPlaying
+                  ? <View style={styles.progressTipBox}>
+                    <ProgressViewIOS style={styles.progressBar} progressTintColor='#ee735c' progress={videoProgress} />
+                    {
+                        this.state.recording
+                        ? <Text style={styles.progressTip}>
+                          录制声音中
+                          </Text>
+                        : null
+                      }
+                  </View>
+                  : null
+                }
+
 
                 {
-                    this.state.recordDone && !this.state.recording
-                    ? <View style={styles.previewBox}>
-                      <Icon name='ios-play' style={styles.previewIcon} />
-                      <Text style={styles.previewText} onPress={this._preview.bind(this)}>
-                          预览{this.state.modalVisible}
-                        </Text>
-                    </View>
-                    : null
-                  }
+                  this.state.recordDone && !this.state.recording
+                  ? <View style={styles.previewBox}>
+                    <Icon name='ios-play' style={styles.previewIcon} />
+                    <Text style={styles.previewText} onPress={this._preview.bind(this)}>
+                        预览{this.state.modalVisible}
+                      </Text>
+                  </View>
+                  : null
+                }
               </View>
             </View>
             : <TouchableOpacity style={styles.uploadContainer} onPress={this._pickVideo.bind(this)}>

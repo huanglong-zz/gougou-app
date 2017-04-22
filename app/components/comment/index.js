@@ -25,22 +25,23 @@ import {
 const {height, width} = Dimensions.get('window')
 
 class Comment extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
       content: '',
+      multiline: true,
       isSending: false
     }
   }
 
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps (props) {
     if (props.commentDone) {
       this.props.navigation.goBack()
     }
   }
 
-  _submit() {
+  _submit () {
     if (!this.state.content) {
       return this.props.popAlert('呜呜~', '留言不能为空！')
     }
@@ -59,7 +60,7 @@ class Comment extends React.Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <View style={styles.commentContainer}>
         {this.state.pop && <Popup {...this.state.pop} />}
@@ -68,7 +69,7 @@ class Comment extends React.Component {
             <TextInput
               placeholder='敢不敢评论一个...'
               style={styles.content}
-              multiline={true}
+              multiline={this.state.multiline}
               defaultValue={this.state.content}
               onChangeText={(text) => {
                 this.setState({
@@ -87,13 +88,13 @@ class Comment extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   return {
     commentDone: state.get('comments').commentDone
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return bindActionCreators(commentActions, dispatch)
 }
 

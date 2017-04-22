@@ -39,7 +39,9 @@ export const SEND_COMMENTS_REJECTED = 'SEND_COMMENTS_REJECTED'
 export const SEND_COMMENTS_FULFILLED = 'SEND_COMMENTS_FULFILLED'
 
 // 评论 浮窗
-
 export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
+
+// 账户更新
+export const USER_UPDATED = 'USER_UPDATED'
 

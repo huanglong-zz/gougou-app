@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
 import Popup from '../../common/popup'
@@ -22,35 +16,21 @@ import {
   TouchableOpacity,
   Dimensions,
   ListView,
-  Image,
-  Modal,
-  AlertIOS,
-  TextInput,
-  ActivityIndicator,
-  AsyncStorage,
+  ActivityIndicator
 } from 'react-native'
 
 const {height, width} = Dimensions.get('window')
 
-let cachedResults = {
-  nextPage: 1,
-  items: [],
-  total: 0
-}
-
-
-class Detail extends React.Component {
-  constructor(props) {
+class Detail extends Component {
+  constructor (props) {
     super(props)
 
-    const data = this.props.rowData
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
 
     this.state = {
       pop: null,
-      data: data,
 
       // comments
       dataSource: ds.cloneWithRows([]),
@@ -60,15 +40,8 @@ class Detail extends React.Component {
       videoLoaded: false,
       playing: false,
       paused: false,
-      videoProgress: 0.01,
-      videoTotal: 0,
-      currentTime: 0,
-
-      // modal
-      content: '',
-      animationType: 'none',
-      modalVisible: false,
-      isSending: false,
+      duration: 0.0,
+      currentTime: 0.0,
 
       // video player
       rate: 1,
@@ -78,82 +51,101 @@ class Detail extends React.Component {
     }
   }
 
-  _onLoadStart() {
+  _onLoadStart () {
     console.log('load start')
   }
 
-  _onLoad() {
+  _onLoad (data) {
     console.log('loads')
+    this.setState({duration: data.duration})
   }
 
-  _onProgress(data) {
-    if (!this.state.videoLoaded) {
+  getCurrentTimePercentage() {
+    if (this.state.currentTime > 0) {
+      return parseFloat(this.state.currentTime) / parseFloat(this.state.duration)
+    } else {
+      return 0
+    }
+  }
+
+  _onProgress (data) {
+    console.log(data)
+    if (data.playableDuration === 0) {
       this.setState({
-        videoLoaded: true
+        currentTime: this.state.duration,
+        playing: false
       })
-    }
+    } else {
+      if (!this.state.videoLoaded) {
+        this.setState({
+          videoLoaded: true
+        })
+      }
 
-    const duration = data.playableDuration
-    const currentTime = data.currentTime
-    const percent = Number((currentTime / duration).toFixed(2))
-    let newState = {
-      videoTotal: duration,
-      currentTime: Number(data.currentTime.toFixed(2)),
-      videoProgress: percent
-    }
+      let newState = {
+        currentTime: data.currentTime,
+      }
 
-    if (!this.state.videoLoaded) {
-      newState.videoLoaded = true
-    }
-    if (!this.state.playing) {
-      newState.playing = true
-    }
+      if (!this.state.videoLoaded) {
+        newState.videoLoaded = true
+      }
+      if (!this.state.playing) {
+        newState.playing = true
+      }
 
-    this.setState(newState)
+      this.setState(newState)
+    }
   }
 
-  _onEnd() {
+  _onEnd () {
     this.setState({
-      videoProgress: 1,
+      currentTime: this.state.duration,
       playing: false
     })
   }
 
-  _onError(e) {
+  _onError (e) {
     this.setState({
       videoOk: false
     })
   }
 
-  _rePlay() {
-    this.refs.videoPlayer.seek(0)
+  _rePlay () {
+    this.player.seek(0)
   }
 
   _pause() {
-    if (!this.props.paused) {
-      this.props.videoPaused()
+    if (!this.state.paused) {
+      this.setState({
+        paused: true
+      })
     }
   }
 
   _resume() {
-    if (this.props.paused) {
-      this.props.videoPlay()
+    if (this.state.paused) {
+      this.setState({
+        paused: false
+      })
     }
   }
 
-  render() {
+  render () {
     const data = this.props.rowData
+    const flexCompleted = this.getCurrentTimePercentage()
 
     return (
       <View style={styles.container}>
         {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.videoBox}>
           <Video
-            ref='videoPlayer'
+            ref={(ref) => {
+              this.player = ref
+            }} 
             source={{uri: util.video(data.qiniu_video)}}
             style={styles.video}
             volume={5}
-            paused={this.props.paused}
+            paused={this.state.paused}
             rate={this.state.rate}
             muted={this.state.muted}
             resizeMode={this.state.resizeMode}
@@ -174,30 +166,22 @@ class Detail extends React.Component {
           }
 
           {
-            this.state.videoLoaded && !this.state.playing
-            ? <Icon
-                onPress={this._rePlay.bind(this)}
-                name='ios-play'
-                size={48}
-                style={styles.playIcon} />
-            //: <Text></Text>
-            : null
+            (this.state.videoLoaded && !this.state.playing) &&
+              <Icon onPress={this._rePlay.bind(this)} name='ios-play' size={48} style={styles.playIcon} />
           }
 
           {
             this.state.videoLoaded && this.state.playing
             ? <TouchableOpacity onPress={this._pause.bind(this)} style={styles.pauseBtn}>
               {
-                this.state.paused
-                ? <Icon onPress={this._resume.bind(this)} size={48} name='ios-play' style={styles.resumeIcon} />
-                : null
+                this.state.paused && <Icon onPress={this._resume.bind(this)} size={48} name='ios-play' style={styles.resumeIcon} />
               }
             </TouchableOpacity>
             : null
           }
 
           <View style={styles.progressBox}>
-            <View style={[styles.progressBar, {width: width * this.state.videoProgress}]}></View>
+            <View style={[styles.progressBar, {width: width * flexCompleted}]} />
           </View>
         </View>
 
@@ -207,7 +191,7 @@ class Detail extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   const {
     isLoadingTail,
     commentList,
@@ -216,9 +200,6 @@ function mapStateToProps(state) {
     page,
     user
   } = state.get('comments')
-
-  console.log('commentList map state to detail')
-  console.log(commentList)
 
   return {
     user: user,
@@ -411,16 +392,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 8,
     width: width
-  },
-
-  content: {
-    paddingLeft: 4,
-    color: '#333',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
-    fontSize: 14,
-    height: 80
   },
 
   commentArea: {

@@ -6,11 +6,16 @@ import Edit from './edit'
 import Account from './account'
 import Detail from '../components/creation/detail'
 import Comment from '../components/comment/index'
+import AccountUpdate from '../components/account/update'
 
 import {
   TabNavigator,
-  StackNavigator,
+  StackNavigator
 } from 'react-navigation'
+
+import {
+  Text
+} from 'react-native'
 
 const DetailScreen = ({ navigation }) => (
   <Detail
@@ -21,6 +26,12 @@ const DetailScreen = ({ navigation }) => (
 
 const CommentScreen = ({ navigation }) => (
   <Comment
+    navigation={navigation}
+  />
+)
+
+const AccountUpdateScreen = ({ navigation }) => (
+  <AccountUpdate
     navigation={navigation}
   />
 )
@@ -50,9 +61,9 @@ const ListTab = StackNavigator({
               color={tintColor}
               size={28} />
           )
-        },
-      }),
-    },
+        }
+      })
+    }
   },
   Detail: {
     screen: DetailScreen,
@@ -61,7 +72,7 @@ const ListTab = StackNavigator({
       header: header,
       tabBar: ({ state, setParams }) => ({
         visible: false
-      }),
+      })
     }
   },
   Comment: {
@@ -71,9 +82,46 @@ const ListTab = StackNavigator({
       header: header,
       tabBar: ({ state, setParams }) => ({
         visible: false
+      })
+    }
+  }
+})
+
+const AccountTab = StackNavigator({
+  Account: {
+    screen: Account,
+    navigationOptions: {
+      title: '狗狗的账户',
+      header: ({ navigate }) => ({
+        style: header.style,
+        tintColor: header.tintColor,
+        right: (
+          <Text style={{color: '#fff', paddingRight: 10}} onPress={() => navigate('AccountUpdate')}>编辑</Text>
+        )
       }),
+      tabBar: ({ state, setParams }) => ({
+        label: '账户',
+        icon: ({ tintColor, focused }) => {
+          return (
+            <Icon
+              name={focused ? 'ios-more' : 'ios-more-outline'}
+              color={tintColor}
+              size={28} />
+          )
+        }
+      })
     }
   },
+  AccountUpdate: {
+    screen: AccountUpdateScreen,
+    navigationOptions: {
+      title: '更新资料',
+      header: header,
+      tabBar: ({ state, setParams }) => ({
+        visible: false
+      })
+    }
+  }
 })
 
 // https://github.com/react-community/react-navigation/blob/master/docs/api/navigators/TabNavigator.md
@@ -93,39 +141,26 @@ const Tabs = TabNavigator({
               color={tintColor}
               size={28} />
           )
-        },
+        }
       })
     }
   },
   AccountTab: {
-    title: '狗狗的账户',
-    screen: Account,
-    navigationOptions: {
-      tabBar: ({ state, setParams }) => ({
-        label: '账户',
-        icon: ({ tintColor, focused }) => {
-          return (
-            <Icon
-              name={focused ? 'ios-more' : 'ios-more-outline'}
-              color={tintColor}
-              size={28} />
-          )
-        },
-      }),
-    }
+    screen: AccountTab
   }
 }, {
   tabBarOptions: {
     activeTintColor: '#ee735c',
     showLabel: false,
     labelStyle: {
-      fontSize: 14,
+      fontSize: 14
     },
     style: {
       backgroundColor: '#fff',
-    },
-  },
+      borderTopWidth: 1,
+      borderTopColor: '#f1f1f1'
+    }
+  }
 })
-
 
 export default Tabs

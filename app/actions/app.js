@@ -1,5 +1,7 @@
 import * as types from './actionTypes'
 import * as storage from '../common/storage'
+import request from '../common/request'
+import config from '../common/config'
 
 export let enteredSlide = () => {
   return (dispatch, getState) => {
@@ -84,8 +86,6 @@ export let checkUserStatus = () => {
   return (dispatch, getState) => {
     storage.getItem('user')
       .then(function (data) {
-        var type = types.CHECK_USER_STATUS
-
         if (data && data.accessToken) {
           dispatch({
             type: types.USER_LOGINED,
@@ -99,6 +99,38 @@ export let checkUserStatus = () => {
           })
         }
       })
+  }
+}
+
+export let updateUserInfo = (userInfo) => {
+  const url = config.api.update
+
+  return (dispatch, getState) => {
+    request.post(url, userInfo)
+    .then(data => {
+      if (data && data.success) {
+        storage.setItem('user', JSON.stringify(data.data))
+
+        dispatch({
+          type: types.USER_UPDATED,
+          payload: {
+            user: data.data,
+            popup: {
+              title: 'Yeah',
+              content: '更新成功'
+            }
+          }
+        })
+
+        setTimeout(function () {
+          console.log('hide')
+          dispatch({
+            type: types.HIDE_ALERT,
+            popup: null
+          })
+        }, 1500)
+      }
+    })
   }
 }
 

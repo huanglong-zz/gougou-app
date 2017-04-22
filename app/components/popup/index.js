@@ -9,19 +9,19 @@ import {
 const {height, width} = Dimensions.get('window')
 
 export default class Popup extends React.Component {
-
-  static propTypes = {
-    title: PropTypes.string,
-    content: PropTypes.string
-  }
-
-  constructor(props) {
+  constructor (props) {
     super(props)
   }
 
-  render() {
-    let title = this.props.title
-    let content = this.props.content
+  render () {
+    const {
+      title,
+      content
+    } = this.props
+
+    if (!title && !content) {
+      return null
+    }
 
     return (
       <View style={styles.popupContainer}>
@@ -54,8 +54,7 @@ let styles = StyleSheet.create({
     alignItems: 'center',
     width: width,
     height: height,
-    overflow: 'hidden',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)'
   },
 
   tipBoxView: {
@@ -63,43 +62,37 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: width - 50,
-    borderRadius: 12,
-    overflow: 'hidden',
+    borderRadius: 12
   },
-  
+
   tipBox: {
-    flex: 1,
     paddingTop: 15,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-  
+
   tipTitleBox: {
     height: 30,
-    width: width - 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: width - 50
   },
-  
+
   tipTitle: {
     fontSize: 19,
     fontWeight: '500',
-    textAlign: 'center',
+    textAlign: 'center'
   },
-  
+
   tipContentBox: {
-    flex: 1,
-    flexDirection: 'column',
-    marginBottom: 15,
     marginTop: 10,
+    marginBottom: 15,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   tipContent: {
     fontSize: 16,
     marginBottom: 5,
-    textAlign: 'center',
+    textAlign: 'center'
   }
 })
