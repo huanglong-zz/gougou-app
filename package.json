@@ -14,7 +14,7 @@
     "query-string": "^4.2.3",
     "react": "~15.4.1",
     "react-addons-update": "^15.0.0",
-    "react-native": "0.42.0",
+    "react-native": "0.42.3",
     "react-native-audio": "^3.2.2",
     "react-native-button": "^1.7.1",
     "react-native-cli": "^1.0.0",

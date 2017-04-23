@@ -296,6 +296,8 @@ export default class Edit extends Component {
   _showModal () {
     this.setState({
       modalVisible: true
+    }, function() {
+      console.log(33323)
     })
   }
 
@@ -414,10 +416,13 @@ export default class Edit extends Component {
             }
           })
           .then((data) => {
+            console.log(data)
+            console.log('data.data')
             if (data && data.success) {
               let mediaState = {}
 
               mediaState[type + 'Id'] = data.data
+
 
               if (type === 'audio') {
                 mediaState.modalVisible = true
@@ -488,7 +493,7 @@ export default class Edit extends Component {
               name: key
             })
 
-            //that._upload(body, 'video')
+            that._upload(body, 'video')
           }
         })
     })
@@ -621,7 +626,8 @@ export default class Edit extends Component {
     return (
       <Modal
         animationType={'slide'}
-        visible={this.state.modalVisible}
+        visible={true}
+        onShow={() => {console.log('Modal has been opened.')}}
         onRequestClose={() => {console.log('Modal has been closed.')}}>
         <View style={styles.modalContainer}>
           <Icon
@@ -664,6 +670,7 @@ export default class Edit extends Component {
 
               <Circle
                 showsText
+                thickness={5}
                 size={60}
                 color={'#ee735c'}
                 progress={this.state.publishProgress} />
@@ -690,10 +697,11 @@ export default class Edit extends Component {
 
     return (
       <View style={styles.container}>
+        {this.state.modalVisible && this.renderModal()}
         {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.toolbar}>
           <Text style={styles.toolbarTitle}>
-            {this.state.previewVideo ? ('点击按钮配音' + this.state.modalVisible) : ('理解狗狗，从配音开始' + this.state.modalVisible)}
+            {this.state.previewVideo ? '点击按钮配音' : '理解狗狗，从配音开始'}
           </Text>
           {
             this.state.previewVideo && this.state.videoUploaded
@@ -790,7 +798,8 @@ export default class Edit extends Component {
                 {
                   this.state.recordDone && !this.state.recording && this.state.audioUploading
                   ? <Circle
-                      showsText={true}
+                      showsText
+                      thickness={5}
                       size={60}
                       color={'#ee735c'}
                       progress={this.state.audioUploadedProgress} />
@@ -813,7 +822,6 @@ export default class Edit extends Component {
             : null
           }
         </View>
-        { this.state.modalVisible && this.renderModal() }
       </View>
     )
   }
@@ -934,6 +942,7 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     marginTop: -30,
+    marginBottom: 20,
     borderRadius: 34,
     backgroundColor: '#ee735c',
     borderWidth: 1,
@@ -1005,10 +1014,7 @@ const styles = StyleSheet.create({
   },
 
   modalContainer: {
-    width: width,
-    height: height,
-    paddingTop: 50,
-    backgroundColor: '#fff'
+    flex: 1
   },
 
   closeIcon: {
@@ -1036,7 +1042,7 @@ const styles = StyleSheet.create({
   fieldBox: {
     width: width - 40,
     height: 36,
-    marginTop: 30,
+    marginTop: 100,
     marginLeft: 20,
     marginRight: 20,
     borderBottomWidth: 1,
@@ -1051,7 +1057,7 @@ const styles = StyleSheet.create({
   },
 
   submitBox: {
-    marginTop: 50,
+    marginTop: 20,
     padding: 15
   },
 
