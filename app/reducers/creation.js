@@ -7,6 +7,7 @@ const initialState = {
   total: 0,
   nextPage: 1,
   videoList: [],
+  videoReadyList: [],
   nextVideoList: [],
   isLoading: true,
   isLoadMore: false,

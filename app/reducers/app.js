@@ -8,9 +8,9 @@ const initialState = {
   user: null,
   popup: null,
   banners: [
-    require('../assets/images/s1.jpg'),
-    require('../assets/images/s2.jpg'),
-    require('../assets/images/s3.jpg')
+    require('../static/images/s1.jpg'),
+    require('../static/images/s2.jpg'),
+    require('../static/images/s3.jpg')
   ]
 }
 

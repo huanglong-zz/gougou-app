@@ -15,6 +15,10 @@ import {Circle} from 'react-native-progress'
 import Button from 'react-native-button'
 import Popup from '../common/popup'
 
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as creationActions from '../actions/creation'
+
 import React, {Component} from 'react'
 import {
   StyleSheet,
@@ -99,14 +103,11 @@ const defaultState = {
   repeat: false
 }
 
-export default class Edit extends Component {
+class Edit extends Component {
 
   constructor (props) {
     super(props)
-    const user = this.props.user || {}
     const state = _.clone(defaultState)
-
-    state.user = user
 
     this.state = state
   }
@@ -296,8 +297,6 @@ export default class Edit extends Component {
   _showModal () {
     this.setState({
       modalVisible: true
-    }, function() {
-      console.log(33323)
     })
   }
 
@@ -338,7 +337,7 @@ export default class Edit extends Component {
   _getToken (body) {
     const signatureURL = config.api.signature
 
-    body.accessToken = this.state.user.accessToken
+    body.accessToken = this.props.user.accessToken
 
     return request.post(signatureURL, body)
   }
@@ -394,7 +393,7 @@ export default class Edit extends Component {
         that.setState(newState)
 
         const updateURL = config.api[type]
-        const accessToken = this.state.user.accessToken
+        const accessToken = this.props.user.accessToken
         let updateBody = {
           accessToken: accessToken
         }
@@ -469,7 +468,6 @@ export default class Edit extends Component {
       const uri = res.uri
 
       state.previewVideo = uri
-      state.user = this.state.user
       that.setState(state)
 
       that._getToken({
@@ -536,25 +534,6 @@ export default class Edit extends Component {
     }
   }
 
-  componentDidMount () {
-    let that = this
-
-    AsyncStorage.getItem('user')
-      .then((data) => {
-        let user
-
-        if (data) {
-          user = JSON.parse(data)
-        }
-
-        if (user && user.accessToken) {
-          that.setState({
-            user: user
-          })
-        }
-      })
-  }
-
   _submit () {
     let that = this
     let body = {
@@ -564,7 +543,7 @@ export default class Edit extends Component {
     }
 
     const creationURL = config.api.creations
-    const user = this.state.user
+    const user = this.props.user
 
     if (user && user.accessToken) {
       body.accessToken = user.accessToken
@@ -610,16 +589,6 @@ export default class Edit extends Component {
         })
       }, 1500)
     })
-  }
-
-  onBuffer (isBuffering) {
-    console.log('isBuffering')
-    console.log(isBuffering)
-  }
-
-  onTimedMetadata (onTimedMetadata) {
-    console.log('onTimedMetadata')
-    console.log(onTimedMetadata)
   }
 
   renderModal () {
@@ -727,9 +696,6 @@ export default class Edit extends Component {
                   resizeMode={this.state.resizeMode}
                   repeat={this.state.repeat}
 
-                  onBuffer={this.onBuffer}
-                  onTimedMetadata={this.onTimedMetadata}
-
                   onLoadStart={this._onLoadStart.bind(this)}
                   onLoad={this._onLoad.bind(this)}
                   onProgress={this._onProgress.bind(this)}
@@ -776,7 +742,7 @@ export default class Edit extends Component {
             </View>
             : <TouchableOpacity style={styles.uploadContainer} onPress={this._pickVideo.bind(this)}>
               <View style={styles.uploadBox}>
-                <Image source={require('../assets/images/record.png')} style={styles.uploadIcon} />
+                <Image source={require('../static/images/record.png')} style={styles.uploadIcon} />
                 <Text style={styles.uploadTitle}>点我上传视频</Text>
                 <Text style={styles.uploadDesc}>建议时长不超过 15 秒</Text>
               </View>
@@ -826,6 +792,23 @@ export default class Edit extends Component {
     )
   }
 }
+
+function mapStateToProps (state) {
+  const {
+    user
+  } = state.get('app')
+
+  return {
+    user: user
+  }
+}
+
+
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators(creationActions, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Edit)
 
 const styles = StyleSheet.create({
   container: {
