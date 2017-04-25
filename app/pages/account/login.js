@@ -6,9 +6,9 @@
 
 // ES5
 import Button from 'react-native-button'
-import request from '../common/request'
-import config from '../common/config'
-import Popup from '../common/popup'
+import request from '../../common/request'
+import config from '../../common/config'
+import Popup from '../../components/popup'
 
 import React, {Component} from 'react'
 import {

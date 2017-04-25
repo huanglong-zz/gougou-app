@@ -1,16 +1,9 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-// ES5
+import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import request from '../../common/request'  
 import config from '../../common/config'
 import * as util from '../../common/util'
 
-import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
@@ -22,9 +15,10 @@ import {
 
 const {height, width} = Dimensions.get('window')
 
-export default class Item extends React.Component {
+export default class Item extends Component {
   constructor (props) {
     super(props)
+
     const row = this.props.row
 
     this.state = {
@@ -34,8 +28,8 @@ export default class Item extends React.Component {
   }
 
   _up () {
-    let that = this
-    let up = !this.state.up
+    const that = this
+    const up = !this.state.up
     const row = this.state.row
     const url = config.api.up
 
@@ -47,16 +41,17 @@ export default class Item extends React.Component {
 
     request.post(url, body)
       .then(function (data) {
+        that.props.popup('失败', '点赞失败，稍后重试')
         if (data && data.success) {
           that.setState({
             up: up
           })
         } else {
-          that.props.alert('失败', '点赞失败，稍后重试')
+          that.props.popup('失败', '点赞失败，稍后重试')
         }
       })
       .catch(function (err) {
-        that.props.alert('失败', '点赞失败，稍后重试')
+        that.props.popup('失败', '点赞失败，稍后重试')
       })
   }
 

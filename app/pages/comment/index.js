@@ -24,7 +24,7 @@ import {
 
 const {height, width} = Dimensions.get('window')
 
-class Comment extends React.Component {
+class Comment extends Component {
   constructor (props) {
     super(props)
 
@@ -54,10 +54,7 @@ class Comment extends React.Component {
       isSending: true
     })
 
-    this.props.sendComment({
-      creation: this.props.navigation.state.params.rowData._id,
-      content: this.state.content
-    })
+    this.props.submit(this.state.content)
   }
 
   render () {
@@ -88,17 +85,7 @@ class Comment extends React.Component {
   }
 }
 
-function mapStateToProps (state) {
-  return {
-    commentDone: state.get('comments').commentDone
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return bindActionCreators(commentActions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Comment)
+export default Comment
 
 const styles = StyleSheet.create({
   commentContainer: {

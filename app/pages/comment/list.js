@@ -1,18 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-// ES5
+import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import * as commentActions from '../../actions/comment'
 import * as util from '../../common/util'
 
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-
-import React, {Component} from 'react'
 import {
   StyleSheet,
   Text,
@@ -25,7 +14,7 @@ import {
 
 const {height, width} = Dimensions.get('window')
 
-class Comment extends React.Component {
+class Comment extends Component {
   constructor(props) {
     super(props)
   }
@@ -153,31 +142,7 @@ class Comment extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  const {
-    isLoadingTail,
-    commentList,
-    nextPage,
-    commentTotal,
-    page,
-    user
-  } = state.get('comments')
-
-  return {
-    user: user,
-    page: page,
-    nextPage: nextPage,
-    isLoadingTail: isLoadingTail,
-    commentTotal: commentTotal,
-    commentList: commentList
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(commentActions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Comment)
+export default Comment
 
 const styles = StyleSheet.create({
   container: {

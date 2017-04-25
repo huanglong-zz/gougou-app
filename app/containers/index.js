@@ -3,9 +3,9 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
 import Tabs from './tabs'
-import Login from './login'
-import BootPage from '../components/boot'
-import Slider from '../components/slider'
+import Boot from '../components/boot'
+import Login from '../pages/account/login'
+import Slider from '../pages/slider'
 import * as appActions from '../actions/app'
 
 // import {
@@ -33,7 +33,7 @@ class App extends Component {
 
   render() {
     if (!this.props.booted) {
-      return <BootPage {...this.props} />
+      return <Boot {...this.props} />
     }
 
     if (!this.props.entered) {

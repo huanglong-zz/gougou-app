@@ -1,6 +1,6 @@
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
-import Popup from '../../common/popup'
+import Popup from '../../components/popup'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
@@ -191,31 +191,7 @@ class Detail extends Component {
   }
 }
 
-function mapStateToProps (state) {
-  const {
-    isLoadingTail,
-    commentList,
-    nextPage,
-    commentTotal,
-    page,
-    user
-  } = state.get('comments')
-
-  return {
-    user: user,
-    page: page,
-    nextPage: nextPage,
-    isLoadingTail: isLoadingTail,
-    commentTotal: commentTotal,
-    commentList: commentList
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(commentActions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Detail)
+export default Detail
 
 const styles = StyleSheet.create({
   container: {

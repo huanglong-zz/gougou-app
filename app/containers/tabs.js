@@ -2,11 +2,11 @@ import React, {Component, PropTypes} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import List from './creation'
+import Detail from './detail'
+import Comment from './comment'
 import Edit from './edit'
 import Account from './account'
-import Detail from '../components/creation/detail'
-import Comment from '../components/comment/index'
-import AccountUpdate from '../components/account/update'
+import AccountUpdate from './accountUpdate'
 
 import {
   TabNavigator,

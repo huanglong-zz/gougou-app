@@ -1,4 +1,3 @@
-
 import React, {Component} from 'react'
 import {
   View,
@@ -19,12 +18,10 @@ const styles = StyleSheet.create({
 })
 
 
-export default class bootPage extends React.Component {
-  render() {
-    return (
-      <View style={styles.bootPage}>
-        <ActivityIndicator color='#ee735c' />
-      </View>
-    )
-  }
-}
+const Boot = () => (
+  <View style={styles.bootPage}>
+    <ActivityIndicator color='#ee735c' />
+  </View>
+)
+
+export default Boot

@@ -1,11 +1,8 @@
 import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
-
-import * as creationActions from '../../actions/creation'
-import Popup from '../../common/popup'
+import Popup from '../../components/popup'
+import Loading from '../../components/loading'
+import NoMore from '../../components/nomore'
 import Detail from './detail'
 import Item from './item'
 
@@ -32,12 +29,12 @@ class List extends React.Component {
     return <Item
       key={row._id}
       user={this.props.user}
-      alert={this._pop.bind(this)}
+      popup={this._popup.bind(this)}
       onSelect={() => this.props.onLoadItem(row)}
       row={row} />
   }
 
-  _pop(title, content) {
+  _popup(title, content) {
     this.props.popAlert(title, content)
   }
 
@@ -47,7 +44,7 @@ class List extends React.Component {
       videoList
     } = this.props
 
-    return videoList.length !== videoTotal
+    return videoList.length <= videoTotal
   }
 
   _renderFooter() {
@@ -58,15 +55,11 @@ class List extends React.Component {
     } = this.props
 
     if (!this._hasMore() && videoTotal !== 0) {
-      return (
-        <View style={styles.loadingMore}>
-          <Text style={styles.loadingText}>没有更多了</Text>
-        </View>
-      )
+      return <NoMore />
     }
 
     if (!isLoadingTail) {
-      return <ActivityIndicator style={styles.loadingMore} />
+      return <Loading />
     }
 
     return null
@@ -121,6 +114,7 @@ class List extends React.Component {
           showsVerticalScrollIndicator={false}
           automaticallyAdjustContentInsets={false}
         />
+        <Popup {...this.props} />
       </View>
     )
   }
@@ -129,26 +123,7 @@ class List extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-
-  loadingMore: {
-    marginVertical: 20
-  },
-
-  loadingText: {
-    color: '#777',
-    textAlign: 'center'
   }
 })
 
-function mapStateToProps(state) {
-  return {
-    user: state.get('app').user
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(creationActions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(List)
+export default List

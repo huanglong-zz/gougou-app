@@ -108,3 +108,21 @@ export let fetchCreations = (page) => {
         })
     }
 }
+
+export let popAlert = (title, content) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: types.SHOW_ALERT,
+      payload: {
+        title: title,
+        content: content
+      }
+    })
+
+    setTimeout(function () {
+      dispatch({
+        type: types.HIDE_ALERT
+      })
+    }, 1500)
+  }
+}

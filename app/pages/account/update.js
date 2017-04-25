@@ -13,12 +13,7 @@ import ImagePicker from 'react-native-image-picker'
 import request from '../../common/request'
 import config from '../../common/config'
 import util from '../../common/util'
-import Popup from '../popup'
-
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-
-import * as appActions from '../../actions/app'
+import Popup from '../../components/popup'
 
 import React, {Component} from 'react'
 import {
@@ -314,18 +309,8 @@ class AccountUpdate extends Component {
   }
 }
 
-function mapStateToProps (state) {
-  return {
-    user: state.get('app').user,
-    popup: state.get('app').popup
-  }
-}
 
-function mapDispatchToProps (dispatch) {
-  return bindActionCreators(appActions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AccountUpdate)
+export default AccountUpdate
 
 const styles = StyleSheet.create({
   container: {

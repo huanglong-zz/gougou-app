@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import CreationList from '../components/creation/list'
+import CreationList from '../pages/creation/list'
 import * as creationActions from '../actions/creation'
 
 class creationContainer extends Component {
@@ -37,8 +37,12 @@ function mapStateToProps (state) {
     nextPage,
     videoTotal,
     page,
-    user
   } = state.get('creations')
+  
+  const {
+    popup,
+    user
+  } = state.get('app')
 
   return {
     isRefreshing: isRefreshing,
@@ -46,6 +50,7 @@ function mapStateToProps (state) {
     videoTotal: videoTotal,
     nextPage: nextPage,
     page: page,
+    popup: popup,
     user: user,
     videoList: videoList
   }

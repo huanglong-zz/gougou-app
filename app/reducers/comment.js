@@ -1,8 +1,6 @@
 import * as types from '../actions/actionTypes'
 
 const initialState = {
-  logined: false,
-  user: null,
   page: 0,
   total: 0,
   nextPage: 1,
