@@ -26,12 +26,20 @@ let creationReducer = (state = initialState, action) => {
         isRefreshing: false
       }
     case types.FETCH_CREATIONS_FULFILLED:
+      let videoList = state.videoList.slice()
+      let newVideoList = action.payload.newVideoList
+
+      if (!action.payload.up) {
+        newVideoList = videoList.concat(newVideoList)
+      }
+      else {
+        newVideoList = newVideoList.concat(videoList)
+      }
+
       return {
         ...state,
-        videoList: action.payload.videoList,
+        videoList: newVideoList,
         videoTotal: action.payload.videoTotal,
-        nextPage: action.payload.nextPage,
-        page: action.payload.page,
         isLoadingTail: action.payload.isLoadingTail,
         isLoading: false,
         isRefreshing: false

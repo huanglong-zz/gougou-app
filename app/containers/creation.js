@@ -47,7 +47,6 @@ function mapStateToProps (state) {
     isRefreshing: isRefreshing,
     isLoadingTail: isLoadingTail,
     videoTotal: videoTotal,
-    page: page,
     popup: popup,
     user: user,
     videoList: videoList

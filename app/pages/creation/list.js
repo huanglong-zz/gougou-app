@@ -67,16 +67,17 @@ class List extends React.Component {
   _fetchMoreData() {
     const {
       isLoadingTail,
+      videoList,
       fetchCreations
     } = this.props
 
     if (this._hasMore() && !isLoadingTail) {
-      fetchCreations()
+      fetchCreations(videoList[videoList.length - 1]._id)
     }
   }
 
   _onRefresh() {
-    this.props.fetchCreations(true)
+    this.props.fetchCreations(true, this.props.videoList[0]._id)
   }
 
   render() {

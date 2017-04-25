@@ -12,31 +12,17 @@ import config from '../common/config'
 import request from '../common/request'
 import * as storage from '../common/storage'
 
-export let fetchCreations = (up) => {
+export let fetchCreations = (up, cid) => {
   return (dispatch, getState) => {
     let url = config.api.creations
     let isLoadingTail = false
     let isRefreshing = false
-    let cid
-    let {
-      videoList,
-      videoTotal
-    } = getState()
 
     if (up) {
       isRefreshing = true
     }
     else {
       isLoadingTail = true
-    }
-
-    if (videoList && videoList.length > 0) {
-      if (up) {
-        cid = videoList[0]
-      }
-      else {
-        cid = videoList[videoList.length - 1]
-      }
     }
 
     dispatch({
@@ -73,26 +59,12 @@ export let fetchCreations = (up) => {
                 return item
               })
 
-
-              let newVideoList = videoList || []
-              let items = newVideoList.slice()
-
-              if (!up) {
-                items = items.concat(data.data)
-              }
-              else {
-                items = data.data.concat(items)
-              }
-
-              newVideoList = items
-              videoTotal = data.total
-
               dispatch({
                 type: types.FETCH_CREATIONS_FULFILLED,
                 payload: {
                   user: user,
-                  videoList: newVideoList,
-                  videoTotal: videoTotal,
+                  newVideoList: data.data,
+                  videoTotal: data.total,
                   isLoadingTail: false,
                   isRefreshing: false
                 }
