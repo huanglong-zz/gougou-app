@@ -50,8 +50,7 @@ class List extends React.Component {
   _renderFooter() {
     const {
       videoTotal,
-      isLoadingTail,
-      fetchCreations
+      isLoadingTail
     } = this.props
 
     if (!this._hasMore() && videoTotal !== 0) {
@@ -67,18 +66,17 @@ class List extends React.Component {
 
   _fetchMoreData() {
     const {
-      nextPage,
       isLoadingTail,
       fetchCreations
     } = this.props
 
-    if (!this._hasMore() || isLoadingTail) {
-      fetchCreations(nextPage)
+    if (this._hasMore() && !isLoadingTail) {
+      fetchCreations()
     }
   }
 
   _onRefresh() {
-    this.props.fetchCreations()
+    this.props.fetchCreations(true)
   }
 
   render() {
@@ -86,7 +84,6 @@ class List extends React.Component {
       videoList,
       fetchCreations,
       isRefreshing,
-      nextPage,
       onRefresh,
     } = this.props
 

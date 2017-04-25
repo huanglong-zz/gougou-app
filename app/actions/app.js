@@ -69,8 +69,6 @@ export let willEnterApp = () => {
         let user = data[0]
         let entered = data[1]
 
-        console.log(user)
-        console.log(entered)
         dispatch({
           type: types.WILL_ENTER_APP,
           payload: {

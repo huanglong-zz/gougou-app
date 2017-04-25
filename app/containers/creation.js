@@ -17,7 +17,7 @@ class creationContainer extends Component {
   }
 
   componentWillMount () {
-    this.props.fetchCreations(1)
+    this.props.fetchCreations()
   }
   
   render () {
@@ -34,7 +34,6 @@ function mapStateToProps (state) {
     isRefreshing,
     isLoadingTail,
     videoList,
-    nextPage,
     videoTotal,
     page,
   } = state.get('creations')
@@ -48,7 +47,6 @@ function mapStateToProps (state) {
     isRefreshing: isRefreshing,
     isLoadingTail: isLoadingTail,
     videoTotal: videoTotal,
-    nextPage: nextPage,
     page: page,
     popup: popup,
     user: user,

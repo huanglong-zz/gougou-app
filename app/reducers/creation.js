@@ -1,11 +1,8 @@
 import * as types from '../actions/actionTypes'
 
 const initialState = {
-  page: 0,
   total: 0,
-  nextPage: 1,
   videoList: [],
-  videoReadyList: [],
   nextVideoList: [],
   isLoading: true,
   isLoadMore: false,
@@ -15,11 +12,12 @@ const initialState = {
 let creationReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_CREATIONS_STAET:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isLoadMore: action.payload.isLoadMore,
         isRefreshing: action.payload.isRefreshing,
         isLoading: action.payload.isLoading
-      })
+      }
     case types.FETCH_CREATIONS_REJECTED:
       return {
         ...state,
