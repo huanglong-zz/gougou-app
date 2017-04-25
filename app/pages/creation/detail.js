@@ -30,8 +30,6 @@ class Detail extends Component {
     })
 
     this.state = {
-      pop: null,
-
       // comments
       dataSource: ds.cloneWithRows([]),
 
@@ -136,7 +134,6 @@ class Detail extends Component {
 
     return (
       <View style={styles.container}>
-        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.videoBox}>
           <Video
             ref={(ref) => {
@@ -186,6 +183,7 @@ class Detail extends Component {
         </View>
 
         <CommentList rowData={this.props.rowData} {...this.props} />
+        <Popup {...this.props.pop} />
       </View>
     )
   }

@@ -20,6 +20,7 @@ class DetailContainer extends Component {
 
 function mapStateToProps (state) {
   return {
+    popup: state.get('app').popup,
     user: state.get('app').user,
     page: state.get('comments').page,
     nextPage: state.get('comments').nextPage,

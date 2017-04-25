@@ -101,10 +101,6 @@ class AccountUpdate extends Component {
     })
   }
 
-  _alert (title, content) {
-    this.props.popAlert(title, content)
-  }
-
   componentDidMount () {
     this.props.checkUserStatus()
   }
@@ -122,13 +118,13 @@ class AccountUpdate extends Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        that._alert('呜呜~', '上传失败，稍后重试')
+        that.props.popAlert('呜呜~', '上传失败，稍后重试')
 
         return
       }
 
       if (!xhr.responseText) {
-        that._alert('呜呜~', '服务器异常，稍后重试')
+        that.props.popAlert('呜呜~', '服务器异常，稍后重试')
 
         return
       }
@@ -138,7 +134,7 @@ class AccountUpdate extends Component {
       try {
         response = JSON.parse(xhr.response)
       } catch (e) {
-        that._alert('呜呜~', '返回数据异常，稍后重试')
+        that.props.popAlert('呜呜~', '返回数据异常，稍后重试')
       }
 
       if (response) {
@@ -303,7 +299,7 @@ class AccountUpdate extends Component {
             style={styles.btn}
             onPress={this._updateUser.bind(this)}>保存资料</Button>
         </View>
-        <Popup {...this.props.popup} />
+        <Popup {...this.props} />
       </View>
     )
   }

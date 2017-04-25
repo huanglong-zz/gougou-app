@@ -20,11 +20,13 @@ class EditContainer extends Component {
 
 function mapStateToProps (state) {
   const {
-    user
+    user,
+    popup
   } = state.get('app')
 
   return {
-    user: user
+    user: user,
+    popup: popup
   }
 }
 

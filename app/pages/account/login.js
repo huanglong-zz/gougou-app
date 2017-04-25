@@ -60,7 +60,7 @@ export default class Login extends React.Component {
     const phoneNumber = this.state.phoneNumber
 
     if (!phoneNumber) {
-      return that._alert('呜呜~', '手机号不能为空！')
+      return that.props.popAlert('呜呜~', '手机号不能为空！')
     }
 
     let body = {
@@ -71,16 +71,14 @@ export default class Login extends React.Component {
 
     request.post(signupURL, body)
       .then((data) => {
-        console.log(data)
         if (data && data.success) {
           that._showVerifyCode()
         } else {
-          that._alert('呜呜~', '获取验证码失败，请检查手机号是否正确')
+          that.props.popAlert('呜呜~', '获取验证码失败，请检查手机号是否正确')
         }
       })
       .catch((err) => {
-        console.log(err)
-        that._alert('呜呜~', '获取验证码失败，请检查网络是否良好')
+        that.props.popAlert('呜呜~', '获取验证码失败，请检查网络是否良好')
       })
   }
 
@@ -90,7 +88,7 @@ export default class Login extends React.Component {
     const verifyCode = this.state.verifyCode
 
     if (!phoneNumber || !verifyCode) {
-      return that._alert('呜呜~', '手机号或验证码不能为空！')
+      return that.props.popAlert('呜呜~', '手机号或验证码不能为空！')
     }
 
     let body = {
@@ -114,34 +112,17 @@ export default class Login extends React.Component {
             that.setState({
               submiting: false
             })
-            that._alert('呜呜~', '获取验证码失败，请检查手机号是否正确')
+            that.props.popAlert('呜呜~', '获取验证码失败，请检查手机号是否正确')
           }
         })
         .catch((err) => {
           that.setState({
             submiting: false
           })
-          that._alert('呜呜~', '获取验证码失败，请检查网络是否良好')
+          that.props.popAlert('呜呜~', '获取验证码失败，请检查网络是否良好')
         })
     })
 
-  }
-
-  _alert (title, content) {
-    var that = this
-
-    this.setState({
-      pop: {
-        title: title,
-        content: content
-      }
-    }, function () {
-      setTimeout(function () {
-        that.setState({
-          pop: null
-        })
-      }, 1500)
-    })
   }
 
   _tick() {
@@ -180,7 +161,6 @@ export default class Login extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.signupBox}>
           <Text style={styles.title}>快速登录</Text>
           <TextInput
@@ -234,6 +214,7 @@ export default class Login extends React.Component {
               onPress={this._sendVerifyCode.bind(this)}>获取验证码</Button>
           }
         </View>
+        <Popup {...this.props} />
       </View>
     )
   }

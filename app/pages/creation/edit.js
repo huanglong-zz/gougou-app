@@ -45,7 +45,6 @@ const videoOptions = {
 }
 
 const defaultState = {
-  pop: null,
   previewVideo: null,
 
   videoId: null,
@@ -351,14 +350,14 @@ class Edit extends Component {
     xhr.open('POST', url)
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        that._alert('呜呜~', '请求失败')
+        that.props.popAlert('呜呜~', '请求失败')
         console.log(xhr.responseText)
 
         return
       }
 
       if (!xhr.responseText) {
-        that._alert('呜呜~', '未获得服务器响应')
+        that.props.popAlert('呜呜~', '未获得服务器响应')
 
         return
       }
@@ -398,9 +397,9 @@ class Edit extends Component {
           .catch((err) => {
             console.log(err)
             if (type === 'video') {
-              that._alert('呜呜~', '视频同步出错，请重新上传！')
+              that.props.popAlert('呜呜~', '视频同步出错，请重新上传！')
             } else if (type === 'audio') {
-              that._alert('呜呜~', '音频同步出错，请重新上传！')
+              that.props.popAlert('呜呜~', '音频同步出错，请重新上传！')
             }
           })
           .then((data) => {
@@ -421,9 +420,9 @@ class Edit extends Component {
               that.setState(mediaState)
             } else {
               if (type === 'video') {
-                that._alert('呜呜~', '视频同步出错，请重新上传！')
+                that.props.popAlert('呜呜~', '视频同步出错，请重新上传！')
               } else if (type === 'audio') {
-                that._alert('呜呜~', '音频同步出错，请重新上传！')
+                that.props.popAlert('呜呜~', '音频同步出错，请重新上传！')
               }
             }
           })
@@ -464,7 +463,7 @@ class Edit extends Component {
         cloud: 'qiniu'
       })
       .catch((err) => {
-        that._alert('呜呜~', '上传出错')
+        that.props.popAlert('呜呜~', '上传出错')
       })
         .then((data) => {
           if (data && data.success) {
@@ -544,12 +543,12 @@ class Edit extends Component {
       request
         .post(creationURL, body)
         .catch((err) => {
-          that._alert('呜呜~', '视频发布失败，请稍后重试')
+          that.props.popAlert('呜呜~', '视频发布失败，请稍后重试')
         })
         .then((data) => {
           if (data && data.success) {
             that._closeModal()
-            that._alert('汪汪~', '视频发布成功')
+            that.props.popAlert('汪汪~', '视频发布成功')
             const state = _.clone(defaultState)
 
             that.setState(state)
@@ -557,27 +556,10 @@ class Edit extends Component {
             this.setState({
               publishing: false
             })
-            that._alert('呜呜~', '视频发布失败')
+            that.props.popAlert('呜呜~', '视频发布失败')
           }
         })
     }
-  }
-
-  _alert (title, content) {
-    var that = this
-
-    this.setState({
-      pop: {
-        title: title,
-        content: content
-      }
-    }, function () {
-      setTimeout(function () {
-        that.setState({
-          pop: null
-        })
-      }, 1500)
-    })
   }
 
   renderModal () {
@@ -656,7 +638,6 @@ class Edit extends Component {
     return (
       <View style={styles.container}>
         {this.state.modalVisible && this.renderModal()}
-        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.toolbar}>
           <Text style={styles.toolbarTitle}>
             {this.state.previewVideo ? '点击按钮配音' : '理解狗狗，从配音开始'}
@@ -777,6 +758,7 @@ class Edit extends Component {
             : null
           }
         </View>
+        <Popup {...this.props} />
       </View>
     )
   }

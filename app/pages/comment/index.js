@@ -60,7 +60,6 @@ class Comment extends Component {
   render () {
     return (
       <View style={styles.commentContainer}>
-        {this.state.pop && <Popup {...this.state.pop} />}
         <View style={styles.commentBox}>
           <View style={styles.comment}>
             <TextInput
@@ -80,6 +79,7 @@ class Comment extends Component {
         {this.state.isSending && <ActivityIndicator color='#ee735c' />}
 
         <Button style={styles.submitBtn} onPress={this._submit.bind(this)}>评论</Button>
+        <Popup {...this.props} />
       </View>
     )
   }

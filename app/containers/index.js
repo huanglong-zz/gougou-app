@@ -51,6 +51,7 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
+    popup: state.get('app').popup,
     booted: state.get('app').booted,
     entered: state.get('app').entered,
     logined: state.get('app').logined,
