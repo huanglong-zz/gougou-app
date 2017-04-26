@@ -1,7 +1,7 @@
 import React from 'react'
 import {Provider} from 'react-redux'
 import {AppRegistry} from 'react-native'
-import AppContainer from './containers/index'
+import AppContainer from './containers/app'
 import configureStore from './store'
 
 // 我们通过 redux 来创建存数据的对象 store，把 store 放到 provider 里面，这样就被传递给了我们的容器 RootContainer

@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import * as util from '../../common/util'
+import Loading from '../../components/loading'
+import NoMore from '../../components/nomore'
 
 import {
   StyleSheet,
@@ -20,21 +22,7 @@ class Comment extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchComments(1, this.props.rowData._id)
-  }
-
-  _fetchMoreData() {
-    if (!this._hasMore() || this.props.isLoadingTail) {
-      this.setState({
-        isLoadingTail: false
-      })
-
-      return
-    }
-
-    const page = this.props.nextPage
-
-    this.props.fetchComments(page)
+    this.props.fetchComments(false, null, this.props.rowData._id)
   }
 
   _hasMore() {
@@ -43,7 +31,40 @@ class Comment extends Component {
       commentList
     } = this.props
 
-    return commentList.length !== commentTotal
+    return commentList.length < commentTotal
+  }
+
+  _renderFooter() {
+    const {
+      commentTotal,
+      isCommentLoadingTail
+    } = this.props
+
+    if (!this._hasMore() && commentTotal !== 0) {
+      return <NoMore />
+    }
+
+    if (!isCommentLoadingTail) {
+      return <Loading />
+    }
+
+    return null
+  }
+
+  _fetchMoreData() {
+    const {
+      isCommentLoadingTail,
+      commentList,
+      fetchCreations
+    } = this.props
+
+    if (this._hasMore() && !isCommentLoadingTail) {
+      fetchCreations(false, commentList[commentList.length - 1]._id, this.props.rowData._id)
+    }
+  }
+
+  _onRefresh() {
+    this.props.fetchComments(true, this.props.commentList[0]._id, this.props.rowData._id)
   }
 
   _focus() {
@@ -62,7 +83,7 @@ class Comment extends Component {
       )
     }
 
-    if (!this.props.isLoadingTail) {
+    if (!this.props.isCommentLoadingTail) {
       return <View style={styles.loadingMore} />
     }
 

@@ -44,7 +44,7 @@ class List extends React.Component {
       videoList
     } = this.props
 
-    return videoList.length <= videoTotal
+    return videoList.length < videoTotal
   }
 
   _renderFooter() {
@@ -72,7 +72,7 @@ class List extends React.Component {
     } = this.props
 
     if (this._hasMore() && !isLoadingTail) {
-      fetchCreations(videoList[videoList.length - 1]._id)
+      fetchCreations(false, videoList[videoList.length - 1]._id)
     }
   }
 

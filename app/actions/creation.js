@@ -38,6 +38,10 @@ export let fetchCreations = (up, cid) => {
       cid: cid
     }
 
+
+    console.log(cid)
+    console.log('cid====')
+
     storage.getItem('user')
       .then(function(user) {
         body.accessToken = user.accessToken
@@ -62,6 +66,7 @@ export let fetchCreations = (up, cid) => {
               dispatch({
                 type: types.FETCH_CREATIONS_FULFILLED,
                 payload: {
+                  up: up,
                   user: user,
                   newVideoList: data.data,
                   videoTotal: data.total,

@@ -1,15 +1,11 @@
 import * as types from '../actions/actionTypes'
 
 const initialState = {
-  page: 0,
-  total: 0,
-  nextPage: 1,
+  commentotal: 0,
   commentList: [],
-  nextCommentList: [],
-  isLoading: true,
-  modalVisible: false,
-  commentDone: false,
-  isLoadMore: false
+  isCommentLoadingTail: false,
+  isCommentRefreshing: false,
+  commentDone: false
 }
 
 let commentReducer = (state = initialState, action) => {
@@ -17,24 +13,33 @@ let commentReducer = (state = initialState, action) => {
     case types.FETCH_COMMENTS_STAET:
       return {
         ...state,
-        isLoadMore: action.payload.isLoadMore,
-        isLoading: action.payload.isLoading
+        isCommentLoadingTail: false,
+        isRefreshing: false
       }
     case types.FETCH_COMMENTS_REJECTED:
       return {
         ...state,
         commentList: [],
-        isLoading: false
+        isCommentLoadingTail: false,
+        isRefreshing: false
       }
     case types.FETCH_COMMENTS_FULFILLED:
+      let commentList = state.commentList.slice()
+      let newCommentList = action.payload.newCommentList
+
+      if (!action.payload.up) {
+        newCommentList = commentList.concat(newCommentList)
+      }
+      else {
+        newCommentList = newCommentList.concat(commentList)
+      }
+
       return {
         ...state,
-        commentList: action.payload.commentList,
+        commentList: newCommentList,
         commentTotal: action.payload.commentTotal,
-        nextPage: action.payload.nextPage,
-        page: action.payload.page,
-        isLoadingTail: action.payload.isLoadingTail,
-        isLoading: false
+        isCommentLoadingTail: false,
+        isRefreshing: false
       }
     case types.WILL_COMMENT:
       return {
@@ -48,7 +53,7 @@ let commentReducer = (state = initialState, action) => {
     case types.SEND_COMMENTS_REJECTED:
       return {
         ...state,
-        videoList: [],
+        commentList: [],
         commentDone: false,
         isLoading: false
       }
@@ -57,7 +62,7 @@ let commentReducer = (state = initialState, action) => {
         ...state,
         commentList: action.payload.commentList,
         commentTotal: action.payload.commentTotal,
-        isLoadingTail: action.payload.isLoadingTail,
+        isCommentLoadingTail: action.payload.isCommentLoadingTail,
         commentDone: true,
         isLoading: false
       }

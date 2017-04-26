@@ -1,11 +1,9 @@
 import * as types from '../actions/actionTypes'
 
 const initialState = {
-  total: 0,
+  videoTotal: 0,
   videoList: [],
-  nextVideoList: [],
-  isLoading: true,
-  isLoadMore: false,
+  isLoadingTail: false,
   isRefreshing: false
 }
 
@@ -14,15 +12,14 @@ let creationReducer = (state = initialState, action) => {
     case types.FETCH_CREATIONS_STAET:
       return {
         ...state,
-        isLoadMore: action.payload.isLoadMore,
-        isRefreshing: action.payload.isRefreshing,
-        isLoading: action.payload.isLoading
+        isLoadingTail: false,
+        isRefreshing: false
       }
     case types.FETCH_CREATIONS_REJECTED:
       return {
         ...state,
         videoList: [],
-        isLoading: false,
+        isLoadingTail: false,
         isRefreshing: false
       }
     case types.FETCH_CREATIONS_FULFILLED:
@@ -40,8 +37,7 @@ let creationReducer = (state = initialState, action) => {
         ...state,
         videoList: newVideoList,
         videoTotal: action.payload.videoTotal,
-        isLoadingTail: action.payload.isLoadingTail,
-        isLoading: false,
+        isLoadingTail: false,
         isRefreshing: false
       }
     default:
