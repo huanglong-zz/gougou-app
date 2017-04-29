@@ -1,12 +1,9 @@
 import Icon from 'react-native-vector-icons/Ionicons'
 import Video from 'react-native-video'
 import Popup from '../../components/popup'
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
 
 import CommentList from '../comment/list'
 import util from '../../common/util'
-import * as commentActions from '../../actions/comment'
 
 import React, {Component} from 'react'
 import {
@@ -54,7 +51,6 @@ class Detail extends Component {
   }
 
   _onLoad (data) {
-    console.log('loads')
     this.setState({duration: data.duration})
   }
 
@@ -67,7 +63,6 @@ class Detail extends Component {
   }
 
   _onProgress (data) {
-    console.log(data)
     if (data.playableDuration === 0) {
       this.setState({
         currentTime: this.state.duration,
@@ -182,7 +177,7 @@ class Detail extends Component {
           </View>
         </View>
 
-        <CommentList rowData={this.props.rowData} {...this.props} />
+        <CommentList {...this.props} />
         <Popup {...this.props.pop} />
       </View>
     )

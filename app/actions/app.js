@@ -64,6 +64,8 @@ export let popAlert = (title, content) => {
 
 export let willEnterApp = () => {
   return (dispatch, getState) => {
+    var {user, entered} = getState()
+
     storage.multiGet(['user', 'entered'])
       .then(function (data) {
         let user = data[0]

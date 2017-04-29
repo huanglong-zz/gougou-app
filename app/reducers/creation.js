@@ -18,24 +18,13 @@ let creationReducer = (state = initialState, action) => {
     case types.FETCH_CREATIONS_REJECTED:
       return {
         ...state,
-        videoList: [],
         isLoadingTail: false,
         isRefreshing: false
       }
     case types.FETCH_CREATIONS_FULFILLED:
-      let videoList = state.videoList.slice()
-      let newVideoList = action.payload.newVideoList
-
-      if (!action.payload.up) {
-        newVideoList = videoList.concat(newVideoList)
-      }
-      else {
-        newVideoList = newVideoList.concat(videoList)
-      }
-
       return {
         ...state,
-        videoList: newVideoList,
+        videoList: action.payload.videoList,
         videoTotal: action.payload.videoTotal,
         isLoadingTail: false,
         isRefreshing: false

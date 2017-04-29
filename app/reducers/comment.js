@@ -24,19 +24,9 @@ let commentReducer = (state = initialState, action) => {
         isRefreshing: false
       }
     case types.FETCH_COMMENTS_FULFILLED:
-      let commentList = state.commentList.slice()
-      let newCommentList = action.payload.newCommentList
-
-      if (!action.payload.up) {
-        newCommentList = commentList.concat(newCommentList)
-      }
-      else {
-        newCommentList = newCommentList.concat(commentList)
-      }
-
       return {
         ...state,
-        commentList: newCommentList,
+        commentList: action.payload.commentList,
         commentTotal: action.payload.commentTotal,
         isCommentLoadingTail: false,
         isRefreshing: false

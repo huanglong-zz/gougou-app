@@ -82,84 +82,83 @@ export let popAlert = (title, content) => {
 }
 
 
-export let fetchComments = (page, creationid) => {
-  let url = config.api.comment
-  let isLoadingTail = true
-
+export let fetchComments = (cid, feed) => {
   return (dispatch, getState) => {
+    let url = config.api.comment
+    let isCommentLoadingTail = false
+    let isCommentRefreshing = false
+    let comment
+    let id = ''
+
+    const {
+      commentList
+    } = getState().get('comments')
+
+    const {
+      user
+    } = getState().get('app')
+
+
+    if (feed === 'recent') {
+      isCommentRefreshing = true
+      comment = commentList[0]
+    }
+    else {
+      isCommentLoadingTail = true
+      comment = commentList[commentList.length - 1]
+    }
+
+    if (comment && comment._id) {
+      id = comment._id
+    }
+
     dispatch({
       type: types.FETCH_COMMENTS_START,
       payload: {
-        isLoadingTail: isLoadingTail
+        isCommentLoadingTail: isCommentLoadingTail,
+        isCommentRefreshing: isCommentRefreshing
       }
     })
 
-    storage.getItem('user')
-      .then(function(user) {
-        request.get(url, {
-          creation: creationid,
-          accessToken: user.accessToken,
-          page: page
-        })
-        .then(data => {
-          if (data && data.success) {
-            if (data.data.length > 0) {
-              let {
-                commentList,
-                nextPage,
-                commentTotal
-              } = getState()
+    request.get(url, {
+      accessToken: user.accessToken,
+      feed: feed,
+      cid: cid,
+      id: id
+    })
+    .then(data => {
+      if (data && data.success) {
+        if (data.data.length > 0) {
+          let newCommentList
 
-              if (!nextPage) {
-                nextPage = 1
-              }
-
-              let newCommentList = commentList || []
-              let items = newCommentList.slice()
-
-              if (page !== 0) {
-                items = items.concat(data.data)
-                nextPage += 1
-              }
-              else {
-                items = data.data.concat(items)
-              }
-
-              newCommentList = items
-              commentTotal = data.total
-
-              dispatch({
-                type: types.FETCH_COMMENTS_FULFILLED,
-                payload: {
-                  page: page,
-                  user: user,
-                  nextPage: nextPage,
-                  commentList: newCommentList,
-                  commentTotal: commentTotal,
-                  isLoadingTail: false,
-                  isRefreshing: false
-                }
-              })
-            }
+          if (feed === 'recent') {
+            newCommentList = data.data.concat(commentList)
           }
           else {
-            dispatch({
-              type: types.FETCH_COMMENTS_REJECTED,
-              payload: {
-                isLoadingTail: false
-              }
-            })
+            newCommentList = commentList.concat(data.data)
           }
-        })
-        .catch((err) => {
+
           dispatch({
-            type: types.FETCH_COMMENTS_REJECTED,
+            type: types.FETCH_COMMENTS_FULFILLED,
             payload: {
-              isLoadingTail: false,
-              err: err
+              commentList: newCommentList,
+              commentTotal: data.total,
+              isCommentLoadingTail: false,
+              isCommentRefreshing: false
             }
           })
-        })
+        }
+      }
+    })
+    .catch(err => {
+      dispatch({
+        type: types.FETCH_COMMENTS_REJECTED,
+        payload: {
+          isCommentLoadingTail: false,
+          isCommentRefreshing: false,
+          err: err
+        }
+      })
     })
   }
 }

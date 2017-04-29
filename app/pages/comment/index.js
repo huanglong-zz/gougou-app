@@ -7,9 +7,7 @@
 // ES5
 import * as commentActions from '../../actions/comment'
 import Button from 'react-native-button'
-
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import Popup from '../../components/popup'
 
 import React, {Component} from 'react'
 import {

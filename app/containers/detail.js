@@ -10,7 +10,6 @@ class DetailContainer extends Component {
     super(props)
   }
 
-
   render () {
     return (
       <Detail {...this.props} />

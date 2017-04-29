@@ -1,5 +1,5 @@
 // const baseUrl = 'http://app.iblack7.com/'
-const baseUrl = 'http://169.254.150.200:3001/'
+const baseUrl = 'http://127.0.0.1:3001/'
 //const baseUrl = 'http://rap.taobao.org/mockjs/4230/'
 
 export default {

@@ -22,7 +22,12 @@ class Comment extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchComments(false, null, this.props.rowData._id)
+    this.props.fetchComments(this.props.rowData._id)
+  }
+
+  // 在视频播放的中间，有时候会出现评论列表不渲染的情况，我们可以通过让列表滚动，强制它进行渲染
+  componentDidUpdate(prevProps, prevState) {
+    this.listView.scrollTo({y: 1})
   }
 
   _hasMore() {
@@ -54,17 +59,16 @@ class Comment extends Component {
   _fetchMoreData() {
     const {
       isCommentLoadingTail,
-      commentList,
-      fetchCreations
+      fetchComments
     } = this.props
 
     if (this._hasMore() && !isCommentLoadingTail) {
-      fetchCreations(false, commentList[commentList.length - 1]._id, this.props.rowData._id)
+      fetchComments(this.props.rowData._id)
     }
   }
 
   _onRefresh() {
-    this.props.fetchComments(true, this.props.commentList[0]._id, this.props.rowData._id)
+    this.props.fetchComments(this.props.rowData._id, 'recent')
   }
 
   _focus() {
@@ -76,18 +80,14 @@ class Comment extends Component {
 
   _renderFooter() {
     if (!this._hasMore() && this.props.commentTotal !== 0) {
-      return (
-        <View style={styles.loadingMore}>
-          <Text style={styles.loadingText}>没有更多了</Text>
-        </View>
-      )
+      return <NoMore />
     }
 
-    if (!this.props.isCommentLoadingTail) {
-      return <View style={styles.loadingMore} />
+    if (!this.props.isLoadingTail) {
+      return <Loading />
     }
 
-    return <ActivityIndicator style={styles.loadingMore} />
+    return null
   }
 
   _renderRow(row) {
@@ -134,11 +134,7 @@ class Comment extends Component {
 
   render() {
     const {
-      commentList,
-      fetchComments,
-      isRefreshing,
-      nextPage,
-      onRefresh,
+      commentList
     } = this.props
 
     let ds = new ListView.DataSource({
@@ -149,6 +145,7 @@ class Comment extends Component {
 
     return (
       <ListView
+        ref={(listView) => { this.listView = listView }}
         dataSource={dataSource}
         renderRow={this._renderRow.bind(this)}
         renderHeader={this._renderHeader.bind(this)}
@@ -253,7 +250,7 @@ const styles = StyleSheet.create({
     color: '#333',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 4,
+    borderRadius: 2,
     fontSize: 14,
     height: 40
   },
