@@ -11,7 +11,11 @@ const store = configureStore()
 
 // 而 imoocApp 就是提供应用的入口，无论是 iOS 还是 Android，都首先调用这个组件，里面的 RootContainer 则是这个 App 里面第一个可见组件，同时它也是所有其他页面和组件的祖先容器。
 
-// * ```Provider``` will tie the React-Native to the Redux store
+// * ```Provider``` 是用在 redux 的环境中，相当于是一个祖先容器，它把我们的应用完全的包裹起来，然后注入数据，也就是 store，而 store 存储着我们整个应用的所有状态。
+
+// - Reducers: reducers listen to actions and make changes on the store values. They also cannot mutate the data on the store in any way, but must return a new set of data.
+// - Actions: pretty much just like flux actions, the only difference is that async can be handled in multiple different ways depending on store "middleware"
+// - Components: React components can be injected with various pieces of store data. React components also trigger Redux actions. This is what makes it all come together.SUBSCRIBE for more!
 
 const imoocApp = () => (
   <Provider store={store}>

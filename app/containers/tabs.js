@@ -48,21 +48,28 @@ const header = {
 const ListTab = StackNavigator({
   List: {
     screen: List,
-    navigationOptions: {
-      title: '狗狗说',
-      header: header,
-      tabBar: ({ state, setParams }) => ({
-        label: '合集',
-        visible: true,
-        icon: ({ tintColor, focused }) => {
-          return (
-            <Icon
-              name={focused ? 'ios-videocam' : 'ios-videocam-outline'}
-              color={tintColor}
-              size={28} />
-          )
-        }
-      })
+    navigationOptions: ({navigation}) => {
+      const {state, setParams} = navigation
+
+      return {
+        title: '狗狗说'
+      }
+      
+      // title: '狗狗说',
+      // header: header,
+      // tabBar: ({ navigation }) => ({
+      //   tabBarKey: 'list',
+      //   label: '合集',
+      //   visible: true,
+      //   icon: ({ tintColor, focused }) => {
+      //     return (
+      //       <Icon
+      //         name={focused ? 'ios-videocam' : 'ios-videocam-outline'}
+      //         color={tintColor}
+      //         size={28} />
+      //     )
+      //   }
+      // })
     }
   },
   Detail: {

@@ -69,8 +69,12 @@ export default class Login extends React.Component {
 
     const signupURL = config.api.signup
 
+    console.log(signupURL)
+    console.log(body)
     request.post(signupURL, body)
       .then((data) => {
+        console.log('data')
+        console.log(data)
         if (data && data.success) {
           that._showVerifyCode()
         } else {
@@ -78,6 +82,8 @@ export default class Login extends React.Component {
         }
       })
       .catch((err) => {
+        console.log('===err')
+        console.log(err)
         that.props.popAlert('呜呜~', '获取验证码失败，请检查网络是否良好')
       })
   }
@@ -116,6 +122,8 @@ export default class Login extends React.Component {
           }
         })
         .catch((err) => {
+          console.log(err)
+          console.log('err=====')
           that.setState({
             submiting: false
           })

@@ -3,6 +3,7 @@ package com.imoocapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.zmxv.RNSound.RNSoundPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSoundPackage(),
             new ReactVideoPackage(),
             new ReactNativeAudioPackage(),
             new VectorIconsPackage(),
