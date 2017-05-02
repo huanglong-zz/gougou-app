@@ -8,11 +8,15 @@ import React, {Component} from 'react'
 class DetailContainer extends Component {
   constructor (props) {
     super(props)
+
+    console.log(props)
   }
 
   render () {
+    const rowData = this.props.navigation.state.params.rowData
+
     return (
-      <Detail {...this.props} />
+      <Detail rowData={rowData} {...this.props} />
     )
   }
 }

@@ -17,79 +17,44 @@ import {
   Text
 } from 'react-native'
 
-const DetailScreen = ({ navigation }) => (
-  <Detail
-    rowData={navigation.state.params.rowData}
-    navigation={navigation}
-  />
-)
-
-const CommentScreen = ({ navigation }) => (
-  <Comment
-    navigation={navigation}
-  />
-)
-
-const AccountUpdateScreen = ({ navigation }) => (
-  <AccountUpdate
-    navigation={navigation}
-  />
-)
-
-const header = {
-  style: {
-    height: 52,
-    paddingTop: 14,
-    backgroundColor: '#ee735c'
-  },
-  tintColor: '#fff'
+const headerStyle = {
+  height: 52,
+  paddingTop: 14,
+  backgroundColor: '#ee735c'
 }
 
 const ListTab = StackNavigator({
   List: {
     screen: List,
-    navigationOptions: ({navigation}) => {
-      const {state, setParams} = navigation
-
-      return {
-        title: '狗狗说'
-      }
-      
-      // title: '狗狗说',
-      // header: header,
-      // tabBar: ({ navigation }) => ({
-      //   tabBarKey: 'list',
-      //   label: '合集',
-      //   visible: true,
-      //   icon: ({ tintColor, focused }) => {
-      //     return (
-      //       <Icon
-      //         name={focused ? 'ios-videocam' : 'ios-videocam-outline'}
-      //         color={tintColor}
-      //         size={28} />
-      //     )
-      //   }
-      // })
+    navigationOptions: {
+      headerTitle: '狗狗说',
+      tabBarVisible: true,
+      headerStyle: headerStyle,
+      headerTintColor: '#fff',
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name={focused ? 'ios-videocam' : 'ios-videocam-outline'}
+          color={tintColor}
+          size={28} />
+      )
     }
   },
   Detail: {
-    screen: DetailScreen,
-    navigationOptions: {
-      title: ({state}) => `${state.params.rowData.author.nickname} 的创意`,
-      header: header,
-      tabBar: ({ state, setParams }) => ({
-        visible: false
-      })
-    }
+    screen: Detail,
+    navigationOptions: ({navigation}) => ({
+      title: `${navigation.state.params.rowData.author.nickname} 的创意`,
+      headerStyle: headerStyle,
+      headerTintColor: '#fff',
+      tabBarVisible: false
+    })
   },
   Comment: {
-    screen: CommentScreen,
+    screen: Comment,
     navigationOptions: {
       title: '评论',
-      header: header,
-      tabBar: ({ state, setParams }) => ({
-        visible: false
-      })
+      headerStyle: headerStyle,
+      headerTintColor: '#fff',
+      tabBarVisible: false
     }
   }
 })
@@ -97,36 +62,32 @@ const ListTab = StackNavigator({
 const AccountTab = StackNavigator({
   Account: {
     screen: Account,
-    navigationOptions: {
-      title: '狗狗的账户',
-      header: ({ navigate }) => ({
-        style: header.style,
-        tintColor: header.tintColor,
-        right: (
-          <Text style={{color: '#fff', paddingRight: 10}} onPress={() => navigate('AccountUpdate')}>编辑</Text>
-        )
-      }),
-      tabBar: ({ state, setParams }) => ({
-        label: '账户',
-        icon: ({ tintColor, focused }) => {
-          return (
-            <Icon
-              name={focused ? 'ios-more' : 'ios-more-outline'}
-              color={tintColor}
-              size={28} />
-          )
-        }
-      })
-    }
+    navigationOptions: ({navigation}) => ({
+      headerTitle: '狗狗的账户',
+      tabBarVisible: true,
+      headerStyle: headerStyle,
+      headerRight: (
+        <Text style={{color: '#fff', paddingRight: 10}} onPress={() => navigation.navigate('AccountUpdate')}>编辑</Text>
+      ),
+      headerTintColor: '#fff',
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name={focused ? 'ios-more' : 'ios-more-outline'}
+          color={tintColor}
+          size={28} />
+      )
+    })
   },
   AccountUpdate: {
-    screen: AccountUpdateScreen,
+    screen: AccountUpdate,
     navigationOptions: {
-      title: '更新资料',
-      header: header,
-      tabBar: ({ state, setParams }) => ({
-        visible: false
-      })
+      headerTitle: '更新资料',
+      headerStyle: headerStyle,
+      headerTintColor: '#fff',
+      headerRight: (
+        <Text style={{color: '#fff', paddingRight: 10}} onPress={() => navigate('AccountUpdate')}>编辑</Text>
+      ),
+      tabBarVisible: false
     }
   }
 })
@@ -140,16 +101,19 @@ const Tabs = TabNavigator({
     title: '理解狗狗，从配音开始',
     screen: Edit,
     navigationOptions: {
-      tabBar: ({ state, setParams }) => ({
-        icon: ({ tintColor, focused }) => {
-          return (
-            <Icon
-              name={focused ? 'ios-recording' : 'ios-recording-outline'}
-              color={tintColor}
-              size={28} />
-          )
-        }
-      })
+      headerTitle: '更新资料',
+      headerRight: (
+        <Text style={{color: '#fff', paddingRight: 10}} onPress={() => navigate('AccountUpdate')}>编辑</Text>
+      ),
+      headerStyle: headerStyle,
+      headerTintColor: '#fff',
+      tabBarVisible: true,
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name={focused ? 'ios-recording' : 'ios-recording-outline'}
+          color={tintColor}
+          size={28} />
+      )
     }
   },
   AccountTab: {
