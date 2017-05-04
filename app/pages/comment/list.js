@@ -120,6 +120,7 @@ class Comment extends Component {
               placeholder='敢不敢评论一个...'
               style={styles.content}
               multiline={true}
+              underlineColorAndroid='transparent'
               onFocus={this._focus.bind(this)}
             />
           </View>
@@ -249,6 +250,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     color: '#333',
     borderWidth: 1,
+    paddingBottom: 0,
     borderColor: '#ddd',
     borderRadius: 2,
     fontSize: 14,

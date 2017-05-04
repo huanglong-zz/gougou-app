@@ -177,6 +177,7 @@ export default class Login extends React.Component {
             autoCorrect={false}
             keyboardType={'number-pad'}
             style={styles.inputField}
+            underlineColorAndroid='transparent'
             onChangeText={(text) => {
               this.setState({
                 phoneNumber: text
@@ -193,6 +194,7 @@ export default class Login extends React.Component {
                 autoCorrect={false}
                 keyboardType={'number-pad'}
                 style={[styles.inputField, styles.verifyField]}
+                underlineColorAndroid='transparent'
                 onChangeText={(text) => {
                   this.setState({
                     verifyCode: text
@@ -251,6 +253,7 @@ const styles = StyleSheet.create({
     padding: 5,
     color: '#666',
     fontSize: 16,
+    paddingBottom: 0,
     backgroundColor: '#fff',
     borderRadius: 4
   },

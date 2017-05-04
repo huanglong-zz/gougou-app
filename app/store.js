@@ -17,11 +17,11 @@ function configureStore (initialState = fromJS({})) {
   const enhancer = applyMiddleware(...middlewares)
   const store = createStore(reducers(), initialState, enhancer)
 
-  // if (module.hot) {
-  //   module.hot.accept(() => {
-  //     store.replaceReducer(require('./reducers').default)
-  //   })
-  // }
+  if (module.hot) {
+    module.hot.accept(() => {
+      store.replaceReducer(require('./reducers').default)
+    })
+  }
 
   return store
 }

@@ -13,6 +13,16 @@ export let enteredSlide = () => {
   }
 }
 
+export let logout = () => {
+  return (dispatch, getState) => {
+    storage.multiRemove(['logined', 'user']).then(function() {
+      dispatch({
+        type: types.USER_LOGOUT
+      })
+    })
+  }
+}
+
 export let appBooted = () => {
   return {
     type: types.APP_BOOTED

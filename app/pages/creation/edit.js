@@ -111,9 +111,6 @@ class Edit extends Component {
   }
 
   async _onProgress (data) {
-    console.log('data progress')
-    console.log(data)
-
     if (data.playableDuration === 0) {
       console.log(32323)
       await this._onEnd()
@@ -132,7 +129,6 @@ class Edit extends Component {
   }
 
   async _onEnd () {
-    console.log('from progress')
     var newState = {}
 
     if (this.state.recording) {
@@ -583,6 +579,7 @@ class Edit extends Component {
                 autoCapitalize={'none'}
                 autoCorrect={false}
                 defaultValue={this.state.title}
+                underlineColorAndroid='transparent'
                 onChangeText={(text) => {
                   this.setState({
                     title: text
@@ -990,6 +987,7 @@ const styles = StyleSheet.create({
 
   inputField: {
     height: 36,
+    paddingBottom: 0,
     textAlign: 'center',
     color: '#666',
     fontSize: 14

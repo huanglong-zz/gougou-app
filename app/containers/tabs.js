@@ -120,16 +120,20 @@ const Tabs = TabNavigator({
     screen: AccountTab
   }
 }, {
+  tabBarPosition: 'bottom',
+  lazyload: true,
   tabBarOptions: {
     activeTintColor: '#ee735c',
+    inactiveTintColor: '#666',
+    showIcon: true,
     showLabel: false,
     labelStyle: {
-      fontSize: 14
+      fontSize: 12
     },
     style: {
-      backgroundColor: '#fff',
       borderTopWidth: 1,
-      borderTopColor: '#f1f1f1'
+      borderTopColor: '#f1f1f1',
+      backgroundColor: '#fff',
     }
   }
 })

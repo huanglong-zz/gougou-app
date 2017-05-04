@@ -267,6 +267,7 @@ class AccountUpdate extends Component {
               autoCapitalize={'none'}
               autoCorrect={false}
               defaultValue={user.age}
+              underlineColorAndroid='transparent'
               onChangeText={(text) => {
                 this._changeUserState('age', text)
               }}
@@ -422,6 +423,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     color: '#666',
+    paddingBottom: 0,
     fontSize: 14
   },
 

@@ -65,6 +65,7 @@ class Comment extends Component {
               style={styles.content}
               multiline={this.state.multiline}
               defaultValue={this.state.content}
+              underlineColorAndroid='transparent'
               onChangeText={(text) => {
                 this.setState({
                   content: text
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
 
   content: {
     paddingLeft: 4,
+    paddingBottom: 0,
     color: '#333',
     borderWidth: 1,
     borderColor: '#ddd',
