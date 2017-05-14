@@ -1,40 +1,141 @@
-import './app'
+import React, { Component } from 'react'
+import {
+  AppRegistry,
+  Text,
+  View
+} from 'react-native'
 
-/**
-  1. Modal not showing in rn 42~43
-  
-  https://github.com/facebook/react-native/issues/12515
 
-  upgrade to v42.3
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 
-  2. video still fire onProgress
+const userReducer = function(state={name: 'Scott', age: 28}, action) {
+  switch (action.type) {
+    case 'CHNAGE_NAME': {
+      return {
+        ...state,
+        name: action.payload
+      }
+    }
+    case 'CHNAGE_AGE': {
+      return {
+        ...state,
+        age: action.payload
+      }
+    }
+  }
 
-  change 188 line in react-native-video/ios/RCTVideo.m
+  return state
+}
 
-  ```
-  if( currentTimeSecs >= 0 && self.onVideoProgress) {
-  ```
+const friendsReducer = function(state=[], action) {
+  switch (action.type) {
+    case 'CHNAGE_FRIENDS': {
+      return action.payload
+    }
+    case 'CHNAGE_NAME': {
+      return ['Nodejs']
+    }
+  }
 
-  to
+  return state
+}
 
-  ```
-  if( currentTimeSecs >= 0 && self.onVideoProgress && currentTimeSecs <= duration) {
-  ```
+const reducers = combineReducers({
+  user: userReducer,
+  friends: friendsReducer
+})
 
-  3. 'RCTBridgeModule.h' file not found
+const logger = (store) => (next) => (action) => {
+  console.log('action fired', action)
+  action.type = 'CHNAGE_NAME'
+  next(action)
+}
 
-  https://github.com/weflex/react-native-wechat/issues/33
+const store = createStore(reducers, {}, applyMiddleware(logger))
 
-  4. A problem occurred configuring project ':app'. SDK location not found
+store.subscribe(() => {
+  console.log('store changed to ', store.getState())
+})
 
-  http://stackoverflow.com/questions/32634352/react-native-android-build-failed-sdk-location-not-found
+store.dispatch({type: 'CHNAGE_NAME', payload: 'Bill'})
+store.dispatch({type: 'CHNAGE_AGE', payload: 29})
+store.dispatch({type: 'CHNAGE_FRIENDS', payload: ['imooc']})
 
-  5. TypeError: Network request failed
+class Child1 extends Component {
+  constructor(props) {
+    super(props)
 
-  adb reverse tcp:3001 tcp:3001
+    this.state = {
+      a: 1,
+      c: this.props.c
+    }
+  }
 
-  6. RN debugger Notes
+  render() {
+    return (
+      <Text onPress={() => this.props.setD(5)}>
+        Child1:
+          {this.state.a},
+          {this.state.c},
+          {this.props.d}
+      </Text>
+    )
+  }
+}
 
-  https://github.com/crazycodeboy/RNStudyNotes
+class Child2 extends Component {
+  constructor(props) {
+    super(props)
 
-**/
+    this.state = {
+      b: 2,
+      c: this.props.c
+    }
+  }
+
+  render() {
+    return (
+      <Text onPress={() => this.props.setD(6)}>
+        Child2:
+        {this.state.b},
+        {this.state.c},
+        {this.props.d}
+      </Text>
+    )
+  }
+}
+
+class imoocApp extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      c: 3,
+      d: 4
+    }
+  }
+
+  _setD(v) {
+    this.setState({
+      d: v
+    })
+  }
+
+  render() {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>d: {this.state.d}</Text>
+        <Child1
+          setD={this._setD.bind(this)}
+          c={this.state.c}
+          d={this.state.d} />
+        <Child2
+          setD={this._setD.bind(this)}
+          c={this.state.c}
+          d={this.state.d} />
+      </View>
+    )
+  }
+}
+
+AppRegistry.registerComponent('imoocApp', () => imoocApp)
