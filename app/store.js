@@ -1,11 +1,9 @@
 import {createStore, applyMiddleware} from 'redux'
 import {fromJS} from 'immutable'
 import thunk from 'redux-thunk'
-import createLogger from 'redux-logger'
+import logger from 'redux-logger'
 import promiseMiddleware from 'redux-promise'
 import reducers from './reducers'
-
-const logger = createLogger()
 
 const middlewares = [
   thunk,
