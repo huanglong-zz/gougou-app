@@ -4,18 +4,33 @@ import {AppRegistry} from 'react-native'
 import AppContainer from './containers/app'
 import configureStore from './store'
 
-// 我们通过 redux 来创建存数据的对象 store，把 store 放到 provider 里面，这样就被传递给了我们的容器 RootContainer
+// 我们通过 redux 来创建存放状态的数据对象 store，把 store 放到 provider 里面，这样
+// 就被传递给了我们的容器 RootContainer
 
 //*  ```configureStore``` will connect the ```reducers```, the
 const store = configureStore()
 
-// 而 imoocApp 就是提供应用的入口，无论是 iOS 还是 Android，都首先调用这个组件，里面的 RootContainer 则是这个 App 里面第一个可见组件，同时它也是所有其他页面和组件的祖先容器。
+// 而 imoocApp 就是提供应用的入口，无论是 iOS 还是 Android，都首先调用这个组件，
+// 里面的 RootContainer 则是这个 App 里面第一个可见组件，同时它也是所有其他页面和组件的祖先容器。
 
-// * ```Provider``` 是用在 redux 的环境中，相当于是一个祖先容器，它把我们的应用完全的包裹起来，然后注入数据，也就是 store，而 store 存储着我们整个应用的所有状态。
+// * ```Provider``` 是用在 redux 的环境中，相当于是一个祖先容器，它把我们的应用完全的包裹起来，
+// 然后注入数据，也就是 store，而 store 存储着我们整个应用的所有状态。
 
 // - Reducers: reducers listen to actions and make changes on the store values. They also cannot mutate the data on the store in any way, but must return a new set of data.
 // - Actions: pretty much just like flux actions, the only difference is that async can be handled in multiple different ways depending on store "middleware"
 // - Components: React components can be injected with various pieces of store data. React components also trigger Redux actions. This is what makes it all come together.SUBSCRIBE for more!
+/*
+a. 需要回调通知state (等同于回调参数) -> action
+b. 需要根据回调处理 (等同于父级方法) -> reducer
+c. 需要state (等同于总状态) -> store
+对Redux来说只有这三个要素
+作者：Wang Namelos
+链接：https://www.zhihu.com/question/41312576/answer/90782136
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+a. action是纯声明式的数据结构，只提供事件的所有要素，不提供逻辑。b. reducer是一个匹配函数，action的发送是全局的：所有的reducer都可以捕捉到并匹配与自己相关与否，相关就拿走action中的要素进行逻辑处理，修改store中的状态，不相关就不对state做处理原样返回。c. store负责存储状态并可以被react api回调，发布action.当然一般不会直接把两个库拿来用，还有一个binding叫react-redux, 提供一个Provider和connect。很多人其实看懂了redux卡在这里。a. Provider是一个普通组件，可以作为顶层app的分发点，它只需要store属性就可以了。它会将state分发给所有被connect的组件，不管它在哪里，被嵌套多少层。b. connect是真正的重点，它是一个科里化函数，意思是先接受两个参数（数据绑定mapStateToProps和事件绑定mapDispatchToProps），再接受一个参数（将要绑定的组件本身）：mapStateToProps：构建好Redux系统的时候，它会被自动初始化，但是你的React组件并不知道它的存在，因此你需要分拣出你需要的Redux状态，所以你需要绑定一个函数，它的参数是state，简单返回你关心的几个值。mapDispatchToProps：声明好的action作为回调，也可以被注入到组件里，就是通过这个函数，它的参数是dispatch，通过redux的辅助方法bindActionCreator绑定所有action以及参数的dispatch，就可以作为属性在组件里面作为函数简单使用了，不需要手动dispatch。这个mapDispatchToProps是可选的，如果不传这个参数redux会简单把dispatch作为属性注入给组件，可以手动当做store.dispatch使用。这也是为什么要科里化的原因。做好以上流程Redux和React就可以工作了。简单地说就是：1.顶层分发状态，让React组件被动地渲染。2.监听事件，事件有权利回到所有状态顶层影响状态。
+*/
 
 const imoocApp = () => (
   <Provider store={store}>

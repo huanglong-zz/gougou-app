@@ -50,7 +50,6 @@ export let sendComment = (comment) => {
             }
           })
           .catch((err) => {
-            console.log(err)
             dispatch({
               type: types.SEND_COMMENTS_REJECTED,
               payload: {
@@ -91,6 +90,7 @@ export let fetchComments = (cid, feed) => {
     let id = ''
 
     const {
+      creationId,
       commentList
     } = getState().get('comments')
 
@@ -109,12 +109,16 @@ export let fetchComments = (cid, feed) => {
     }
 
     if (comment && comment._id) {
-      id = comment._id
+      // 确保在同一个详情页内
+      if (cid === creationId) {
+        id = comment._id
+      }
     }
 
     dispatch({
       type: types.FETCH_COMMENTS_START,
       payload: {
+        creationId: cid,
         isCommentLoadingTail: isCommentLoadingTail,
         isCommentRefreshing: isCommentRefreshing
       }
@@ -128,9 +132,9 @@ export let fetchComments = (cid, feed) => {
     })
     .then(data => {
       if (data && data.success) {
-        if (data.data.length > 0) {
-          let newCommentList
+        let newCommentList = []
 
+        if (data.data.length > 0) {
           if (feed === 'recent') {
             newCommentList = data.data.concat(commentList)
           }
@@ -138,16 +142,21 @@ export let fetchComments = (cid, feed) => {
             newCommentList = commentList.concat(data.data)
           }
 
-          dispatch({
-            type: types.FETCH_COMMENTS_FULFILLED,
-            payload: {
-              commentList: newCommentList,
-              commentTotal: data.total,
-              isCommentLoadingTail: false,
-              isCommentRefreshing: false
-            }
-          })
+          if (cid !== creationId) {
+            newCommentList = data.data
+          }
         }
+
+        dispatch({
+          type: types.FETCH_COMMENTS_FULFILLED,
+          payload: {
+            creationId: cid,
+            commentList: newCommentList,
+            commentTotal: data.total,
+            isCommentLoadingTail: false,
+            isCommentRefreshing: false
+          }
+        })
       }
     })
     .catch(err => {

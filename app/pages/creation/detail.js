@@ -22,14 +22,7 @@ class Detail extends Component {
   constructor (props) {
     super(props)
 
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    })
-
     this.state = {
-      // comments
-      dataSource: ds.cloneWithRows([]),
-
       // video loads
       videoOk: true,
       videoLoaded: false,
@@ -38,12 +31,23 @@ class Detail extends Component {
       duration: 0.0,
       currentTime: 0.0,
 
+      startComment: false,
+
       // video player
       rate: 1,
       muted: false,
       resizeMode: 'contain',
       repeat: false
     }
+  }
+
+  // 推测评论列表在视频播放的时候，会因为不可知的内存占用而不能渲染，需要加个小延时
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        startComment: true
+      })
+    }, 50)
   }
 
   _onLoadStart () {
@@ -133,7 +137,7 @@ class Detail extends Component {
           <Video
             ref={(ref) => {
               this.player = ref
-            }} 
+            }}
             source={{uri: util.video(data.qiniu_video)}}
             style={styles.video}
             volume={5}
@@ -177,7 +181,7 @@ class Detail extends Component {
           </View>
         </View>
 
-        <CommentList {...this.props} />
+        {this.state.startComment && <CommentList rowData={data} navigation={this.props.navigation} />}
         <Popup {...this.props.pop} />
       </View>
     )

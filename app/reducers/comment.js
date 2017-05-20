@@ -1,6 +1,7 @@
 import * as types from '../actions/actionTypes'
 
 const initialState = {
+  creationId: null,
   commentotal: 0,
   commentList: [],
   isCommentLoadingTail: false,
@@ -10,26 +11,27 @@ const initialState = {
 
 let commentReducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.FETCH_COMMENTS_STAET:
+    case types.FETCH_COMMENTS_START:
       return {
         ...state,
-        isCommentLoadingTail: false,
-        isRefreshing: false
+        creationId: action.payload.creationId,
+        isCommentLoadingTail: action.payload.isCommentLoadingTail,
+        isRefreshing: action.payload.isRefreshing
       }
     case types.FETCH_COMMENTS_REJECTED:
       return {
         ...state,
         commentList: [],
-        isCommentLoadingTail: false,
-        isRefreshing: false
+        isCommentLoadingTail: action.payload.isCommentLoadingTail,
+        isRefreshing: action.payload.isRefreshing
       }
     case types.FETCH_COMMENTS_FULFILLED:
       return {
         ...state,
         commentList: action.payload.commentList,
         commentTotal: action.payload.commentTotal,
-        isCommentLoadingTail: false,
-        isRefreshing: false
+        isCommentLoadingTail: action.payload.isCommentLoadingTail,
+        isRefreshing: action.payload.isRefreshing
       }
     case types.WILL_COMMENT:
       return {

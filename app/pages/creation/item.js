@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import request from '../../common/request'  
+import request from '../../common/request'
 import config from '../../common/config'
 import * as util from '../../common/util'
 

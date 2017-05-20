@@ -8,8 +8,6 @@ import React, {Component} from 'react'
 class DetailContainer extends Component {
   constructor (props) {
     super(props)
-
-    console.log(props)
   }
 
   render () {
@@ -24,12 +22,7 @@ class DetailContainer extends Component {
 function mapStateToProps (state) {
   return {
     popup: state.get('app').popup,
-    user: state.get('app').user,
-    page: state.get('comments').page,
-    nextPage: state.get('comments').nextPage,
-    isLoadingTail: state.get('comments').isLoadingTail,
-    commentTotal: state.get('comments').commentTotal,
-    commentList: state.get('comments').commentList
+    user: state.get('app').user
   }
 }
 

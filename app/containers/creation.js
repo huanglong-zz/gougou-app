@@ -19,7 +19,7 @@ class creationContainer extends Component {
   componentWillMount () {
     this.props.fetchCreations()
   }
-  
+
   render () {
     return (
       <CreationList
@@ -37,7 +37,7 @@ function mapStateToProps (state) {
     videoTotal,
     page,
   } = state.get('creations')
-  
+
   const {
     popup,
     user
@@ -56,5 +56,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return bindActionCreators(creationActions, dispatch)
 }
+
+// 本质上两者没有区别，只是被 connect 过的 component 中的 this.props 有了 dispatch 属性
 
 export default connect(mapStateToProps, mapDispatchToProps)(creationContainer)

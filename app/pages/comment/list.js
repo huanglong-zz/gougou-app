@@ -1,8 +1,13 @@
 import React, {Component} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+
+import * as commentActions from '../../actions/comment'
 import * as util from '../../common/util'
 import Loading from '../../components/loading'
 import NoMore from '../../components/nomore'
+
 
 import {
   StyleSheet,
@@ -25,11 +30,6 @@ class Comment extends Component {
     this.props.fetchComments(this.props.rowData._id)
   }
 
-  // 在视频播放的中间，有时候会出现评论列表不渲染的情况，我们可以通过让列表滚动，强制它进行渲染
-  componentDidUpdate(prevProps, prevState) {
-    this.listView.scrollTo({y: 1})
-  }
-
   _hasMore() {
     const {
       commentTotal,
@@ -45,7 +45,7 @@ class Comment extends Component {
       isCommentLoadingTail
     } = this.props
 
-    if (!this._hasMore() && commentTotal !== 0) {
+    if (!this._hasMore() || commentTotal === 0) {
       return <NoMore />
     }
 
@@ -76,18 +76,6 @@ class Comment extends Component {
     this.props.navigation.navigate('Comment', {
       rowData: this.props.rowData
     })
-  }
-
-  _renderFooter() {
-    if (!this._hasMore() && this.props.commentTotal !== 0) {
-      return <NoMore />
-    }
-
-    if (!this.props.isLoadingTail) {
-      return <Loading />
-    }
-
-    return null
   }
 
   _renderRow(row) {
@@ -146,7 +134,7 @@ class Comment extends Component {
 
     return (
       <ListView
-        ref={(listView) => { this.listView = listView }}
+        ref={(ref) => { this.listView = ref }}
         dataSource={dataSource}
         renderRow={this._renderRow.bind(this)}
         renderHeader={this._renderHeader.bind(this)}
@@ -161,7 +149,24 @@ class Comment extends Component {
   }
 }
 
-export default Comment
+
+function mapStateToProps (state) {
+  return {
+    popup: state.get('app').popup,
+    user: state.get('app').user,
+    page: state.get('comments').page,
+    nextPage: state.get('comments').nextPage,
+    isLoadingTail: state.get('comments').isLoadingTail,
+    commentTotal: state.get('comments').commentTotal,
+    commentList: state.get('comments').commentList
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(commentActions, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Comment)
 
 const styles = StyleSheet.create({
   container: {

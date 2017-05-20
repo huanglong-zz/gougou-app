@@ -1,0 +1,119 @@
+利用 Redux 组装 store
+
+1. 把 index.js 源码移动到 containers
+2. 开发 index.js/store.js
+
+通过 connect 连接组件和 store
+
+1. 分化出 app 启动顺序 不带 {...this.props}
+2. 通过 connect 实现连接
+3. 给 App 设置初始状态
+4. 给 App 设置 actions willEnterApp
+
+dispatch 异步请求控制 App 加载次序
+
+1. 完善 app reducer
+2. 完善 mapStateToProps
+3. 传递 {...this.props}
+4. 抽象 Boot 和修改 Slider
+5. 修改 Tabs -> <View><Text>Tabs</Text></View>
+6. 虚拟器测试
+
+修改 creation action fetchCreation
+修改 creation reducer state
+
+// 注释 list 里面的路径
+
+
+page /creation/index.js 25 ,
+
+ dataSource render
+ this.state.isRefreshing
+
+../components/popup
+import Loading from '../../components/loading'
+
+item
+
+path detail 改 common/popup
+
+
+tabs list listscreen
+
+container creation
+
+creationConatiner by creation list
+
+creation action
+  accessToken comment
+
+登录取消
+
+router.get('/creations', Creation.find)
+
+
+
+
+详情页
+
+把评论列表和评论弹窗抽离出来
+
+获取到 rowData
+
+把状态删除
+
+把进度条函数更新
+
+
+
+详情页
+
+1. videoPlayer 改成 player
+
+
+2. ppt
+
+- 列表页 容器组件
+  - 列表 页面组件
+  - 详情 页面组件
+    -
+
+3. 9 video change creation find in gougou-server qq source
+全文替换 CID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+对对对

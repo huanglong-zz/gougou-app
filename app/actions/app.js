@@ -54,20 +54,32 @@ export let back = () => {
   }
 }
 
+function showAlert(id, title, content) {
+  return {
+    type: types.SHOW_ALERT,
+    payload: {
+      title: title,
+      content: content
+    }
+  }
+}
+
+function hideAlert(id) {
+  return {
+    type: types.HIDE_ALERT
+  }
+}
+
+let nextAlertId = 0
+
 export let popAlert = (title, content) => {
   return (dispatch, getState) => {
-    dispatch({
-      type: types.SHOW_ALERT,
-      payload: {
-        title: title,
-        content: content
-      }
-    })
+    const id = nextAlertId++
+
+    dispatch(showAlert(id, title, content))
 
     setTimeout(function () {
-      dispatch({
-        type: types.HIDE_ALERT
-      })
+      dispatch(hideAlert(id))
     }, 1500)
   }
 }
